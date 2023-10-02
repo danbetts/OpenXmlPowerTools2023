@@ -272,7 +272,7 @@ namespace OxPt
             var rootTempDir = TestUtil.TempDir;
             var thisTestTempDir = new DirectoryInfo(Path.Combine(rootTempDir.FullName, testId));
             if (thisTestTempDir.Exists)
-                Assert.True(false, "Duplicate test id: " + testId);
+                Assert.Fail("Duplicate test id: " + testId);
             else
                 thisTestTempDir.Create();
             var tempDirFullName = thisTestTempDir.FullName;
@@ -375,7 +375,7 @@ namespace OxPt
             var rootTempDir = TestUtil.TempDir;
             var thisTestTempDir = new DirectoryInfo(Path.Combine(rootTempDir.FullName, testId));
             if (thisTestTempDir.Exists)
-                Assert.True(false, "Duplicate test id: " + testId);
+                Assert.Fail("Duplicate test id: " + testId);
             else
                 thisTestTempDir.Create();
             var tempDirFullName = thisTestTempDir.FullName;
@@ -451,7 +451,7 @@ namespace OxPt
                         if (errors.Count() != 0)
                         {
                             var message = errors.Select(e => e.Description + Environment.NewLine).StringConcatenate();
-                            Assert.True(false, message);
+                            Assert.Fail(message);
                         }
                     }
                 }
@@ -826,7 +826,7 @@ namespace OxPt
             var rootTempDir = TestUtil.TempDir;
             var thisTestTempDir = new DirectoryInfo(Path.Combine(rootTempDir.FullName, testId));
             if (thisTestTempDir.Exists)
-                Assert.True(false, "Duplicate test id: " + testId);
+                Assert.Fail("Duplicate test id: " + testId);
             else
                 thisTestTempDir.Create();
             var tempDirFullName = thisTestTempDir.FullName;
@@ -878,7 +878,7 @@ namespace OxPt
                         sb.Append(item.Description).Append(Environment.NewLine);
                     }
                     var s = sb.ToString();
-                    Assert.True(false, s);
+                    Assert.Fail(s);
                 }
             }
         }

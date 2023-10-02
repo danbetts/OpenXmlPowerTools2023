@@ -132,7 +132,7 @@ namespace OxPt
             var rootTempDir = TestUtil.TempDir;
             var thisTestTempDir = new DirectoryInfo(Path.Combine(rootTempDir.FullName, testId));
             if (thisTestTempDir.Exists)
-                Assert.True(false, "Duplicate test id: " + testId);
+                Assert.Fail("Duplicate test id: " + testId);
             else
                 thisTestTempDir.Create();
 
@@ -255,7 +255,7 @@ namespace OxPt
             }
 
             if (validationErrors != "")
-                Assert.True(false, validationErrors);
+                Assert.Fail(validationErrors);
         }
 
         [Theory]
@@ -352,7 +352,7 @@ namespace OxPt
             var rootTempDir = TestUtil.TempDir;
             var thisTestTempDir = new DirectoryInfo(Path.Combine(rootTempDir.FullName, testId));
             if (thisTestTempDir.Exists)
-                Assert.True(false, "Duplicate test id: " + testId);
+                Assert.Fail("Duplicate test id: " + testId);
             else
                 thisTestTempDir.Create();
 
@@ -484,7 +484,7 @@ namespace OxPt
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             if (validationErrors != "")
-                Assert.True(false, validationErrors);
+                Assert.Fail(validationErrors);
         }
 
         [Theory]
@@ -610,7 +610,7 @@ namespace OxPt
             var rootTempDir = TestUtil.TempDir;
             var thisTestTempDir = new DirectoryInfo(Path.Combine(rootTempDir.FullName, testId));
             if (thisTestTempDir.Exists)
-                Assert.True(false, "Duplicate test id???");
+                Assert.Fail("Duplicate test id???");
             else
                 thisTestTempDir.Create();
 
@@ -747,7 +747,7 @@ namespace OxPt
 
             if (validationErrors != "")
             {
-                Assert.True(false, validationErrors);
+                Assert.Fail(validationErrors);
             }
 
             WmlComparerSettings settings2 = new WmlComparerSettings();
@@ -793,9 +793,9 @@ namespace OxPt
             }
 
             if (sanityCheck1.Count() != 0)
-                Assert.True(false, "Sanity Check #1 failed");
+                Assert.Fail("Sanity Check #1 failed");
             if (sanityCheck2.Count() != 0)
-                Assert.True(false, "Sanity Check #2 failed");
+                Assert.Fail("Sanity Check #2 failed");
         }
 
 #if false
@@ -896,7 +896,7 @@ namespace OxPt
             var rootTempDir = TestUtil.TempDir;
             var thisTestTempDir = new DirectoryInfo(Path.Combine(rootTempDir.FullName, testId));
             if (thisTestTempDir.Exists)
-                Assert.True(false, "Duplicate test id???");
+                Assert.Fail("Duplicate test id???");
             else
                 thisTestTempDir.Create();
 
@@ -933,7 +933,7 @@ namespace OxPt
             var rootTempDir = TestUtil.TempDir;
             var thisTestTempDir = new DirectoryInfo(Path.Combine(rootTempDir.FullName, testId));
             if (thisTestTempDir.Exists)
-                Assert.True(false, "Duplicate test id???");
+                Assert.Fail("Duplicate test id???");
             else
                 thisTestTempDir.Create();
 

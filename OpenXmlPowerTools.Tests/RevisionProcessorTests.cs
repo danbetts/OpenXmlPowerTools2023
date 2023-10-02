@@ -178,12 +178,12 @@ namespace OxPt
                 var revisions = WmlComparer.GetRevisions(result, wmlComparerSettings);
                 if (revisions.Any())
                 {
-                    Assert.True(false, "Regression Error: Accepted baseline document did not match processed document");
+                    Assert.Fail("Regression Error: Accepted baseline document did not match processed document");
                 }
             }
             else
             {
-                Assert.True(false, "No Accepted baseline document");
+                Assert.Fail("No Accepted baseline document");
             }
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,12 +196,12 @@ namespace OxPt
                 var revisions = WmlComparer.GetRevisions(result, wmlComparerSettings);
                 if (revisions.Any())
                 {
-                    Assert.True(false, "Regression Error: Rejected baseline document did not match processed document");
+                    Assert.Fail("Regression Error: Rejected baseline document did not match processed document");
                 }
             }
             else
             {
-                Assert.True(false, "No Rejected baseline document");
+                Assert.Fail("No Rejected baseline document");
             }
         }
     }
