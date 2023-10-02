@@ -1,11 +1,17 @@
-﻿NuGet Feed for CI build: https://ci.appveyor.com/nuget/open-xml-powertools
+NuGet Feed for CI build: https://ci.appveyor.com/nuget/open-xml-powertools
 
 News
 ====
-Welcome, Open-Xml-PowerTools users.  As you may have learned from the repo at OfficeDev/Open-Xml-PowerTools,
-Microsoft is going to archive that repo, and will not be maintaining that repo in the future.
+This repository was forked from Erik White's as of 01/10/2023. There were over four years of pull requests pending that have been incorporated. There will be a 'pure' release for Net6.0 with all packages and references updated.
 
-Eric White
+This branch has been detached from the original fork, as the intention is to go in a bit of a different direction, which will result in significant changes to the code base, making cross-pull requests difficult.
+
+Moving forward:
+1. Remove Stylecop, which isn't being used anyway, and instead gravitate towards best practices SOLID/DRY principles, using latest C# syntax sugar
+1. Break classes out into separate files that are clean and closed to change
+2. Refactor reusuable code into public or extension methods (this should reduce the code base a lot)
+3. Implement local methods rather than countless private methods and arrow methods of doom that make  overaching local of a method indeterminable.
+4. Start adding xmldoc
 
 Open-XML-PowerTools
 ===================
@@ -34,15 +40,11 @@ Portions Copyright (c) Eric White Inc 2018-2019
 Licensed under the MIT License.
 See License in the project root for license information.
 
-News
-====
-New Release!  Version 4.6.0
-
-This version has a completely re-written WmlComparer.cs, which now supports nested tables and text boxes.  WmlComparer.cs is a module that compares two DOCX files and
-produces a DOCX with revision tracking markup.  It enables retrieving a list of revisions.
 
 Open-Xml-PowerTools Content
 ===========================
+
+Erik White put a lot of work into creating content for Powertools, and it's still the best resources around.
 
 There is a lot of content about Open-Xml-PowerTools at the [Open-Xml-PowerTools Resource Center at OpenXmlDeveloper.org](http://openxmldeveloper.org/wiki/w/wiki/powertools-for-open-xml.aspx)
 
@@ -74,6 +76,10 @@ With .NET CLI toolchain:
 
 Change Log
 ==========
+
+Version 6.0 : October 2, 2023
+- Brought in outstanding valid PRs that introduce many fixes and features. See the initial commit for details.
+- Migrated to Net 6.0
 
 Version 4.6 : November 16, 2020
 - Various small bug fixes
