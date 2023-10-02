@@ -44,7 +44,7 @@ namespace OxPt
             var rootTempDir = TestUtil.TempDir;
             var thisTestTempDir = new DirectoryInfo(Path.Combine(rootTempDir.FullName, testId));
             if (thisTestTempDir.Exists)
-                Assert.True(false, "Duplicate test id???");
+                Assert.Fail("Duplicate test id???");
             else
                 thisTestTempDir.Create();
             var source1CopiedToDestDocx = new FileInfo(Path.Combine(thisTestTempDir.FullName, source1Docx.Name));
@@ -107,7 +107,7 @@ namespace OxPt
                         }
                         var sbs = sb.ToString();
                         if (sbs != "")
-                            Assert.True(false, sbs.ToString());
+                            Assert.Fail(sbs.ToString());
                     }
                 }
             }
@@ -307,7 +307,7 @@ namespace OxPt
                         }
                         var sbs = sb.ToString();
                         if (sbs != "")
-                            Assert.True(false, sbs.ToString());
+                            Assert.Fail(sbs.ToString());
                     }
                 }
             }

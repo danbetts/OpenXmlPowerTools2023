@@ -175,11 +175,9 @@ namespace OpenXmlPowerTools
                     workbookPart.WorkbookStylesPart.PutXDocument();
                 }
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine("Unhandled exception: {0} in {1}",
-                    e.ToString(), e.Source);
-                throw e;
+                throw;
             }
         }
 
