@@ -2,6 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -492,7 +494,7 @@ namespace OpenXmlPowerTools
                                 runToReplace.ReplaceWith(newXml);
                             }
                         }
-                        var coalescedParagraph = WordprocessingMLUtil.CoalesceAdjacentRunsWithIdenticalFormatting(newPara);
+                        var coalescedParagraph = Wordprocessing.CoalesceAdjacentRunsWithIdenticalFormatting(newPara);
                         return coalescedParagraph;
                     }
                 }
@@ -578,7 +580,7 @@ namespace OpenXmlPowerTools
                                 runToReplace.ReplaceWith(newXml);
                             }
                         }
-                        var coalescedParagraph = WordprocessingMLUtil.CoalesceAdjacentRunsWithIdenticalFormatting(newPara);
+                        var coalescedParagraph = Wordprocessing.CoalesceAdjacentRunsWithIdenticalFormatting(newPara);
                         return coalescedParagraph;
                     }
                 }

@@ -9,6 +9,8 @@ using System.Text;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 
 // Insert content into a document
 // Delete content from a document

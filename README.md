@@ -151,7 +151,7 @@ Version 3.1.05 : January 29, 2015
 - Partially fixed GetListItemText_ru_RU.cs
 - Fixed GetListItemText_Default.cs
 - Added better support in ListItemRetriever.cs
-- Added FileUtils class in PtUtil.cs
+- Added FileUtils class in PtCommon.cs
 
 Version 3.1.04 : December 17, 2014
 - Added Get-DocxMetrics Cmdlet

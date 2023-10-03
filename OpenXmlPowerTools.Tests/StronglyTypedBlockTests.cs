@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Xunit;
+using OpenXmlPowerTools.Commons;
 
 #if !ELIDE_XUNIT_TESTS
 

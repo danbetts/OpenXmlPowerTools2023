@@ -8,6 +8,8 @@ using System.Text;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Drawing;
+using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Commons;
 
 namespace OpenXmlPowerTools
 {
@@ -409,7 +411,7 @@ namespace OpenXmlPowerTools
                             var hangingAtt = accumulatedParaProps.Elements(W.ind).Attributes(W.hanging).FirstOrDefault();
                             if (hangingAtt == null)
                             {
-                                var listItemRunLength = WordprocessingMLUtil.CalcWidthOfRunInTwips(listItemRun);
+                                var listItemRunLength = Wordprocessing.CalcWidthOfRunInTwips(listItemRun);
                                 var ind = accumulatedParaProps.Element(W.ind);
                                 if (ind == null)
                                 {
@@ -421,7 +423,7 @@ namespace OpenXmlPowerTools
                             else
                             {
                                 var hanging = (int)hangingAtt;
-                                var listItemRunLength = WordprocessingMLUtil.CalcWidthOfRunInTwips(listItemRun);
+                                var listItemRunLength = Wordprocessing.CalcWidthOfRunInTwips(listItemRun);
                                 hanging += listItemRunLength; // should be width of list item, in twips
                                 hangingAtt.Value = hanging.ToString();
                             }
@@ -433,7 +435,7 @@ namespace OpenXmlPowerTools
                             var hangingAtt = accumulatedParaProps.Elements(W.ind).Attributes(W.hanging).FirstOrDefault();
                             if (hangingAtt == null)
                             {
-                                var listItemRunLength = WordprocessingMLUtil.CalcWidthOfRunInTwips(listItemRun);
+                                var listItemRunLength = Wordprocessing.CalcWidthOfRunInTwips(listItemRun);
                                 var ind = accumulatedParaProps.Element(W.ind);
                                 if (ind == null)
                                 {
@@ -445,7 +447,7 @@ namespace OpenXmlPowerTools
                             else
                             {
                                 var hanging = (int)hangingAtt;
-                                var listItemRunLength = WordprocessingMLUtil.CalcWidthOfRunInTwips(listItemRun);
+                                var listItemRunLength = Wordprocessing.CalcWidthOfRunInTwips(listItemRun);
                                 hanging += (listItemRunLength / 2); // should be half of width of list item, in twips
                                 hangingAtt.Value = hanging.ToString();
                             }
@@ -666,7 +668,7 @@ namespace OpenXmlPowerTools
                 tabs = new XElement(W.tabs);
                 pPr.Add(tabs);
             }
-            var tabAtLeft = tabs.Elements(W.tab).FirstOrDefault(t => WordprocessingMLUtil.StringToTwips((string)t.Attribute(W.pos)) == left);
+            var tabAtLeft = tabs.Elements(W.tab).FirstOrDefault(t => Wordprocessing.StringToTwips((string)t.Attribute(W.pos)) == left);
             if (tabAtLeft == null)
             {
                 tabs.Add(
@@ -836,7 +838,7 @@ namespace OpenXmlPowerTools
             pxd.Root.Descendants().Where(d => d.Name.Namespace == PtOpenXml.pt).Remove();
             if (settings.OrderElementsPerStandard)
             {
-                XElement newRoot = (XElement)WordprocessingMLUtil.WmlOrderElementsPerStandard(pxd.Root);
+                XElement newRoot = (XElement)Wordprocessing.WmlOrderElementsPerStandard(pxd.Root);
                 pxd.Root.ReplaceWith(newRoot);
             }
         }
@@ -2011,7 +2013,7 @@ namespace OpenXmlPowerTools
             var hps = higherPriorityElement.Elements().Select(e =>
                 new
                 {
-                    Pos = WordprocessingMLUtil.StringToTwips((string)e.Attribute(W.pos)),
+                    Pos = Wordprocessing.StringToTwips((string)e.Attribute(W.pos)),
                     Pri = 1,
                     Element = e,
                 }
@@ -2019,7 +2021,7 @@ namespace OpenXmlPowerTools
             var lps = lowerPriorityElement.Elements().Select(e =>
                 new
                 {
-                    Pos = WordprocessingMLUtil.StringToTwips((string)e.Attribute(W.pos)),
+                    Pos = Wordprocessing.StringToTwips((string)e.Attribute(W.pos)),
                     Pri = 2,
                     Element = e,
                 }
@@ -2028,7 +2030,7 @@ namespace OpenXmlPowerTools
                 .GroupBy(s => s.Pos)
                 .Select(g => g.OrderBy(s => s.Pri).First().Element)
                 .Where(e => (string)e.Attribute(W.val) != "clear")
-                .OrderBy(e => WordprocessingMLUtil.StringToTwips((string)e.Attribute(W.pos)));
+                .OrderBy(e => Wordprocessing.StringToTwips((string)e.Attribute(W.pos)));
             var newTabs = new XElement(W.tabs, newTabElements);
             return newTabs;
         }

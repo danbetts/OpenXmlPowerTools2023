@@ -14,6 +14,8 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 using Xunit;
 
 #if !ELIDE_XUNIT_TESTS
@@ -854,8 +856,7 @@ namespace OxPt
             // Use DocumentBuilder to build the destination document
 
             var outFi = new FileInfo(Path.Combine(tempDirFullName, "Output.docx"));
-            DocumentBuilderSettings settings = new DocumentBuilderSettings();
-            DocumentBuilder.BuildDocument(sources, outFi.FullName, settings);
+            DocumentBuilder.BuildDocument(sources, outFi.FullName);
             Validate(outFi);
         }
 

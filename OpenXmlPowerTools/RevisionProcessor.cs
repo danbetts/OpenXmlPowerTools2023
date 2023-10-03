@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 
 namespace OpenXmlPowerTools
 {
@@ -2819,18 +2821,6 @@ namespace OpenXmlPowerTools
                 if (PartHasTrackedRevisions(doc.MainDocumentPart.FootnotesPart))
                     return true;
             return false;
-        }
-    }
-
-    public partial class WmlDocument : OpenXmlPowerToolsDocument
-    {
-        public WmlDocument AcceptRevisions(WmlDocument document)
-        {
-            return RevisionAccepter.AcceptRevisions(document);
-        }
-        public bool HasTrackedRevisions(WmlDocument document)
-        {
-            return RevisionAccepter.HasTrackedRevisions(document);
         }
     }
 

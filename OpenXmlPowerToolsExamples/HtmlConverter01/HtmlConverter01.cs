@@ -34,6 +34,7 @@ using System.Text;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
 
 class HtmlConverterHelper
 {
@@ -138,7 +139,7 @@ class HtmlConverterHelper
                         string imageSource = localDirInfo.Name + "/image" +
                             imageCounter.ToString() + "." + extension;
 
-                        XElement img = new XElement(Xhtml.img,
+                        XElement img = new XElement(XHtml.img,
                             new XAttribute(NoNamespace.src, imageSource),
                             imageInfo.ImgStyleAttribute,
                             imageInfo.AltText != null ?
@@ -155,7 +156,7 @@ class HtmlConverterHelper
                     htmlElement);
 
                 // Note: the xhtml returned by ConvertToHtmlTransform contains objects of type
-                // XEntity.  PtOpenXmlUtil.cs define the XEntity class.  See
+                // XEntity.  PtOpenXmlCommon.cs define the XEntity class.  See
                 // http://blogs.msdn.com/ericwhite/archive/2010/01/21/writing-entity-references-using-linq-to-xml.aspx
                 // for detailed explanation.
                 //

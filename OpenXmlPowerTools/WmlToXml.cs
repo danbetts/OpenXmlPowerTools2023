@@ -18,6 +18,8 @@ using System.IO;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Drawing;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 
 namespace OpenXmlPowerTools
 {
@@ -1549,7 +1551,7 @@ namespace OpenXmlPowerTools
                         newComments = mainPart.WordprocessingCommentsPart.GetXDocument();
                         newComments.Declaration.Standalone = "yes";
                         newComments.Declaration.Encoding = "UTF-8";
-                        newComments.Add(new XElement(W.comments, NamespaceAttributes));
+                        newComments.Add(new XElement(W.comments, Constants.NamespaceAttributes));
                         commentNumber = 1;
                     }
 #if false
@@ -1731,7 +1733,7 @@ namespace OpenXmlPowerTools
                         newComments = mainPart.WordprocessingCommentsPart.GetXDocument();
                         newComments.Declaration.Standalone = "yes";
                         newComments.Declaration.Encoding = "UTF-8";
-                        newComments.Add(new XElement(W.comments, NamespaceAttributes));
+                        newComments.Add(new XElement(W.comments, Constants.NamespaceAttributes));
                         commentNumber = 1;
                     }
                     XElement newElement = new XElement(W.comment,

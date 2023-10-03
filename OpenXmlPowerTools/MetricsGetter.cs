@@ -12,6 +12,11 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
 using System.Globalization;
+using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Spreadsheets;
+using OpenXmlPowerTools.Presentations;
+using OpenXmlPowerTools.Commons;
+using static OpenXmlPowerTools.Commons.Common;
 
 namespace OpenXmlPowerTools
 {
@@ -36,17 +41,17 @@ namespace OpenXmlPowerTools
             FileInfo fi = new FileInfo(fileName);
             if (!fi.Exists)
                 throw new FileNotFoundException("{0} does not exist.", fi.FullName);
-            if (Util.IsWordprocessingML(fi.Extension))
+            if (Wordprocessing.IsWordprocessing(fi.Extension))
             {
                 WmlDocument wmlDoc = new WmlDocument(fi.FullName, true);
                 return GetDocxMetrics(wmlDoc, settings);
             }
-            if (Util.IsSpreadsheetML(fi.Extension))
+            if (Spreadsheet.IsSpreadsheet(fi.Extension))
             {
                 SmlDocument smlDoc = new SmlDocument(fi.FullName, true);
                 return GetXlsxMetrics(smlDoc, settings);
             }
-            if (Util.IsPresentationML(fi.Extension))
+            if (Presentation.IsPresentation(fi.Extension))
             {
                 PmlDocument pmlDoc = new PmlDocument(fi.FullName, true);
                 return GetPptxMetrics(pmlDoc, settings);
@@ -80,9 +85,6 @@ namespace OpenXmlPowerTools
                     using (MemoryStream ms = new MemoryStream())
                     {
                         ms.Write(wmlDoc.DocumentByteArray, 0, wmlDoc.DocumentByteArray.Length);
-#if !NET35
-                        UriFixer.FixInvalidUri(ms, brokenUri => FixUri(brokenUri));
-#endif
                         wmlDoc = new WmlDocument("dummy.docx", ms.ToArray());
                     }
                     using (MemoryStream ms = new MemoryStream())

@@ -14,6 +14,7 @@ Email: thomas@barnekow.info
 
 ***************************************************************************/
 
+using OpenXmlPowerTools.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -295,7 +296,7 @@ namespace OpenXmlPowerTools
         {
             var run = new XElement(W.r,
                 runProperties,
-                new XElement(W.t, XmlUtil.GetXmlSpaceAttribute(textValue), textValue));
+                new XElement(W.t, Common.GetXmlSpaceAttribute(textValue), textValue));
             return new List<XElement> { run };
         }
 
@@ -355,7 +356,7 @@ namespace OpenXmlPowerTools
                 return UnicodeCharToSymDictionary[character];
 
             // Turn "normal" characters into text elements.
-            return new XElement(W.t, XmlUtil.GetXmlSpaceAttribute(character), character);
+            return new XElement(W.t, Common.GetXmlSpaceAttribute(character), character);
         }
     }
 }

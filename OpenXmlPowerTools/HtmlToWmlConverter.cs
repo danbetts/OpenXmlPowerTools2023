@@ -8,6 +8,8 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools.HtmlToWml;
 using System.Text.RegularExpressions;
+using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Commons;
 
 namespace OpenXmlPowerTools
 {

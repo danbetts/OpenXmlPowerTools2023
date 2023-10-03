@@ -11,24 +11,11 @@ using System.Text;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.IO;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Spreadsheets;
 
 namespace OpenXmlPowerTools
 {
-    public partial class SmlDocument
-    {
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public XElement ConvertToHtml(SmlToHtmlConverterSettings htmlConverterSettings, string tableName)
-        {
-            return SmlToHtmlConverter.ConvertTableToHtml(this, htmlConverterSettings, tableName);
-        }
-
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public XElement ConvertTableToHtml(string tableName)
-        {
-            SmlToHtmlConverterSettings settings = new SmlToHtmlConverterSettings();
-            return SmlToHtmlConverter.ConvertTableToHtml(this, settings, tableName);
-        }
-    }
 
     [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
     public class SmlToHtmlConverterSettings
@@ -92,7 +79,7 @@ namespace OpenXmlPowerTools
             ReifyStylesAndClasses(htmlConverterSettings, xhtml);
 
             // Note: the xhtml returned by ConvertToHtmlTransform contains objects of type
-            // XEntity.  PtOpenXmlUtil.cs define the XEntity class.  See
+            // XEntity.  PtOpenXmlCommon.cs define the XEntity class.  See
             // http://blogs.msdn.com/ericwhite/archive/2010/01/21/writing-entity-references-using-linq-to-xml.aspx
             // for detailed explanation.
             //
@@ -206,14 +193,14 @@ namespace OpenXmlPowerTools
         private static void SetStyleElementValue(XElement xhtml, string styleValue)
         {
             var styleElement = xhtml
-                .Descendants(Xhtml.style)
+                .Descendants(XHtml.style)
                 .FirstOrDefault();
             if (styleElement != null)
                 styleElement.Value = styleValue;
             else
             {
-                styleElement = new XElement(Xhtml.style, styleValue);
-                var head = xhtml.Element(Xhtml.head);
+                styleElement = new XElement(XHtml.style, styleValue);
+                var head = xhtml.Element(XHtml.head);
                 if (head != null)
                     head.Add(styleElement);
             }

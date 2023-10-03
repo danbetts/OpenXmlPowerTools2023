@@ -11,6 +11,8 @@ using System.IO;
 using System.Timers;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Spreadsheets;
 
 namespace ExamplePivotTables
 {

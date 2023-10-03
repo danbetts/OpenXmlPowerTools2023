@@ -110,6 +110,8 @@ using OpenXmlPowerTools;
 using OpenXmlPowerTools.HtmlToWml;
 using OpenXmlPowerTools.HtmlToWml.CSS;
 using System.Text.RegularExpressions;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 
 namespace OpenXmlPowerTools.HtmlToWml
 {
@@ -218,19 +220,19 @@ namespace OpenXmlPowerTools.HtmlToWml
             while (true)
             {
                 var rowSpanCell = html
-                    .Descendants(XhtmlNoNamespace.td)
-                    .FirstOrDefault(td => td.Attribute(XhtmlNoNamespace.rowspan) != null && td.Attribute("HtmlToWmlVMergeRestart") == null);
+                    .Descendants(XHtmlNoNamespace.td)
+                    .FirstOrDefault(td => td.Attribute(XHtmlNoNamespace.rowspan) != null && td.Attribute("HtmlToWmlVMergeRestart") == null);
                 if (rowSpanCell == null)
                     break;
                 rowSpanCell.Add(
                     new XAttribute("HtmlToWmlVMergeRestart", "true"));
-                int colNumber = rowSpanCell.ElementsBeforeSelf(XhtmlNoNamespace.td).Count();
-                int numberPseudoToAdd = (int)rowSpanCell.Attribute(XhtmlNoNamespace.rowspan) - 1;
-                var tr = rowSpanCell.Ancestors(XhtmlNoNamespace.tr).FirstOrDefault();
+                int colNumber = rowSpanCell.ElementsBeforeSelf(XHtmlNoNamespace.td).Count();
+                int numberPseudoToAdd = (int)rowSpanCell.Attribute(XHtmlNoNamespace.rowspan) - 1;
+                var tr = rowSpanCell.Ancestors(XHtmlNoNamespace.tr).FirstOrDefault();
                 if (tr == null)
                     throw new OpenXmlPowerToolsException("Invalid HTML - td does not have parent tr");
                 var rowsToAddTo = tr
-                    .ElementsAfterSelf(XhtmlNoNamespace.tr)
+                    .ElementsAfterSelf(XHtmlNoNamespace.tr)
                     .Take(numberPseudoToAdd)
                     .ToList();
                 foreach (var rowToAddTo in rowsToAddTo)
@@ -238,10 +240,10 @@ namespace OpenXmlPowerTools.HtmlToWml
                     if (colNumber > 0)
                     {
                         var tdToAddAfter = rowToAddTo
-                            .Elements(XhtmlNoNamespace.td)
+                            .Elements(XHtmlNoNamespace.td)
                             .Skip(colNumber - 1)
                             .FirstOrDefault();
-                        var td = new XElement(XhtmlNoNamespace.td,
+                        var td = new XElement(XHtmlNoNamespace.td,
                             rowSpanCell.Attributes(),
                             new XAttribute("HtmlToWmlVMergeNoRestart", "true"));
                         tdToAddAfter.AddAfterSelf(td);
@@ -249,10 +251,10 @@ namespace OpenXmlPowerTools.HtmlToWml
                     else
                     {
                         var tdToAddBefore = rowToAddTo
-                            .Elements(XhtmlNoNamespace.td)
+                            .Elements(XHtmlNoNamespace.td)
                             .Skip(colNumber)
                             .FirstOrDefault();
-                        var td = new XElement(XhtmlNoNamespace.td,
+                        var td = new XElement(XHtmlNoNamespace.td,
                             rowSpanCell.Attributes(),
                             new XAttribute("HtmlToWmlVMergeNoRestart", "true"));
                         tdToAddBefore.AddBeforeSelf(td);
@@ -273,9 +275,9 @@ namespace OpenXmlPowerTools.HtmlToWml
         {
             int numId;
             NumberingUpdater.GetNextNumId(wDoc, out numId);
-            foreach (var item in html.DescendantsAndSelf().Where(d => d.Name == XhtmlNoNamespace.ol || d.Name == XhtmlNoNamespace.ul))
+            foreach (var item in html.DescendantsAndSelf().Where(d => d.Name == XHtmlNoNamespace.ol || d.Name == XHtmlNoNamespace.ul))
             {
-                XElement parentOlUl = item.Ancestors().Where(a => a.Name == XhtmlNoNamespace.ol || a.Name == XhtmlNoNamespace.ul).LastOrDefault();
+                XElement parentOlUl = item.Ancestors().Where(a => a.Name == XHtmlNoNamespace.ol || a.Name == XHtmlNoNamespace.ul).LastOrDefault();
                 int numIdToUse;
                 if (parentOlUl != null)
                     numIdToUse = parentOlUl.Annotation<NumberedItemAnnotation>().numId;
@@ -285,7 +287,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                 item.AddAnnotation(new NumberedItemAnnotation
                 {
                     numId = numIdToUse,
-                    ilvl = item.Ancestors().Where(a => a.Name == XhtmlNoNamespace.ol || a.Name == XhtmlNoNamespace.ul).Count(),
+                    ilvl = item.Ancestors().Where(a => a.Name == XHtmlNoNamespace.ol || a.Name == XHtmlNoNamespace.ul).Count(),
                     listStyleType = lst,
                 });
             }
@@ -329,16 +331,16 @@ namespace OpenXmlPowerTools.HtmlToWml
             XElement element = node as XElement;
             if (element != null)
             {
-                if (element.Name == XhtmlNoNamespace.pre)
+                if (element.Name == XHtmlNoNamespace.pre)
                 {
                     return new XElement(element.Name,
                         element.Attributes(),
                         element.Nodes().Select(n => TransformWhiteSpaceInPreCodeTtKbdSamp(n, true, false)));
                 }
-                if (element.Name == XhtmlNoNamespace.code ||
-                    element.Name == XhtmlNoNamespace.tt ||
-                    element.Name == XhtmlNoNamespace.kbd ||
-                    element.Name == XhtmlNoNamespace.samp)
+                if (element.Name == XHtmlNoNamespace.code ||
+                    element.Name == XHtmlNoNamespace.tt ||
+                    element.Name == XHtmlNoNamespace.kbd ||
+                    element.Name == XHtmlNoNamespace.samp)
                 {
                     return new XElement(element.Name,
                         element.Attributes(),
@@ -356,7 +358,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                 var newNodes = groupedCharacters.Select(g =>
                 {
                     if (g.Key == true)
-                        return (object)(new XElement(XhtmlNoNamespace.br));
+                        return (object)(new XElement(XHtmlNoNamespace.br));
                     string x = g.Select(c => c.ToString()).StringConcatenate();
                     return new XText(x);
                 });
@@ -779,7 +781,7 @@ namespace OpenXmlPowerTools.HtmlToWml
             XElement element = node as XElement;
             if (element != null)
             {
-                if (element.Name == XhtmlNoNamespace.a)
+                if (element.Name == XHtmlNoNamespace.a)
                 {
                     string rId = "R" + Guid.NewGuid().ToString().Replace("-", "");
                     string href = (string)element.Attribute(NoNamespace.href);
@@ -802,7 +804,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                         if (uri != null)
                         {
                             wDoc.MainDocumentPart.AddHyperlinkRelationship(uri, true, rId);
-                            if (element.Element(XhtmlNoNamespace.img) != null)
+                            if (element.Element(XHtmlNoNamespace.img) != null)
                             {
                                 var imageTransformed = element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace)).OfType<XElement>();
                                 var newImageTransformed = imageTransformed
@@ -839,13 +841,13 @@ namespace OpenXmlPowerTools.HtmlToWml
                     return null;
                 }
 
-                if (element.Name == XhtmlNoNamespace.b)
+                if (element.Name == XHtmlNoNamespace.b)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.body)
+                if (element.Name == XHtmlNoNamespace.body)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.caption)
+                if (element.Name == XHtmlNoNamespace.caption)
                 {
                     return new XElement(W.tr,
                         GetTableRowProperties(element),
@@ -854,14 +856,14 @@ namespace OpenXmlPowerTools.HtmlToWml
                             element.Nodes().Select(n => Transform(n, settings, wDoc, NextExpected.Paragraph, preserveWhiteSpace))));
                 }
 
-                if (element.Name == XhtmlNoNamespace.div)
+                if (element.Name == XHtmlNoNamespace.div)
                 {
                     if (nextExpected == NextExpected.Paragraph)
                     {
-                        if (element.Descendants().Any(d => d.Name == XhtmlNoNamespace.h1 ||
-                            d.Name == XhtmlNoNamespace.li ||
-                            d.Name == XhtmlNoNamespace.p ||
-                            d.Name == XhtmlNoNamespace.table))
+                        if (element.Descendants().Any(d => d.Name == XHtmlNoNamespace.h1 ||
+                            d.Name == XHtmlNoNamespace.li ||
+                            d.Name == XHtmlNoNamespace.p ||
+                            d.Name == XHtmlNoNamespace.table))
                         {
                             return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
                         }
@@ -876,7 +878,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                     }
                 }
 
-                if (element.Name == XhtmlNoNamespace.em)
+                if (element.Name == XHtmlNoNamespace.em)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, NextExpected.Run, preserveWhiteSpace));
 
                 HeadingInfo hi = HeadingTagMap.FirstOrDefault(htm => htm.Name == element.Name);
@@ -885,7 +887,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                     return GenerateNextExpected(element, settings, wDoc, hi.StyleName, NextExpected.Paragraph, false);
                 }
 
-                if (element.Name == XhtmlNoNamespace.hr)
+                if (element.Name == XHtmlNoNamespace.hr)
                 {
                     int i = GetNextRectId();
                     XElement hr = XElement.Parse(
@@ -909,18 +911,18 @@ namespace OpenXmlPowerTools.HtmlToWml
                     return hr;
                 }
 
-                if (element.Name == XhtmlNoNamespace.html)
+                if (element.Name == XHtmlNoNamespace.html)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, NextExpected.Paragraph, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.i)
+                if (element.Name == XHtmlNoNamespace.i)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.blockquote)
+                if (element.Name == XHtmlNoNamespace.blockquote)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.img)
+                if (element.Name == XHtmlNoNamespace.img)
                 {
-                    if (element.Parent.Name == XhtmlNoNamespace.body)
+                    if (element.Parent.Name == XHtmlNoNamespace.body)
                     {
                         XElement para = new XElement(W.p,
                             GetParagraphPropertiesForImage(),
@@ -934,25 +936,25 @@ namespace OpenXmlPowerTools.HtmlToWml
                     }
                 }
 
-                if (element.Name == XhtmlNoNamespace.li)
+                if (element.Name == XHtmlNoNamespace.li)
                 {
                     return GenerateNextExpected(element, settings, wDoc, null, NextExpected.Paragraph, false);
                 }
 
-                if (element.Name == XhtmlNoNamespace.ol)
+                if (element.Name == XHtmlNoNamespace.ol)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, NextExpected.Paragraph, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.p)
+                if (element.Name == XHtmlNoNamespace.p)
                 {
                     return GenerateNextExpected(element, settings, wDoc, null, NextExpected.Paragraph, false);
                 }
 
-                if (element.Name == XhtmlNoNamespace.s)
+                if (element.Name == XHtmlNoNamespace.s)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
                 /****************************************** SharePoint Specific ********************************************/
                 // todo sharepoint specific
-                //if (element.Name == Xhtml.div && (string)element.Attribute(Xhtml._class) == "ms-rteElement-Callout1")
+                //if (element.Name == XHtml.div && (string)element.Attribute(XHtml._class) == "ms-rteElement-Callout1")
                 //{
                 //    return new XElement(W.p,
                 //        // todo need a style for class
@@ -962,11 +964,11 @@ namespace OpenXmlPowerTools.HtmlToWml
                 //        new XElement(W.r,
                 //            new XElement(W.t, element.Value)));
                 //}
-                if (element.Name == XhtmlNoNamespace.span && (string)element.Attribute(XhtmlNoNamespace.id) == "layoutsData")
+                if (element.Name == XHtmlNoNamespace.span && (string)element.Attribute(XHtmlNoNamespace.id) == "layoutsData")
                     return null;
                 /****************************************** End SharePoint Specific ********************************************/
 
-                if (element.Name == XhtmlNoNamespace.span)
+                if (element.Name == XHtmlNoNamespace.span)
                 {
                     var spanReplacement = element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
                     var dummyElement = new XElement("dummy", spanReplacement);
@@ -1006,19 +1008,19 @@ namespace OpenXmlPowerTools.HtmlToWml
                     return spanReplacement;
                 }
 
-                if (element.Name == XhtmlNoNamespace.strong)
+                if (element.Name == XHtmlNoNamespace.strong)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.style)
+                if (element.Name == XHtmlNoNamespace.style)
                     return null;
 
-                if (element.Name == XhtmlNoNamespace.sub)
+                if (element.Name == XHtmlNoNamespace.sub)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.sup)
+                if (element.Name == XHtmlNoNamespace.sup)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.table)
+                if (element.Name == XHtmlNoNamespace.table)
                 {
                     XElement wmlTable = new XElement(W.tbl,
                         GetTableProperties(element),
@@ -1027,13 +1029,13 @@ namespace OpenXmlPowerTools.HtmlToWml
                     return wmlTable;
                 }
 
-                if (element.Name == XhtmlNoNamespace.tbody)
+                if (element.Name == XHtmlNoNamespace.tbody)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, NextExpected.Paragraph, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.td)
+                if (element.Name == XHtmlNoNamespace.td)
                 {
                     var tdText = element.DescendantNodes().OfType<XText>().Select(t => t.Value).StringConcatenate().Trim();
-                    var hasOtherThanSpansAndParas = element.Descendants().Any(d => d.Name != XhtmlNoNamespace.span && d.Name != XhtmlNoNamespace.p);
+                    var hasOtherThanSpansAndParas = element.Descendants().Any(d => d.Name != XHtmlNoNamespace.span && d.Name != XHtmlNoNamespace.p);
                     if (tdText != "" || hasOtherThanSpansAndParas)
                     {
                         var newElementRaw = new XElement("dummy", element.Nodes().Select(n => Transform(n, settings, wDoc, NextExpected.Paragraph, preserveWhiteSpace)));
@@ -1064,27 +1066,27 @@ namespace OpenXmlPowerTools.HtmlToWml
                     }
                 }
 
-                if (element.Name == XhtmlNoNamespace.th)
+                if (element.Name == XHtmlNoNamespace.th)
                 {
                     return new XElement(W.tc,
                         GetCellHeaderProperties(element),
                         element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace)));
                 }
 
-                if (element.Name == XhtmlNoNamespace.tr)
+                if (element.Name == XHtmlNoNamespace.tr)
                 {
                     return new XElement(W.tr,
                         GetTableRowProperties(element),
                         element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace)));
                 }
 
-                if (element.Name == XhtmlNoNamespace.u)
+                if (element.Name == XHtmlNoNamespace.u)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.ul)
+                if (element.Name == XHtmlNoNamespace.ul)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.br)
+                if (element.Name == XHtmlNoNamespace.br)
                     if (nextExpected == NextExpected.Paragraph)
                     {
                         return new XElement(W.p,
@@ -1096,17 +1098,17 @@ namespace OpenXmlPowerTools.HtmlToWml
                         return new XElement(W.r, new XElement(W.br));
                     }
 
-                if (element.Name == XhtmlNoNamespace.tt || element.Name == XhtmlNoNamespace.code || element.Name == XhtmlNoNamespace.kbd || element.Name == XhtmlNoNamespace.samp)
+                if (element.Name == XHtmlNoNamespace.tt || element.Name == XHtmlNoNamespace.code || element.Name == XHtmlNoNamespace.kbd || element.Name == XHtmlNoNamespace.samp)
                     return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
 
-                if (element.Name == XhtmlNoNamespace.pre)
+                if (element.Name == XHtmlNoNamespace.pre)
                     return GenerateNextExpected(element, settings, wDoc, null, NextExpected.Paragraph, true);
 
                 // if no match up to this point, then just recursively process descendants
                 return element.Nodes().Select(n => Transform(n, settings, wDoc, nextExpected, preserveWhiteSpace));
             }
 
-            if (node.Parent.Name != XhtmlNoNamespace.title)
+            if (node.Parent.Name != XHtmlNoNamespace.title)
                 return GenerateNextExpected(node, settings, wDoc, null, nextExpected, preserveWhiteSpace);
 
             return null;
@@ -1180,9 +1182,9 @@ namespace OpenXmlPowerTools.HtmlToWml
             }
 
             var fs = FontStyle.Regular;
-            if (Util.GetBoolProp(rPr, W.b) == true || Util.GetBoolProp(rPr, W.bCs) == true)
+            if (Common.GetBoolProp(rPr, W.b) == true || Common.GetBoolProp(rPr, W.bCs) == true)
                 fs |= FontStyle.Bold;
-            if (Util.GetBoolProp(rPr, W.i) == true || Util.GetBoolProp(rPr, W.iCs) == true)
+            if (Common.GetBoolProp(rPr, W.i) == true || Common.GetBoolProp(rPr, W.iCs) == true)
                 fs |= FontStyle.Italic;
 
             // Appended blank as a quick fix to accommodate &nbsp; that will get
@@ -1264,7 +1266,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                     return;
                 foreach (XName xn in TogglePropertyNames)
                 {
-                    ToggleProperties[xn] = Util.GetBoolProp(rPr, xn);
+                    ToggleProperties[xn] = Common.GetBoolProp(rPr, xn);
                 }
                 foreach (XName xn in PropertyNames)
                 {
@@ -2285,7 +2287,7 @@ namespace OpenXmlPowerTools.HtmlToWml
 
         private static XElement TransformImageToWml(XElement element, HtmlToWmlConverterSettings settings, WordprocessingDocument wDoc)
         {
-            string srcAttribute = (string)element.Attribute(XhtmlNoNamespace.src);
+            string srcAttribute = (string)element.Attribute(XHtmlNoNamespace.src);
             byte[] ba = null;
             Bitmap bmp = null;
 
@@ -2769,21 +2771,21 @@ namespace OpenXmlPowerTools.HtmlToWml
             if (rightPaddingProperty != null)
                 rightIndent += (Twip)rightPaddingProperty;
 
-            if (paragraph.Name == XhtmlNoNamespace.li)
+            if (paragraph.Name == XHtmlNoNamespace.li)
             {
                 leftIndent += 180;
                 rightIndent += 180;
             }
             XElement listElement = null;
             NumberedItemAnnotation numberedItemAnnotation = null;
-            listElement = paragraph.Ancestors().FirstOrDefault(a => a.Name == XhtmlNoNamespace.ol || a.Name == XhtmlNoNamespace.ul);
+            listElement = paragraph.Ancestors().FirstOrDefault(a => a.Name == XHtmlNoNamespace.ol || a.Name == XHtmlNoNamespace.ul);
             if (listElement != null)
             {
                 numberedItemAnnotation = listElement.Annotation<NumberedItemAnnotation>();
                 leftIndent += 600 * (numberedItemAnnotation.ilvl + 1);
             }
 
-            int blockQuoteCount = paragraph.Ancestors(XhtmlNoNamespace.blockquote).Count();
+            int blockQuoteCount = paragraph.Ancestors(XHtmlNoNamespace.blockquote).Count();
             leftIndent += blockQuoteCount * 720;
             if (blockQuoteCount == 0)
             {
@@ -2824,7 +2826,7 @@ namespace OpenXmlPowerTools.HtmlToWml
             long? before = null;
             long? after = null;
 
-            if (paragraph.Name == XhtmlNoNamespace.td || paragraph.Name == XhtmlNoNamespace.th || paragraph.Name == XhtmlNoNamespace.caption)
+            if (paragraph.Name == XHtmlNoNamespace.td || paragraph.Name == XHtmlNoNamespace.th || paragraph.Name == XHtmlNoNamespace.caption)
             {
                 line = (long)settings.DefaultSpacingElementForParagraphsInTables.Attribute(W.line);
                 lineRule = (string)settings.DefaultSpacingElementForParagraphsInTables.Attribute(W.lineRule);
@@ -2835,7 +2837,7 @@ namespace OpenXmlPowerTools.HtmlToWml
             }
 
             // todo should check based on display property
-            bool numItem = paragraph.Name == XhtmlNoNamespace.li;
+            bool numItem = paragraph.Name == XHtmlNoNamespace.li;
 
             if (numItem && marginTopProperty?.IsAuto == true)
                 beforeAutospacing = "1";
@@ -2870,17 +2872,17 @@ namespace OpenXmlPowerTools.HtmlToWml
             // contextualSpacing
 
             XElement contextualSpacing = null;
-            if (paragraph.Name == XhtmlNoNamespace.li)
+            if (paragraph.Name == XHtmlNoNamespace.li)
             {
                 NumberedItemAnnotation thisNumberedItemAnnotation = null;
-                XElement listElement2 = paragraph.Ancestors().FirstOrDefault(a => a.Name == XhtmlNoNamespace.ol || a.Name == XhtmlNoNamespace.ul);
+                XElement listElement2 = paragraph.Ancestors().FirstOrDefault(a => a.Name == XHtmlNoNamespace.ol || a.Name == XHtmlNoNamespace.ul);
                 if (listElement2 != null)
                 {
                     thisNumberedItemAnnotation = listElement2.Annotation<NumberedItemAnnotation>();
                     XElement next = paragraph.ElementsAfterSelf().FirstOrDefault();
-                    if (next != null && next.Name == XhtmlNoNamespace.li)
+                    if (next != null && next.Name == XHtmlNoNamespace.li)
                     {
-                        XElement nextListElement = next.Ancestors().FirstOrDefault(a => a.Name == XhtmlNoNamespace.ol || a.Name == XhtmlNoNamespace.ul);
+                        XElement nextListElement = next.Ancestors().FirstOrDefault(a => a.Name == XHtmlNoNamespace.ol || a.Name == XHtmlNoNamespace.ul);
                         NumberedItemAnnotation nextNumberedItemAnnotation = nextListElement.Annotation<NumberedItemAnnotation>();
                         if (nextNumberedItemAnnotation != null && thisNumberedItemAnnotation.numId == nextNumberedItemAnnotation.numId)
                             contextualSpacing = new XElement(W.contextualSpacing);
@@ -2920,16 +2922,16 @@ namespace OpenXmlPowerTools.HtmlToWml
             string letterSpacingString = letterSpacingProperty.ToString().ToLower();
             string directionString = directionProp.ToString().ToLower();
 
-            bool subAncestor = element.AncestorsAndSelf(XhtmlNoNamespace.sub).Any();
-            bool supAncestor = element.AncestorsAndSelf(XhtmlNoNamespace.sup).Any();
-            bool bAncestor = element.AncestorsAndSelf(XhtmlNoNamespace.b).Any();
-            bool iAncestor = element.AncestorsAndSelf(XhtmlNoNamespace.i).Any();
-            bool strongAncestor = element.AncestorsAndSelf(XhtmlNoNamespace.strong).Any();
-            bool emAncestor = element.AncestorsAndSelf(XhtmlNoNamespace.em).Any();
-            bool uAncestor = element.AncestorsAndSelf(XhtmlNoNamespace.u).Any();
-            bool sAncestor = element.AncestorsAndSelf(XhtmlNoNamespace.s).Any();
+            bool subAncestor = element.AncestorsAndSelf(XHtmlNoNamespace.sub).Any();
+            bool supAncestor = element.AncestorsAndSelf(XHtmlNoNamespace.sup).Any();
+            bool bAncestor = element.AncestorsAndSelf(XHtmlNoNamespace.b).Any();
+            bool iAncestor = element.AncestorsAndSelf(XHtmlNoNamespace.i).Any();
+            bool strongAncestor = element.AncestorsAndSelf(XHtmlNoNamespace.strong).Any();
+            bool emAncestor = element.AncestorsAndSelf(XHtmlNoNamespace.em).Any();
+            bool uAncestor = element.AncestorsAndSelf(XHtmlNoNamespace.u).Any();
+            bool sAncestor = element.AncestorsAndSelf(XHtmlNoNamespace.s).Any();
 
-            XAttribute dirAttribute = element.Attribute(XhtmlNoNamespace.dir);
+            XAttribute dirAttribute = element.Attribute(XHtmlNoNamespace.dir);
             string dirAttributeString = "";
             if (dirAttribute != null)
                 dirAttributeString = dirAttribute.Value.ToLower();
@@ -2993,7 +2995,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                 underline = new XElement(W.u, new XAttribute(W.val, "single"));
 
             XElement rStyle = null;
-            if (element.Name == XhtmlNoNamespace.a)
+            if (element.Name == XHtmlNoNamespace.a)
                 rStyle = new XElement(W.rStyle,
                     new XAttribute(W.val, "Hyperlink"));
 
@@ -3036,8 +3038,8 @@ namespace OpenXmlPowerTools.HtmlToWml
         private static string GetDisplayText(XText node, bool preserveWhiteSpace)
         {
             string textTransform = node.Parent.GetProp("text-transform").ToString();
-            bool isFirst = node.Parent.Name == XhtmlNoNamespace.p && node == node.Parent.FirstNode;
-            bool isLast = node.Parent.Name == XhtmlNoNamespace.p && node == node.Parent.LastNode;
+            bool isFirst = node.Parent.Name == XHtmlNoNamespace.p && node == node.Parent.FirstNode;
+            bool isLast = node.Parent.Name == XHtmlNoNamespace.p && node == node.Parent.LastNode;
 
             IEnumerable<IGrouping<bool, char>> groupedCharacters = null;
             if (preserveWhiteSpace)
@@ -3073,13 +3075,13 @@ namespace OpenXmlPowerTools.HtmlToWml
         {
             // Numbering properties ******************************************************
             NumberedItemAnnotation numberedItemAnnotation = null;
-            XElement listElement = paragraph.Ancestors().FirstOrDefault(a => a.Name == XhtmlNoNamespace.ol || a.Name == XhtmlNoNamespace.ul);
+            XElement listElement = paragraph.Ancestors().FirstOrDefault(a => a.Name == XHtmlNoNamespace.ol || a.Name == XHtmlNoNamespace.ul);
             if (listElement != null)
             {
                 numberedItemAnnotation = listElement.Annotation<NumberedItemAnnotation>();
             }
             XElement numPr = null;
-            if (paragraph.Name == XhtmlNoNamespace.li)
+            if (paragraph.Name == XHtmlNoNamespace.li)
                 numPr = new XElement(W.numPr,
                     new XElement(W.ilvl, new XAttribute(W.val, numberedItemAnnotation.ilvl)),
                     new XElement(W.numId, new XAttribute(W.val, numberedItemAnnotation.numId)));
@@ -3091,7 +3093,7 @@ namespace OpenXmlPowerTools.HtmlToWml
             // Justify ******************************************************
             CssExpression textAlignProperty = blockLevelElement.GetProp("text-align");
             string textAlign;
-            if (blockLevelElement.Name == XhtmlNoNamespace.caption || blockLevelElement.Name == XhtmlNoNamespace.th)
+            if (blockLevelElement.Name == XHtmlNoNamespace.caption || blockLevelElement.Name == XHtmlNoNamespace.th)
                 textAlign = "center";
             else
                 textAlign = "left";
@@ -3132,20 +3134,20 @@ namespace OpenXmlPowerTools.HtmlToWml
 
         private static HeadingInfo[] HeadingTagMap = new[]
             {
-                new HeadingInfo { Name = XhtmlNoNamespace.h1, StyleName = "Heading1" },
-                new HeadingInfo { Name = XhtmlNoNamespace.h2, StyleName = "Heading2" },
-                new HeadingInfo { Name = XhtmlNoNamespace.h3, StyleName = "Heading3" },
-                new HeadingInfo { Name = XhtmlNoNamespace.h4, StyleName = "Heading4" },
-                new HeadingInfo { Name = XhtmlNoNamespace.h5, StyleName = "Heading5" },
-                new HeadingInfo { Name = XhtmlNoNamespace.h6, StyleName = "Heading6" },
-                new HeadingInfo { Name = XhtmlNoNamespace.h7, StyleName = "Heading7" },
-                new HeadingInfo { Name = XhtmlNoNamespace.h8, StyleName = "Heading8" },
+                new HeadingInfo { Name = XHtmlNoNamespace.h1, StyleName = "Heading1" },
+                new HeadingInfo { Name = XHtmlNoNamespace.h2, StyleName = "Heading2" },
+                new HeadingInfo { Name = XHtmlNoNamespace.h3, StyleName = "Heading3" },
+                new HeadingInfo { Name = XHtmlNoNamespace.h4, StyleName = "Heading4" },
+                new HeadingInfo { Name = XHtmlNoNamespace.h5, StyleName = "Heading5" },
+                new HeadingInfo { Name = XHtmlNoNamespace.h6, StyleName = "Heading6" },
+                new HeadingInfo { Name = XHtmlNoNamespace.h7, StyleName = "Heading7" },
+                new HeadingInfo { Name = XHtmlNoNamespace.h8, StyleName = "Heading8" },
             };
 
         private static string GetDirection(XElement element)
         {
             string retValue = "ltr";
-            string dirString = (string)element.Attribute(XhtmlNoNamespace.dir);
+            string dirString = (string)element.Attribute(XHtmlNoNamespace.dir);
             if (dirString != null && dirString.ToLower() == "rtl")
                 retValue = "rtl";
             CssExpression directionProp = element.GetProp("direction");
@@ -3221,7 +3223,7 @@ namespace OpenXmlPowerTools.HtmlToWml
 
         private static XElement GetBlockContentBorders(XElement element, XName borderXName, bool forParagraph)
         {
-            if ((element.Name == XhtmlNoNamespace.td || element.Name == XhtmlNoNamespace.th || element.Name == XhtmlNoNamespace.caption) && forParagraph)
+            if ((element.Name == XHtmlNoNamespace.td || element.Name == XHtmlNoNamespace.th || element.Name == XHtmlNoNamespace.caption) && forParagraph)
                 return null;
             XElement borders = new XElement(borderXName,
                 new XElement(W.top, GetBorderAttributes(element, "top")),
@@ -3281,7 +3283,7 @@ namespace OpenXmlPowerTools.HtmlToWml
             double borderSizeInOneEighthPoint = borderSizeInTwips / 20 * 8;
             sz = new XAttribute(W.sz, (int)borderSizeInOneEighthPoint);
 
-            if (element.Name == XhtmlNoNamespace.td || element.Name == XhtmlNoNamespace.th)
+            if (element.Name == XHtmlNoNamespace.td || element.Name == XHtmlNoNamespace.th)
             {
                 space = new XAttribute(W.space, "0");
 #if false
@@ -3381,7 +3383,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                     {
                         XElement cell = tableArray[r][c];
                         CssExpression width = cell.GetProp("width");
-                        XAttribute colSpan = cell.Attribute(XhtmlNoNamespace.colspan);
+                        XAttribute colSpan = cell.Attribute(XHtmlNoNamespace.colspan);
                         if (colSpan == null && columnWidth.ToString() == "auto" && width.ToString() != "auto")
                         {
                             columnWidth = width;
@@ -3420,15 +3422,15 @@ namespace OpenXmlPowerTools.HtmlToWml
 
         private static XElement[][] GetTableArray(XElement table)
         {
-            List<XElement> rowList = table.DescendantsTrimmed(XhtmlNoNamespace.table).Where(e => e.Name == XhtmlNoNamespace.tr).ToList();
-            int numberColumns = rowList.Select(r => r.Elements().Where(e => e.Name == XhtmlNoNamespace.td || e.Name == XhtmlNoNamespace.th).Count()).Max();
+            List<XElement> rowList = table.DescendantsTrimmed(XHtmlNoNamespace.table).Where(e => e.Name == XHtmlNoNamespace.tr).ToList();
+            int numberColumns = rowList.Select(r => r.Elements().Where(e => e.Name == XHtmlNoNamespace.td || e.Name == XHtmlNoNamespace.th).Count()).Max();
             XElement[][] tableArray = new XElement[rowList.Count()][];
             int rowNumber = 0;
             foreach (var row in rowList)
             {
                 tableArray[rowNumber] = new XElement[numberColumns];
                 int columnNumber = 0;
-                foreach (var cell in row.Elements(XhtmlNoNamespace.td))
+                foreach (var cell in row.Elements(XHtmlNoNamespace.td))
                 {
                     tableArray[rowNumber][columnNumber] = cell;
                     columnNumber++;
@@ -3471,7 +3473,7 @@ namespace OpenXmlPowerTools.HtmlToWml
 
         private static XElement GetCellProperties(XElement element)
         {
-            int? colspan = (int?)element.Attribute(XhtmlNoNamespace.colspan);
+            int? colspan = (int?)element.Attribute(XHtmlNoNamespace.colspan);
             XElement gridSpan = null;
             if (colspan != null)
                 gridSpan = new XElement(W.gridSpan,
@@ -3498,7 +3500,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                     vMerge = new XElement(W.vMerge,
                         new XAttribute(W.val, "restart"));
 
-            string vAlignValue = (string)element.Attribute(XhtmlNoNamespace.valign);
+            string vAlignValue = (string)element.Attribute(XHtmlNoNamespace.valign);
             CssExpression verticalAlignmentProp = element.GetProp("vertical-align");
             if (verticalAlignmentProp != null && verticalAlignmentProp.ToString() != "inherit")
                 vAlignValue = verticalAlignmentProp.ToString();
@@ -3522,7 +3524,7 @@ namespace OpenXmlPowerTools.HtmlToWml
 
         private static XElement GetCellHeaderProperties(XElement element)
         {
-            //int? colspan = (int?)element.Attribute(Xhtml.colspan);
+            //int? colspan = (int?)element.Attribute(XHtml.colspan);
             //XElement gridSpan = null;
             //if (colspan != null)
             //    gridSpan = new XElement(W.gridSpan,
@@ -3617,7 +3619,7 @@ namespace OpenXmlPowerTools.HtmlToWml
 
         private static XElement GetTableCellSpacing(XElement element)
         {
-            XElement table = element.AncestorsAndSelf(XhtmlNoNamespace.table).FirstOrDefault();
+            XElement table = element.AncestorsAndSelf(XHtmlNoNamespace.table).FirstOrDefault();
             XElement tblCellSpacing = null;
             if (table != null)
             {
@@ -3671,11 +3673,11 @@ namespace OpenXmlPowerTools.HtmlToWml
         private static XElement GetTableRowProperties(XElement element)
         {
             XElement trPr = null;
-            XElement table = element.AncestorsAndSelf(XhtmlNoNamespace.table).FirstOrDefault();
+            XElement table = element.AncestorsAndSelf(XHtmlNoNamespace.table).FirstOrDefault();
             if (table != null)
             {
                 CssExpression heightProperty = element.GetProp("height");
-                //long? maxCellHeight = element.Elements(Xhtml.td).Aggregate((long?)null,
+                //long? maxCellHeight = element.Elements(XHtml.td).Aggregate((long?)null,
                 //    (XElement td, long? last) =>
                 //    {
                 //        Expression heightProp2 = td.GetProp("height");
@@ -3686,7 +3688,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                 //        return last + (long?)(long)(Twip)heightProp2;
                 //    });
                 var cellHeights = element
-                    .Elements(XhtmlNoNamespace.td)
+                    .Elements(XHtmlNoNamespace.td)
                     .Select(td => td.GetProp("height"))
                     .Concat(new[] { heightProperty })
                     .Where(d => d != null)
@@ -4534,7 +4536,7 @@ namespace OpenXmlPowerTools.HtmlToWml
             int nextAbstractId, nextNumId;
             nextNumId = numberingXDoc.Root.Elements(W.num).Attributes(W.numId).Select(ni => (int)ni).Concat(new[] { 1 }).Max();
             nextAbstractId = numberingXDoc.Root.Elements(W.abstractNum).Attributes(W.abstractNumId).Select(ani => (int)ani).Concat(new[] { 0 }).Max();
-            var numberingElements = html.DescendantsAndSelf().Where(d => d.Name == XhtmlNoNamespace.ol || d.Name == XhtmlNoNamespace.ul).ToList();
+            var numberingElements = html.DescendantsAndSelf().Where(d => d.Name == XHtmlNoNamespace.ol || d.Name == XHtmlNoNamespace.ul).ToList();
 
             Dictionary<int, int> numToAbstractNum = new Dictionary<int, int>();
 
@@ -4547,12 +4549,12 @@ namespace OpenXmlPowerTools.HtmlToWml
                 if (!numToAbstractNum.ContainsKey(nia.numId))
                 {
                     numToAbstractNum.Add(nia.numId, currentAbstractId);
-                    if (list.Name == XhtmlNoNamespace.ul)
+                    if (list.Name == XHtmlNoNamespace.ul)
                     {
                         XElement bulletAbstract = XElement.Parse(String.Format(BulletAbstractXml, currentAbstractId++));
                         numberingXDoc.Root.Add(bulletAbstract);
                     }
-                    if (list.Name == XhtmlNoNamespace.ol)
+                    if (list.Name == XHtmlNoNamespace.ol)
                     {
                         string[] numFmt = new string[9];
                         string[] just = new string[9];
@@ -4644,8 +4646,8 @@ namespace OpenXmlPowerTools.HtmlToWml
 
             var classes = html
                 .DescendantsAndSelf()
-                .Where(d => d.Attribute(XhtmlNoNamespace._class) != null && ((string)d.Attribute(XhtmlNoNamespace._class)).Split().Length == 1)
-                .Select(d => (string)d.Attribute(XhtmlNoNamespace._class));
+                .Where(d => d.Attribute(XHtmlNoNamespace._class) != null && ((string)d.Attribute(XHtmlNoNamespace._class)).Split().Length == 1)
+                .Select(d => (string)d.Attribute(XHtmlNoNamespace._class));
 
             foreach (var item in classes)
             {
@@ -4697,7 +4699,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                 }
             }
 
-            if (html.Descendants(XhtmlNoNamespace.h1).Any())
+            if (html.Descendants(XHtmlNoNamespace.h1).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                     styleXDoc
                         .Root
@@ -4735,7 +4737,7 @@ namespace OpenXmlPowerTools.HtmlToWml
     </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h2).Any())
+            if (html.Descendants(XHtmlNoNamespace.h2).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                     styleXDoc
                         .Root
@@ -4773,7 +4775,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h3).Any())
+            if (html.Descendants(XHtmlNoNamespace.h3).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -4809,7 +4811,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h4).Any())
+            if (html.Descendants(XHtmlNoNamespace.h4).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -4847,7 +4849,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h5).Any())
+            if (html.Descendants(XHtmlNoNamespace.h5).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -4882,7 +4884,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h6).Any())
+            if (html.Descendants(XHtmlNoNamespace.h6).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -4919,7 +4921,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h7).Any())
+            if (html.Descendants(XHtmlNoNamespace.h7).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -4956,7 +4958,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h8).Any())
+            if (html.Descendants(XHtmlNoNamespace.h8).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -4993,7 +4995,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h9).Any())
+            if (html.Descendants(XHtmlNoNamespace.h9).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5032,7 +5034,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h1).Any())
+            if (html.Descendants(XHtmlNoNamespace.h1).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5062,7 +5064,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h2).Any())
+            if (html.Descendants(XHtmlNoNamespace.h2).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5091,7 +5093,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h3).Any())
+            if (html.Descendants(XHtmlNoNamespace.h3).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5118,7 +5120,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h4).Any())
+            if (html.Descendants(XHtmlNoNamespace.h4).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5147,7 +5149,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h5).Any())
+            if (html.Descendants(XHtmlNoNamespace.h5).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5173,7 +5175,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h6).Any())
+            if (html.Descendants(XHtmlNoNamespace.h6).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5201,7 +5203,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h7).Any())
+            if (html.Descendants(XHtmlNoNamespace.h7).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5229,7 +5231,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h8).Any())
+            if (html.Descendants(XHtmlNoNamespace.h8).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5257,7 +5259,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.h9).Any())
+            if (html.Descendants(XHtmlNoNamespace.h9).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5287,7 +5289,7 @@ namespace OpenXmlPowerTools.HtmlToWml
   </w:rPr>
 </w:style>");
 
-            if (html.Descendants(XhtmlNoNamespace.a).Any())
+            if (html.Descendants(XHtmlNoNamespace.a).Any())
                 PtUtils.AddElementIfMissing(styleXDoc,
                 styleXDoc
                     .Root
@@ -5318,17 +5320,17 @@ namespace OpenXmlPowerTools.HtmlToWml
         {
             XDocument themeXDoc = wDoc.MainDocumentPart.ThemePart.GetXDocument();
 
-            CssExpression minorFont = html.Descendants(XhtmlNoNamespace.body).FirstOrDefault().GetProp("font-family");
+            CssExpression minorFont = html.Descendants(XHtmlNoNamespace.body).FirstOrDefault().GetProp("font-family");
             XElement majorFontElement = html.Descendants().Where(e =>
-                e.Name == XhtmlNoNamespace.h1 ||
-                e.Name == XhtmlNoNamespace.h2 ||
-                e.Name == XhtmlNoNamespace.h3 ||
-                e.Name == XhtmlNoNamespace.h4 ||
-                e.Name == XhtmlNoNamespace.h5 ||
-                e.Name == XhtmlNoNamespace.h6 ||
-                e.Name == XhtmlNoNamespace.h7 ||
-                e.Name == XhtmlNoNamespace.h8 ||
-                e.Name == XhtmlNoNamespace.h9).FirstOrDefault();
+                e.Name == XHtmlNoNamespace.h1 ||
+                e.Name == XHtmlNoNamespace.h2 ||
+                e.Name == XHtmlNoNamespace.h3 ||
+                e.Name == XHtmlNoNamespace.h4 ||
+                e.Name == XHtmlNoNamespace.h5 ||
+                e.Name == XHtmlNoNamespace.h6 ||
+                e.Name == XHtmlNoNamespace.h7 ||
+                e.Name == XHtmlNoNamespace.h8 ||
+                e.Name == XHtmlNoNamespace.h9).FirstOrDefault();
             CssExpression majorFont = null;
             if (majorFontElement != null)
                 majorFont = majorFontElement.GetProp("font-family");

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -339,7 +341,7 @@ namespace OpenXmlPowerTools
                     }
 
                     return coalesceContent
-                        ? WordprocessingMLUtil.CoalesceAdjacentRunsWithIdenticalFormatting(paragraphWithSplitRuns)
+                        ? Wordprocessing.CoalesceAdjacentRunsWithIdenticalFormatting(paragraphWithSplitRuns)
                         : paragraphWithSplitRuns;
                 }
 
@@ -361,7 +363,7 @@ namespace OpenXmlPowerTools
                             trackRevisions, revisionTrackingAuthor, replInfo, coalesceContent);
                     }));
                 return coalesceContent
-                    ? WordprocessingMLUtil.CoalesceAdjacentRunsWithIdenticalFormatting(newParagraph) // CoalesceContent(newParagraph)
+                    ? Wordprocessing.CoalesceAdjacentRunsWithIdenticalFormatting(newParagraph) // CoalesceContent(newParagraph)
                     : newParagraph;
             }
 
@@ -392,7 +394,7 @@ namespace OpenXmlPowerTools
                         ? ((string) e).Select(c =>
                             new XElement(W.r,
                                 element.Elements(W.rPr),
-                                new XElement(W.t, XmlUtil.GetXmlSpaceAttribute(c), c)))
+                                new XElement(W.t, Common.GetXmlSpaceAttribute(c), c)))
                         : new[] { new XElement(W.r, element.Elements(W.rPr), e) })
                     .SelectMany(t => t);
             }
@@ -411,7 +413,7 @@ namespace OpenXmlPowerTools
 
             if (element.Name == W.t)
                 return new XElement(W.delText,
-                    XmlUtil.GetXmlSpaceAttribute(element.Value),
+                    Common.GetXmlSpaceAttribute(element.Value),
                     element.Value);
 
             return new XElement(element.Name,
@@ -517,7 +519,7 @@ namespace OpenXmlPowerTools
                                 return (object) g;
 
                             string textValue = g.Select(r => r.Element(A.t).Value).StringConcatenate();
-                            XAttribute xs = XmlUtil.GetXmlSpaceAttribute(textValue);
+                            XAttribute xs = Common.GetXmlSpaceAttribute(textValue);
                             return new XElement(A.r,
                                 g.First().Elements(A.rPr),
                                 new XElement(A.t, xs, textValue));
@@ -539,7 +541,7 @@ namespace OpenXmlPowerTools
                             var s = (string) e;
                             IEnumerable<XElement> collectionOfSubRuns = s.Select(c => new XElement(A.r,
                                 element.Elements(A.rPr),
-                                new XElement(A.t, XmlUtil.GetXmlSpaceAttribute(c), c)));
+                                new XElement(A.t, Common.GetXmlSpaceAttribute(c), c)));
                             return (object) collectionOfSubRuns;
                         }
 

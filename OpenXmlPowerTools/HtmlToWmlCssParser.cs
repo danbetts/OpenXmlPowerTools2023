@@ -14,6 +14,7 @@ Resource Center and Documentation: http://openxmldeveloper.org/wiki/w/wiki/power
 
 ***************************************************************************/
 
+using OpenXmlPowerTools.Commons;
 using System;
 using System.Collections;
 using System.Collections.Generic;

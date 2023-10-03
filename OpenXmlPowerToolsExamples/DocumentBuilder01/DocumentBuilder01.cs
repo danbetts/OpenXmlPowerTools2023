@@ -9,6 +9,7 @@ using System.Text;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Documents;
 
 namespace DocumentBuilderExample
 {

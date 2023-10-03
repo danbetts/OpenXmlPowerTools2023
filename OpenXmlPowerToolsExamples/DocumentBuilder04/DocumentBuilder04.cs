@@ -10,6 +10,8 @@ using System.Xml;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Commons;
 
 namespace ExampleDocumentBuilder04
 {

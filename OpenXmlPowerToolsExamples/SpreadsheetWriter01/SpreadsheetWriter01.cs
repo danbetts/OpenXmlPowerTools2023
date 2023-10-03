@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Spreadsheets;
 
 namespace SpreadsheetWriterExample
 {
@@ -21,68 +22,68 @@ namespace SpreadsheetWriterExample
             var tempDi = new DirectoryInfo(string.Format("ExampleOutput-{0:00}-{1:00}-{2:00}-{3:00}{4:00}{5:00}", n.Year - 2000, n.Month, n.Day, n.Hour, n.Minute, n.Second));
             tempDi.Create();
 
-            WorkbookDfn wb = new WorkbookDfn
+            SpreadsheetWorkbook wb = new SpreadsheetWorkbook
             {
-                Worksheets = new WorksheetDfn[]
+                Worksheets = new SpreadsheetWorksheet[]
                 {
-                    new WorksheetDfn
+                    new SpreadsheetWorksheet
                     {
                         Name = "MyFirstSheet",
                         TableName = "NamesAndRates",
-                        ColumnHeadings = new CellDfn[]
+                        ColumnHeadings = new SpreadsheetCell[]
                         {
-                            new CellDfn
+                            new SpreadsheetCell
                             {
                                 Value = "Name",
                                 Bold = true,
                             },
-                            new CellDfn
+                            new SpreadsheetCell
                             {
                                 Value = "Age",
                                 Bold = true,
                                 HorizontalCellAlignment = HorizontalCellAlignment.Left,
                             },
-                            new CellDfn
+                            new SpreadsheetCell
                             {
                                 Value = "Rate",
                                 Bold = true,
                                 HorizontalCellAlignment = HorizontalCellAlignment.Left,
                             }
                         },
-                        Rows = new RowDfn[]
+                        Rows = new SpreadsheetRow[]
                         {
-                            new RowDfn
+                            new SpreadsheetRow
                             {
-                                Cells = new CellDfn[]
+                                Cells = new SpreadsheetCell[]
                                 {
-                                    new CellDfn {
+                                    new SpreadsheetCell {
                                         CellDataType = CellDataType.String,
                                         Value = "Eric",
                                     },
-                                    new CellDfn {
+                                    new SpreadsheetCell {
                                         CellDataType = CellDataType.Number,
                                         Value = 50,
                                     },
-                                    new CellDfn {
+                                    new SpreadsheetCell {
                                         CellDataType = CellDataType.Number,
                                         Value = (decimal)45.00,
                                         FormatCode = "0.00",
                                     },
                                 }
                             },
-                            new RowDfn
+                            new SpreadsheetRow
                             {
-                                Cells = new CellDfn[]
+                                Cells = new SpreadsheetCell[]
                                 {
-                                    new CellDfn {
+                                    new SpreadsheetCell {
                                         CellDataType = CellDataType.String,
                                         Value = "Bob",
                                     },
-                                    new CellDfn {
+                                    new SpreadsheetCell {
                                         CellDataType = CellDataType.Number,
                                         Value = 42,
                                     },
-                                    new CellDfn {
+                                    new SpreadsheetCell {
                                         CellDataType = CellDataType.Number,
                                         Value = (decimal)78.00,
                                         FormatCode = "0.00",
@@ -93,7 +94,7 @@ namespace SpreadsheetWriterExample
                     }
                 }
             };
-            SpreadsheetWriter.Write(Path.Combine(tempDi.FullName, "Test1.xlsx"), wb);
+            SpreadsheetBuilder.Write(Path.Combine(tempDi.FullName, "Test1.xlsx"), wb);
         }
     }
 }

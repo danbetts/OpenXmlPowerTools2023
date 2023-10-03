@@ -9,6 +9,8 @@ using System.Text;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Spreadsheets;
 
 namespace OpenXmlPowerTools
 {
@@ -243,7 +245,7 @@ namespace OpenXmlPowerTools
                         newCval = new XElement(C.val,
                                 new XElement(C.numRef,
                                     sheetName != null ?
-                                        new XElement(C.f, string.Format("{0}!${2}$2:${2}${1}", sheetName, chartData.CategoryNames.Length + 1, SpreadsheetMLUtil.IntToColumnId(si + 1))) : null,
+                                        new XElement(C.f, string.Format("{0}!${2}$2:${2}${1}", sheetName, chartData.CategoryNames.Length + 1, Spreadsheet.IntToColumnId(si + 1))) : null,
                                     new XElement(C.numCache,
                                         sheetName != null ? numRef.Descendants(C.formatCode) : null,
                                         new XElement(C.ptCount, new XAttribute("val", chartData.CategoryNames.Length)),
@@ -262,7 +264,7 @@ namespace OpenXmlPowerTools
                     {
                         XElement newFormula = null;
                         if (sheetName != null)
-                            newFormula = new XElement(C.f, string.Format("{0}!${1}$1", sheetName, SpreadsheetMLUtil.IntToColumnId(si + 1)));
+                            newFormula = new XElement(C.f, string.Format("{0}!${1}$1", sheetName, Spreadsheet.IntToColumnId(si + 1)));
                         tx = new XElement(C.tx,
                             new XElement(C.strRef,
                                 newFormula,
@@ -561,7 +563,7 @@ namespace OpenXmlPowerTools
 
         private static string RowColToString(int row, int col)
         {
-            var str = SpreadsheetMLUtil.IntToColumnId(col) + (row + 1).ToString();
+            var str = Spreadsheet.IntToColumnId(col) + (row + 1).ToString();
             return str;
         }
 

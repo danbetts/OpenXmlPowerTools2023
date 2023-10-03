@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Presentations;
+using OpenXmlPowerTools.Spreadsheets;
 
 namespace PresentationBuilder02
 {
@@ -56,7 +59,7 @@ namespace PresentationBuilder02
                 new SlideSource(new PmlDocument("Hidden.pptx", baHiddenPresentation), true),
                 new SlideSource(modifiedMainPresentation, 1, true),
             };
-            PmlDocument combinedPresentation = PresentationBuilder.BuildPresentation(slideSources);
+            PmlDocument combinedPresentation = Presentation.BuildPresentation(slideSources);
 
             // Replace <# TRADEMARK #> with AdventureWorks (c)
             PmlDocument modifiedCombinedPresentation = null;

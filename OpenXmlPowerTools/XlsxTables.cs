@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.IO;
+using OpenXmlPowerTools.Commons;
 
 namespace OpenXmlPowerTools
 {

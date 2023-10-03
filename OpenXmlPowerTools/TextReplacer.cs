@@ -1,33 +1,17 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
+using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Presentations;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
-using DocumentFormat.OpenXml.Packaging;
 
 namespace OpenXmlPowerTools
 {
-    public partial class WmlDocument : OpenXmlPowerToolsDocument
-    {
-        public WmlDocument SearchAndReplace(string search, string replace, bool matchCase)
-        {
-            return TextReplacer.SearchAndReplace(this, search, replace, matchCase);
-        }
-    }
-
-    public partial class PmlDocument : OpenXmlPowerToolsDocument
-    {
-        public PmlDocument SearchAndReplace(string search, string replace, bool matchCase)
-        {
-            return TextReplacer.SearchAndReplace(this, search, replace, matchCase);
-        }
-    }
-
     public class TextReplacer
     {
         private class MatchSemaphore

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net462;netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net48;netstandard2.0;net6.0</TargetFrameworks>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net462|AnyCPU'">
@@ -41,5 +41,10 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
     <Reference Include="System.IO.Compression" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Htmls\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 </Project>

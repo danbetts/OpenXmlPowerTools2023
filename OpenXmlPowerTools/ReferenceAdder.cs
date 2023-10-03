@@ -8,25 +8,11 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 
 namespace OpenXmlPowerTools
 {
-    public partial class WmlDocument : OpenXmlPowerToolsDocument
-    {
-        public WmlDocument AddToc(string xPath, string switches, string title, int? rightTabPos)
-        {
-            return (WmlDocument)ReferenceAdder.AddToc(this, xPath, switches, title, rightTabPos);
-        }
-        public WmlDocument AddTof(string xPath, string switches, int? rightTabPos)
-        {
-            return (WmlDocument)ReferenceAdder.AddTof(this, xPath, switches, rightTabPos);
-        }
-        public WmlDocument AddToa(string xPath, string switches, int? rightTabPos)
-        {
-            return (WmlDocument)ReferenceAdder.AddToa(this, xPath, switches, rightTabPos);
-        }
-    }
-
     public class ReferenceAdder
     {
         public static WmlDocument AddToc(WmlDocument document, string xPath, string switches, string title, int? rightTabPos)

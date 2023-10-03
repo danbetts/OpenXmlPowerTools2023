@@ -11,6 +11,7 @@ using OpenXmlPowerTools;
 using OpenXmlPowerTools.HtmlToWml;
 using OpenXmlPowerTools.HtmlToWml.CSS;
 using System.Globalization;
+using OpenXmlPowerTools.Commons;
 
 #if false
 Sort:
@@ -864,7 +865,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                 Inherits = false,
                 Includes = (e, settings) =>
                 {
-                    if (e.Name == XhtmlNoNamespace.img)
+                    if (e.Name == XHtmlNoNamespace.img)
                         return true;
                     var display = GetComputedPropertyValue(null, e, "display", settings);
                     var dv = display.ToString();
@@ -892,11 +893,11 @@ namespace OpenXmlPowerTools.HtmlToWml
                 },
                 ComputedValue = (element, assignedValue, settings) =>
                 {
-                    if (element.Name != XhtmlNoNamespace.caption &&
-                        element.Name != XhtmlNoNamespace.td &&
-                        element.Name != XhtmlNoNamespace.th &&
-                        element.Name != XhtmlNoNamespace.tr &&
-                        element.Name != XhtmlNoNamespace.table &&
+                    if (element.Name != XHtmlNoNamespace.caption &&
+                        element.Name != XHtmlNoNamespace.td &&
+                        element.Name != XHtmlNoNamespace.th &&
+                        element.Name != XHtmlNoNamespace.tr &&
+                        element.Name != XHtmlNoNamespace.table &&
                         assignedValue.IsAuto)
                     {
                         PropertyInfo pi = PropertyInfoList.FirstOrDefault(p => p.Names.Contains("width"));
@@ -995,7 +996,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                 Inherits = false,
                 Includes = (e, settings) =>
                 {
-                    if (e.Name == XhtmlNoNamespace.img)
+                    if (e.Name == XHtmlNoNamespace.img)
                         return true;
                     var display = GetComputedPropertyValue(null, e, "display", settings);
                     var dv = display.ToString();
@@ -1833,7 +1834,7 @@ namespace OpenXmlPowerTools.HtmlToWml
         {
             foreach (var element in xHtml.DescendantsAndSelf())
             {
-                XAttribute styleAtt = element.Attribute(XhtmlNoNamespace.style);
+                XAttribute styleAtt = element.Attribute(XHtmlNoNamespace.style);
                 if (styleAtt != null)
                 {
                     string style = (string)styleAtt;
@@ -1848,7 +1849,7 @@ namespace OpenXmlPowerTools.HtmlToWml
                         Property.HighOrderPriority.StyleAttributeHigh,
                         ref propertySequence);
                 }
-                XAttribute dirAtt = element.Attribute(XhtmlNoNamespace.dir);
+                XAttribute dirAtt = element.Attribute(XHtmlNoNamespace.dir);
                 if (dirAtt != null)
                 {
                     string dir = dirAtt.Value.ToLower();

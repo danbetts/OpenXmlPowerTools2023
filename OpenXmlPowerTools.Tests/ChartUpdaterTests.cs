@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Presentations;
 using Xunit;
 
 #if !ELIDE_XUNIT_TESTS

@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Xml;
 using ExcelFormula;
+using OpenXmlPowerTools.Commons;
 
 namespace OpenXmlPowerTools
 {

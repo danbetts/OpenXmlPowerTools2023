@@ -13,6 +13,8 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Validation;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Presentations;
+using OpenXmlPowerTools.Spreadsheets;
 using Xunit;
 
 #if !ELIDE_XUNIT_TESTS
@@ -37,7 +39,7 @@ namespace OxPt
                 new SlideSource(new PmlDocument(source2Pptx.FullName), 0, true),
             };
             var processedDestPptx = new FileInfo(Path.Combine(TestUtil.TempDir.FullName, "PB001-Formatting.pptx"));
-            PresentationBuilder.BuildPresentation(sources, processedDestPptx.FullName);
+            Presentation.BuildPresentation(sources, processedDestPptx.FullName);
         }
 
         [Fact]
@@ -53,7 +55,7 @@ namespace OxPt
                 new SlideSource(new PmlDocument(source2Pptx.FullName), 0, true),
             };
             var processedDestPptx = new FileInfo(Path.Combine(TestUtil.TempDir.FullName, "PB002-Formatting.pptx"));
-            PresentationBuilder.BuildPresentation(sources, processedDestPptx.FullName);
+            Presentation.BuildPresentation(sources, processedDestPptx.FullName);
         }
 
         [Fact]
@@ -72,7 +74,7 @@ namespace OxPt
                 new SlideSource(new PmlDocument(source2Pptx.FullName), 0, true),
             };
             var processedDestPptx = new FileInfo(Path.Combine(TestUtil.TempDir.FullName, "PB003-Formatting.pptx"));
-            PresentationBuilder.BuildPresentation(sources, processedDestPptx.FullName);
+            Presentation.BuildPresentation(sources, processedDestPptx.FullName);
         }
 
         [Fact]
@@ -91,7 +93,7 @@ namespace OxPt
                 new SlideSource(new PmlDocument(source1Pptx.FullName), 1, true),
             };
             var processedDestPptx = new FileInfo(Path.Combine(TestUtil.TempDir.FullName, "PB004-Formatting.pptx"));
-            PresentationBuilder.BuildPresentation(sources, processedDestPptx.FullName);
+            Presentation.BuildPresentation(sources, processedDestPptx.FullName);
         }
 
         [Fact]
@@ -111,7 +113,7 @@ namespace OxPt
                 new SlideSource(new PmlDocument(source2Pptx.FullName), 0, true),
             };
             var processedDestPptx = new FileInfo(Path.Combine(TestUtil.TempDir.FullName, "PB005-Formatting.pptx"));
-            PresentationBuilder.BuildPresentation(sources, processedDestPptx.FullName);
+            Presentation.BuildPresentation(sources, processedDestPptx.FullName);
         }
 
 #if NETCOREAPP2_0
@@ -133,7 +135,7 @@ namespace OxPt
                 new SlideSource(new PmlDocument(sourcePptx.FullName), true),
             };
             var processedDestPptx = new FileInfo(Path.Combine(TestUtil.TempDir.FullName, "PB006-Videos.pptx"));
-            PresentationBuilder.BuildPresentation(sources, processedDestPptx.FullName);
+            Presentation.BuildPresentation(sources, processedDestPptx.FullName);
 
             var newMediaDataContentTypes = GetMediaDataContentTypes(processedDestPptx);
 

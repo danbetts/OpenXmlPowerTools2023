@@ -9,6 +9,8 @@ using System.IO;
 using ExcelFormula;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Spreadsheets;
+using OpenXmlPowerTools.Commons;
 
 namespace ExampleFormulas
 {

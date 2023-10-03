@@ -8,17 +8,11 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 
 namespace OpenXmlPowerTools
 {
-    public partial class WmlDocument
-    {
-        public WmlDocument SimplifyMarkup(SimplifyMarkupSettings settings)
-        {
-            return MarkupSimplifier.SimplifyMarkup(this, settings);
-        }
-    }
-
     public class SimplifyMarkupSettings
     {
         public bool AcceptRevisions;
@@ -221,7 +215,7 @@ namespace OpenXmlPowerTools
             if (element == null) return node;
 
             if (element.Name == W.p)
-                return WordprocessingMLUtil.CoalesceAdjacentRunsWithIdenticalFormatting(element);
+                return Wordprocessing.CoalesceAdjacentRunsWithIdenticalFormatting(element);
 
             return new XElement(element.Name,
                 element.Attributes(),
