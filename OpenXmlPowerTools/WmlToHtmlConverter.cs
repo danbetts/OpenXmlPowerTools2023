@@ -24,8 +24,6 @@ using OpenXmlPowerTools.Documents;
 
 namespace OpenXmlPowerTools
 {
-
-    [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
     public class WmlToHtmlConverterSettings
     {
         public string PageTitle;
@@ -69,7 +67,6 @@ namespace OpenXmlPowerTools
         }
     }
 
-    [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
     public class HtmlConverterSettings
     {
         public string PageTitle;
@@ -112,8 +109,6 @@ namespace OpenXmlPowerTools
         }
     }
 
-    [SuppressMessage("ReSharper", "NotAccessedField.Global")]
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class ImageInfo : IDisposable
     {
         public ImageInfo()
@@ -891,7 +886,6 @@ namespace OpenXmlPowerTools
             return tableDiv;
         }
 
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private static object ProcessTableCell(WordprocessingDocument wordDoc, WmlToHtmlConverterSettings settings, XElement element)
         {
             var style = new Dictionary<string, string>();
@@ -1510,7 +1504,6 @@ namespace OpenXmlPowerTools
             return content;
         }
 
-        [SuppressMessage("ReSharper", "FunctionComplexityOverflow")]
         private static Dictionary<string, string> DefineRunStyle(XElement run)
         {
             var style = new Dictionary<string, string>();
@@ -1960,7 +1953,6 @@ namespace OpenXmlPowerTools
         }
 
         // TODO: Refactor. This method is way too long.
-        [SuppressMessage("ReSharper", "FunctionComplexityOverflow")]
         private static object CalculateSpanWidthTransform(XNode node, int defaultTabStop)
         {
             var element = node as XElement;

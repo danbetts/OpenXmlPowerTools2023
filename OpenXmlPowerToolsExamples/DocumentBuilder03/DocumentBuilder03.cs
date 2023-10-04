@@ -47,12 +47,12 @@ class Program
         }
 
         string outFileName = Path.Combine(tempDi.FullName, "Out.docx");
-        List<Source> sources = new List<Source>()
+        List<WmlSource> sources = new List<WmlSource>()
             {
-                new Source(doc1, true),
-                new Source(new WmlDocument(@"..\..\Insert-01.docx"), "Liz"),
-                new Source(new WmlDocument(@"..\..\Insert-02.docx"), "Eric"),
-                new Source(new WmlDocument(@"..\..\FrontMatter.docx"), "Front"),
+                new WmlSource(doc1, true),
+                new WmlSource(new WmlDocument(@"..\..\Insert-01.docx"), "Liz"),
+                new WmlSource(new WmlDocument(@"..\..\Insert-02.docx"), "Eric"),
+                new WmlSource(new WmlDocument(@"..\..\FrontMatter.docx"), "Front"),
             };
         DocumentBuilder.BuildDocument(sources, outFileName);
     }

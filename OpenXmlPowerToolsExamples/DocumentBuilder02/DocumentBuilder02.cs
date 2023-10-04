@@ -33,14 +33,14 @@ class DocumentBuilderExample02
         tempDi.Create();
 
         // Insert an abstract and author biography into a white paper.
-        List<Source> sources = null;
+        List<WmlSource> sources = null;
 
-        sources = new List<Source>()
+        sources = new List<WmlSource>()
         {
-            new Source(new WmlDocument("../../WhitePaper.docx"), 0, 1, true),
-            new Source(new WmlDocument("../../Abstract.docx"), false),
-            new Source(new WmlDocument("../../AuthorBiography.docx"), false),
-            new Source(new WmlDocument("../../WhitePaper.docx"), 1, false),
+            new WmlSource(new WmlDocument("../../WhitePaper.docx"), 0, 1, true),
+            new WmlSource(new WmlDocument("../../Abstract.docx"), false),
+            new WmlSource(new WmlDocument("../../AuthorBiography.docx"), false),
+            new WmlSource(new WmlDocument("../../WhitePaper.docx"), 1, false),
         };
         DocumentBuilder.BuildDocument(sources, Path.Combine(tempDi.FullName, "AssembledPaper.docx"));
 
@@ -65,7 +65,7 @@ class DocumentBuilderExample02
                     .Attributes(W.val)
                     .FirstOrDefault() != "Note")
                 .Where(g => g.Key == true)
-                .Select(g => new Source(
+                .Select(g => new WmlSource(
                     new WmlDocument("../../Notes.docx"), g.First().Index,
                         g.Last().Index - g.First().Index + 1, true))
                 .ToList();
@@ -118,8 +118,8 @@ class DocumentBuilderExample02
         foreach (var doc in documentList)
         {
             string fileName = String.Format("Section{0:000}.docx", doc.DocumentNumber);
-            List<Source> documentSource = new List<Source> {
-                new Source(new WmlDocument("../../Spec.docx"), doc.Start, doc.Count, true)
+            List<WmlSource> documentSource = new List<WmlSource> {
+                new WmlSource(new WmlDocument("../../Spec.docx"), doc.Start, doc.Count, true)
             };
             DocumentBuilder.BuildDocument(documentSource, Path.Combine(tempDi.FullName, fileName));
         }
@@ -127,7 +127,7 @@ class DocumentBuilderExample02
         // Re-assemble the parts into a single document.
         sources = tempDi
             .GetFiles("Section*.docx")
-            .Select(d => new Source(new WmlDocument(d.FullName), true))
+            .Select(d => new WmlSource(new WmlDocument(d.FullName), true))
             .ToList();
         DocumentBuilder.BuildDocument(sources, Path.Combine(tempDi.FullName, "ReassembledSpec.docx"));
     }

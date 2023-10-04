@@ -35,7 +35,6 @@ namespace OpenXmlPowerTools
         public bool ReplaceTabsWithSpaces;
     }
 
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class MarkupSimplifier
     {
         public static WmlDocument SimplifyMarkup(WmlDocument doc, SimplifyMarkupSettings settings)

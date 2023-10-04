@@ -631,7 +631,6 @@ namespace OpenXmlPowerTools
             }
         }
 
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public static IEnumerable<XElement> SiblingsBeforeSelfReverseDocumentOrder(
             this XElement element)
         {
@@ -662,7 +661,6 @@ namespace OpenXmlPowerTools
             }
         }
 
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public static IEnumerable<XElement> DescendantsBeforeSelfReverseDocumentOrder(
             this XElement element)
         {
@@ -693,7 +691,6 @@ namespace OpenXmlPowerTools
             }
         }
 
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public static IEnumerable<XElement> DescendantsTrimmedBeforeSelfReverseDocumentOrder(
             this XElement element, XName trimName)
         {

@@ -28,13 +28,15 @@ namespace OpenXmlPowerTools.Documents
             get
             {
                 using (MemoryStream ms = new MemoryStream(DocumentByteArray))
-                using (WordprocessingDocument wDoc = WordprocessingDocument.Open(ms, false))
                 {
-                    XElement partElement = wDoc.MainDocumentPart.GetXDocument().Root;
-                    var childNodes = partElement.Nodes().ToList();
-                    foreach (var item in childNodes)
-                        item.Remove();
-                    return new PtMainDocumentPart(this, wDoc.MainDocumentPart.Uri, partElement.Name, partElement.Attributes(), childNodes);
+                    using (WordprocessingDocument wDoc = WordprocessingDocument.Open(ms, false))
+                    {
+                        XElement partElement = wDoc.MainDocumentPart.GetXDocument().Root;
+                        var childNodes = partElement.Nodes().ToList();
+                        foreach (var item in childNodes)
+                            item.Remove();
+                        return new PtMainDocumentPart(this, wDoc.MainDocumentPart.Uri, partElement.Name, partElement.Attributes(), childNodes);
+                    }
                 }
             }
         }
@@ -114,13 +116,12 @@ namespace OpenXmlPowerTools.Documents
                 DocumentByteArray = streamDoc.GetModifiedDocument().DocumentByteArray;
             }
         }
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+
         public XElement ConvertToHtml(WmlToHtmlConverterSettings htmlConverterSettings)
         {
             return WmlToHtmlConverter.ConvertToHtml(this, htmlConverterSettings);
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public XElement ConvertToHtml(HtmlConverterSettings htmlConverterSettings)
         {
             WmlToHtmlConverterSettings settings = new WmlToHtmlConverterSettings(htmlConverterSettings);

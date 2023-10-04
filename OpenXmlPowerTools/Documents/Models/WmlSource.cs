@@ -3,7 +3,7 @@
     /// <summary>
     /// Source for documents used in a wordprocessingdocument merge
     /// </summary>
-    public class Source
+    public class WmlSource
     {
         public WmlDocument WmlDocument { get; set; }
         public int Start { get; set; }
@@ -12,7 +12,7 @@
         public bool DiscardHeadersAndFootersInKeptSections { get; set; }
         public string InsertId { get; set; }
 
-        public Source(string fileName)
+        public WmlSource(string fileName)
         {
             WmlDocument = new WmlDocument(fileName);
             Start = 0;
@@ -21,7 +21,7 @@
             InsertId = null;
         }
 
-        public Source(WmlDocument source)
+        public WmlSource(WmlDocument source)
         {
             WmlDocument = source;
             Start = 0;
@@ -30,7 +30,7 @@
             InsertId = null;
         }
 
-        public Source(string fileName, bool keepSections)
+        public WmlSource(string fileName, bool keepSections)
         {
             WmlDocument = new WmlDocument(fileName);
             Start = 0;
@@ -39,7 +39,7 @@
             InsertId = null;
         }
 
-        public Source(WmlDocument source, bool keepSections)
+        public WmlSource(WmlDocument source, bool keepSections)
         {
             WmlDocument = source;
             Start = 0;
@@ -48,7 +48,7 @@
             InsertId = null;
         }
 
-        public Source(string fileName, string insertId)
+        public WmlSource(string fileName, string insertId)
         {
             WmlDocument = new WmlDocument(fileName);
             Start = 0;
@@ -57,7 +57,7 @@
             InsertId = insertId;
         }
 
-        public Source(WmlDocument source, string insertId)
+        public WmlSource(WmlDocument source, string insertId)
         {
             WmlDocument = source;
             Start = 0;
@@ -66,7 +66,7 @@
             InsertId = insertId;
         }
 
-        public Source(string fileName, int start, bool keepSections)
+        public WmlSource(string fileName, int start, bool keepSections)
         {
             WmlDocument = new WmlDocument(fileName);
             Start = start;
@@ -75,7 +75,7 @@
             InsertId = null;
         }
 
-        public Source(WmlDocument source, int start, bool keepSections)
+        public WmlSource(WmlDocument source, int start, bool keepSections)
         {
             WmlDocument = source;
             Start = start;
@@ -84,7 +84,7 @@
             InsertId = null;
         }
 
-        public Source(string fileName, int start, string insertId)
+        public WmlSource(string fileName, int start, string insertId)
         {
             WmlDocument = new WmlDocument(fileName);
             Start = start;
@@ -93,7 +93,7 @@
             InsertId = insertId;
         }
 
-        public Source(WmlDocument source, int start, string insertId)
+        public WmlSource(WmlDocument source, int start, string insertId)
         {
             WmlDocument = source;
             Start = start;
@@ -102,7 +102,7 @@
             InsertId = insertId;
         }
 
-        public Source(string fileName, int start, int count, bool keepSections)
+        public WmlSource(string fileName, int start, int count, bool keepSections)
         {
             WmlDocument = new WmlDocument(fileName);
             Start = start;
@@ -111,7 +111,7 @@
             InsertId = null;
         }
 
-        public Source(WmlDocument source, int start, int count, bool keepSections)
+        public WmlSource(WmlDocument source, int start, int count, bool keepSections)
         {
             WmlDocument = source;
             Start = start;
@@ -120,7 +120,7 @@
             InsertId = null;
         }
 
-        public Source(string fileName, int start, int count, string insertId)
+        public WmlSource(string fileName, int start, int count, string insertId)
         {
             WmlDocument = new WmlDocument(fileName);
             Start = start;
@@ -129,7 +129,7 @@
             InsertId = insertId;
         }
 
-        public Source(WmlDocument source, int start, int count, string insertId)
+        public WmlSource(WmlDocument source, int start, int count, string insertId)
         {
             WmlDocument = source;
             Start = start;

@@ -39,12 +39,7 @@
 	<PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <Reference Include="System.IO.Compression" />
-  </ItemGroup>
-
-  <ItemGroup>
+	<ItemGroup>
     <Folder Include="Htmls\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 </Project>

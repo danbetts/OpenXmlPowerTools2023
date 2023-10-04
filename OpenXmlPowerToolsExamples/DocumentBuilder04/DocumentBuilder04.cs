@@ -93,7 +93,7 @@ namespace ExampleDocumentBuilder04
                         g =>
                         {
                             if (g.Group.Key == ".NonContentControl")
-                                return new Source(
+                                return new WmlSource(
                                     g.Document,
                                     g.Group
                                         .First()
@@ -104,7 +104,7 @@ namespace ExampleDocumentBuilder04
                                         .Count(),
                                     false);
                             else
-                                return new Source(g.Document, false);
+                                return new WmlSource(g.Document, false);
                         }
                     ).ToList();
 
