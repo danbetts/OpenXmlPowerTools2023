@@ -19,12 +19,6 @@ namespace OpenXmlPowerTools.Commons
         public int Count;
     };
 
-    public class Atbi
-    {
-        public XElement BlockLevelContent;
-        public int Index;
-    }
-
     public class Atbid
     {
         public XElement BlockLevelContent;

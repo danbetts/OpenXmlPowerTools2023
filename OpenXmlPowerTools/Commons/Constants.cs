@@ -114,9 +114,6 @@ namespace OpenXmlPowerTools.Commons
             { P.modifyVerifier, 150 },
             { P.extLst, 160 },
         };
-
-
-
         public static Dictionary<XName, int> OrderPPr = new Dictionary<XName, int>
         {
             { W.pStyle, 10 },
@@ -156,7 +153,6 @@ namespace OpenXmlPowerTools.Commons
             { W.sectPr, 360 },
             { W.pPrChange, 370 },
         };
-
         public static Dictionary<XName, int> OrderRPr = new Dictionary<XName, int>
         {
             { W.moveFrom, 5 },
@@ -208,11 +204,6 @@ namespace OpenXmlPowerTools.Commons
             { W.specVanish, 450 },
             { W.oMath, 460 },
         };
-
-
-
-
-
         public static readonly List<XName> AdditionalRunContainerNames = new List<XName>
         {
             W.w + "bdo",
@@ -223,6 +214,12 @@ namespace OpenXmlPowerTools.Commons
             W.moveFrom,
             W.moveTo,
             W.sdtContent
+        };
+        public static string[] WordprocessingExtensions = new[] {
+            ".docx",
+            ".docm",
+            ".dotx",
+            ".dotm",
         };
     }
 }

@@ -1,4 +1,8 @@
-﻿namespace OpenXmlPowerTools.Documents
+﻿using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools.Commons;
+using System;
+
+namespace OpenXmlPowerTools.Documents
 {
     /// <summary>
     /// Source for documents used in a wordprocessingdocument merge
@@ -6,136 +10,37 @@
     public class WmlSource
     {
         public WmlDocument WmlDocument { get; set; }
-        public int Start { get; set; }
-        public int Count { get; set; }
-        public bool KeepSections { get; set; }
-        public bool DiscardHeadersAndFootersInKeptSections { get; set; }
-        public string InsertId { get; set; }
+        public int Start { get; set; } = 0;
+        public int Count { get; set; } = int.MaxValue;
+        public bool KeepSections { get; set; } = true;
+        public bool KeepHeadersAndFooters { get; set; } = true;
+        public string InsertId { get; set; } = null;
 
-        public WmlSource(string fileName)
+        public WmlSource() { }
+        public WmlSource(string filename)
+            : this(new WmlDocument(filename), 0, int.MaxValue, true, true, null) { }
+        public WmlSource(string filename, int start)
+            : this(new WmlDocument(filename), start, int.MaxValue, true, true, null) { }
+        public WmlSource(string filename, int start, int count)
+            : this(new WmlDocument(filename), start, count, true, true, null) { }
+        public WmlSource(string filename, int start, int count, bool keepSections)
+            : this(new WmlDocument(filename), start, count, keepSections, true, null) { }
+        public WmlSource(WmlDocument document)
+            : this(document, 0, int.MaxValue, true, true, null) { }
+        public WmlSource(WmlDocument document, int start)
+            : this(document, start, int.MaxValue, true, true, null) { }
+        public WmlSource(WmlDocument document, int start, int count)
+            : this(document, start, count, true, true, null) { }
+        public WmlSource(WmlDocument document, int start, int count, bool keepSections)
+            : this(document, start, count, keepSections, true, null) { }
+        public WmlSource(WmlDocument document, int start, int count, bool keepSections, bool keepHeadersAndFooters, string insertId)
         {
-            WmlDocument = new WmlDocument(fileName);
-            Start = 0;
-            Count = int.MaxValue;
-            KeepSections = false;
-            InsertId = null;
-        }
-
-        public WmlSource(WmlDocument source)
-        {
-            WmlDocument = source;
-            Start = 0;
-            Count = int.MaxValue;
-            KeepSections = false;
-            InsertId = null;
-        }
-
-        public WmlSource(string fileName, bool keepSections)
-        {
-            WmlDocument = new WmlDocument(fileName);
-            Start = 0;
-            Count = int.MaxValue;
-            KeepSections = keepSections;
-            InsertId = null;
-        }
-
-        public WmlSource(WmlDocument source, bool keepSections)
-        {
-            WmlDocument = source;
-            Start = 0;
-            Count = int.MaxValue;
-            KeepSections = keepSections;
-            InsertId = null;
-        }
-
-        public WmlSource(string fileName, string insertId)
-        {
-            WmlDocument = new WmlDocument(fileName);
-            Start = 0;
-            Count = int.MaxValue;
-            KeepSections = false;
-            InsertId = insertId;
-        }
-
-        public WmlSource(WmlDocument source, string insertId)
-        {
-            WmlDocument = source;
-            Start = 0;
-            Count = int.MaxValue;
-            KeepSections = false;
-            InsertId = insertId;
-        }
-
-        public WmlSource(string fileName, int start, bool keepSections)
-        {
-            WmlDocument = new WmlDocument(fileName);
-            Start = start;
-            Count = int.MaxValue;
-            KeepSections = keepSections;
-            InsertId = null;
-        }
-
-        public WmlSource(WmlDocument source, int start, bool keepSections)
-        {
-            WmlDocument = source;
-            Start = start;
-            Count = int.MaxValue;
-            KeepSections = keepSections;
-            InsertId = null;
-        }
-
-        public WmlSource(string fileName, int start, string insertId)
-        {
-            WmlDocument = new WmlDocument(fileName);
-            Start = start;
-            Count = int.MaxValue;
-            KeepSections = false;
-            InsertId = insertId;
-        }
-
-        public WmlSource(WmlDocument source, int start, string insertId)
-        {
-            WmlDocument = source;
-            Start = start;
-            Count = int.MaxValue;
-            KeepSections = false;
-            InsertId = insertId;
-        }
-
-        public WmlSource(string fileName, int start, int count, bool keepSections)
-        {
-            WmlDocument = new WmlDocument(fileName);
-            Start = start;
-            Count = count;
-            KeepSections = keepSections;
-            InsertId = null;
-        }
-
-        public WmlSource(WmlDocument source, int start, int count, bool keepSections)
-        {
-            WmlDocument = source;
-            Start = start;
-            Count = count;
-            KeepSections = keepSections;
-            InsertId = null;
-        }
-
-        public WmlSource(string fileName, int start, int count, string insertId)
-        {
-            WmlDocument = new WmlDocument(fileName);
-            Start = start;
-            Count = count;
-            KeepSections = false;
-            InsertId = insertId;
-        }
-
-        public WmlSource(WmlDocument source, int start, int count, string insertId)
-        {
-            WmlDocument = source;
-            Start = start;
-            Count = count;
-            KeepSections = false;
-            InsertId = insertId;
+            this.WmlDocument = document;
+            this.Start = start;
+            this.Count = count;
+            this.KeepSections = keepSections;
+            this.KeepHeadersAndFooters = keepHeadersAndFooters;
+            this.InsertId = insertId;
         }
     }
 }

@@ -48,11 +48,13 @@ namespace OpenXmlPowerTools.Spreadsheets
         {
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public XElement ConvertToHtml(SmlToHtmlConverterSettings htmlConverterSettings, string tableName)
         {
             return SmlToHtmlConverter.ConvertTableToHtml(this, htmlConverterSettings, tableName);
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public XElement ConvertTableToHtml(string tableName)
         {
             SmlToHtmlConverterSettings settings = new SmlToHtmlConverterSettings();

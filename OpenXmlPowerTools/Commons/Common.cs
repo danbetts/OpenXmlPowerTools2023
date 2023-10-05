@@ -15,6 +15,7 @@ namespace OpenXmlPowerTools.Commons
 {
     public static class Common
     {
+
         #region Declaration
         /// <summary>
         /// Get new XDeclaration
@@ -636,7 +637,7 @@ namespace OpenXmlPowerTools.Commons
             }
 
         }
-        public static void CopyRelatedImage(this OpenXmlPart oldPart, OpenXmlPart newPart, XElement imageReference, XName attributeName, List<ImageData> images)
+        public static void CopyRelatedImage(this OpenXmlPart oldPart, OpenXmlPart newPart, XElement imageReference, XName attributeName, IList<ImageData> images)
         {
             if(!GetValidReferenceId(oldPart, imageReference, attributeName, out string refId)) return;
 
@@ -747,7 +748,7 @@ namespace OpenXmlPowerTools.Commons
                 return imagePart;
             }
         }
-        public static void CopyRelatedMedia(this OpenXmlPart oldContentPart, OpenXmlPart newContentPart, XElement imageReference, XName attributeName, List<MediaData> mediaList, string mediaRelationshipType)
+        public static void CopyRelatedMedia(this OpenXmlPart oldContentPart, OpenXmlPart newContentPart, XElement imageReference, XName attributeName, IList<MediaData> mediaList, string mediaRelationshipType)
         {
             string relId = (string)imageReference.Attribute(attributeName);
             if (string.IsNullOrEmpty(relId))
@@ -889,16 +890,17 @@ namespace OpenXmlPowerTools.Commons
 
             imageReference.Attribute(attributeName).Value = newId;
         }
-        public static void CopyRelatedPartsForContentParts(this OpenXmlPart oldContentPart, OpenXmlPart newContentPart, Dictionary<XName, XName[]> relationshipMarkup, IEnumerable<XElement> newContent, List<ImageData> images)
+        public static void CopyRelatedPartsForContentParts(this OpenXmlPart oldContentPart, OpenXmlPart newContentPart, Dictionary<XName, XName[]> relationshipMarkup, IEnumerable<XElement> newContent, IList<ImageData> images)
         {
+            // this should be recursive
             var relevantElements = newContent.DescendantsAndSelf()
                 .Where(d => d.Name == VML.imagedata || d.Name == VML.fill || d.Name == VML.stroke || d.Name == A.blip)
                 .ToList();
             foreach (XElement imageReference in relevantElements)
             {
-                CopyRelatedImage(oldContentPart, newContentPart, imageReference, R.embed, images);
-                CopyRelatedImage(oldContentPart, newContentPart, imageReference, R.pict, images);
-                CopyRelatedImage(oldContentPart, newContentPart, imageReference, R.id, images);
+                oldContentPart.CopyRelatedImage(newContentPart, imageReference, R.embed, images);
+                oldContentPart.CopyRelatedImage(newContentPart, imageReference, R.pict, images);
+                oldContentPart.CopyRelatedImage(newContentPart, imageReference, R.id, images);
             }
 
             foreach (XElement diagramReference in newContent.DescendantsAndSelf().Where(d => d.Name == DGM.relIds || d.Name == A.relIds))
@@ -1207,7 +1209,7 @@ namespace OpenXmlPowerTools.Commons
                 sect.AddFirst(referenceToAdd);
             }
         }
-        public static ImageData ManageImageCopy(this ImagePart oldImage, OpenXmlPart newContentPart, List<ImageData> images)
+        public static ImageData ManageImageCopy(this ImagePart oldImage, OpenXmlPart newContentPart, IList<ImageData> images)
         {
             ImageData oldImageData = new ImageData(oldImage);
             foreach (ImageData item in images)
@@ -1218,7 +1220,7 @@ namespace OpenXmlPowerTools.Commons
             images.Add(oldImageData);
             return oldImageData;
         }
-        public static MediaData ManageMediaCopy(this DataPart oldMedia, List<MediaData> mediaList)
+        public static MediaData ManageMediaCopy(this DataPart oldMedia, IList<MediaData> mediaList)
         {
             MediaData oldMediaData = new MediaData(oldMedia);
             foreach (MediaData item in mediaList)
@@ -1295,55 +1297,6 @@ namespace OpenXmlPowerTools.Commons
                 foreach (var att in item.NumStyleLinkAttributesToChange)
                     att.Value = item.NewId;
                 foreach (var att in item.StyleLinkAttributesToChange)
-                    att.Value = item.NewId;
-            }
-            part.PutXDocument();
-        }
-        public static void UpdateStyleIdsForStylePart(this StylesPart part, Dictionary<string, string> correctionList)
-        {
-            var styleXDoc = part.GetXDocument();
-            var styleAttributeChangeList = correctionList
-                .Select(cor => new
-                {
-                    NewId = cor.Value,
-                    StyleIdAttributesToChange = styleXDoc.Root.Elements(W.style).Attributes(W.styleId).Where(a => a.Value == cor.Key).ToList(),
-                    BasedOnAttributesToChange = styleXDoc.Root.Elements(W.style).Elements(W.basedOn).Attributes(W.val).Where(a => a.Value == cor.Key).ToList(),
-                    NextAttributesToChange = styleXDoc.Root.Elements(W.style).Elements(W.next).Attributes(W.val).Where(a => a.Value == cor.Key).ToList(),
-                    LinkAttributesToChange = styleXDoc.Root.Elements(W.style).Elements(W.link).Attributes(W.val).Where(a => a.Value == cor.Key).ToList(),
-                }).ToList();
-
-            foreach (var item in styleAttributeChangeList)
-            {
-                foreach (var att in item.StyleIdAttributesToChange)
-                    att.Value = item.NewId;
-                foreach (var att in item.BasedOnAttributesToChange)
-                    att.Value = item.NewId;
-                foreach (var att in item.NextAttributesToChange)
-                    att.Value = item.NewId;
-                foreach (var att in item.LinkAttributesToChange)
-                    att.Value = item.NewId;
-            }
-            part.PutXDocument();
-        }
-        public static void UpdateStyleIdsForContentPart(this OpenXmlPart part, Dictionary<string, string> correctionList)
-        {
-            var xDoc = part.GetXDocument();
-            var mainAttributeChangeList = correctionList
-                .Select(cor => new
-                {
-                    NewId = cor.Value,
-                    PStyleAttributesToChange = xDoc.Descendants(W.pStyle).Attributes(W.val).Where(a => a.Value == cor.Key).ToList(),
-                    RStyleAttributesToChange = xDoc.Descendants(W.rStyle).Attributes(W.val).Where(a => a.Value == cor.Key).ToList(),
-                    TblStyleAttributesToChange = xDoc.Descendants(W.tblStyle).Attributes(W.val).Where(a => a.Value == cor.Key).ToList(),
-                }).ToList();
-
-            foreach (var item in mainAttributeChangeList)
-            {
-                foreach (var att in item.PStyleAttributesToChange)
-                    att.Value = item.NewId;
-                foreach (var att in item.RStyleAttributesToChange)
-                    att.Value = item.NewId;
-                foreach (var att in item.TblStyleAttributesToChange)
                     att.Value = item.NewId;
             }
             part.PutXDocument();
@@ -1482,35 +1435,53 @@ namespace OpenXmlPowerTools.Commons
                 }
             }
         }
-        public static void MergeLatentStyles(this XDocument fromStyles, XDocument toStyles)
+        public static void MergeDocDefaultStyles(this XDocument xDocument, XDocument newXDoc)
         {
-            var fromLatentStyles = fromStyles.Descendants(W.latentStyles).FirstOrDefault();
+            var docDefaultStyles = xDocument.Descendants(W.docDefaults);
+            foreach (var docDefaultStyle in docDefaultStyles)
+            {
+                newXDoc.Root.Add(docDefaultStyle);
+            }
+        }
+        public static void MergeFontTables(this XDocument source, XDocument target)
+        {
+            foreach (XElement font in source.Root.Elements(W.font))
+            {
+                if (!target.Root.Elements(W.font).Any(o => o.Attribute(W.name).Value == font.Attribute(W.name).Value))
+                {
+                    target.Root.Add(new XElement(font));
+                }
+            }
+        }
+        public static void MergeLatentStyles(this XDocument source, XDocument target)
+        {
+            var fromLatentStyles = source.Descendants(W.latentStyles).FirstOrDefault();
             if (fromLatentStyles == null)
                 return;
 
-            var toLatentStyles = toStyles.Descendants(W.latentStyles).FirstOrDefault();
+            var toLatentStyles = target.Descendants(W.latentStyles).FirstOrDefault();
             if (toLatentStyles == null)
             {
                 var newLatentStylesElement = new XElement(W.latentStyles,
                     fromLatentStyles.Attributes());
-                var globalDefaults = toStyles
+                var globalDefaults = target
                     .Descendants(W.docDefaults)
                     .FirstOrDefault();
                 if (globalDefaults == null)
                 {
-                    var firstStyle = toStyles
+                    var firstStyle = target
                         .Root
                         .Elements(W.style)
                         .FirstOrDefault();
                     if (firstStyle == null)
-                        toStyles.Root.Add(newLatentStylesElement);
+                        target.Root.Add(newLatentStylesElement);
                     else
                         firstStyle.AddBeforeSelf(newLatentStylesElement);
                 }
                 else
                     globalDefaults.AddAfterSelf(newLatentStylesElement);
             }
-            toLatentStyles = toStyles.Descendants(W.latentStyles).FirstOrDefault();
+            toLatentStyles = target.Descendants(W.latentStyles).FirstOrDefault();
             if (toLatentStyles == null)
                 throw new OpenXmlPowerToolsException("Internal error");
 
@@ -1532,27 +1503,6 @@ namespace OpenXmlPowerTools.Commons
                 .Count();
 
             toLatentStyles.SetAttributeValue(W.count, count);
-        }
-        public static void MergeDocDefaultStyles(this XDocument xDocument, XDocument newXDoc)
-        {
-            var docDefaultStyles = xDocument.Descendants(W.docDefaults);
-            foreach (var docDefaultStyle in docDefaultStyles)
-            {
-                newXDoc.Root.Add(docDefaultStyle);
-            }
-        }
-        public static void MergeFontTables(this XDocument fromFontTable, XDocument toFontTable)
-        {
-            foreach (XElement font in fromFontTable.Root.Elements(W.font))
-            {
-                string name = font.Attribute(W.name).Value;
-                if (toFontTable
-                    .Root
-                    .Elements(W.font)
-                    .Where(o => o.Attribute(W.name).Value == name)
-                    .Count() == 0)
-                    toFontTable.Root.Add(new XElement(font));
-            }
         }
         public static void ConvertNumberingPartToNewIds(this XDocument newNumbering, Dictionary<string, string> newIds)
         {
@@ -1732,7 +1682,7 @@ namespace OpenXmlPowerTools.Commons
         #endregion
 
         #region XNode
-        public static object InsertTransform(this XNode node, List<XElement> newContent)
+        public static object InsertTransform(this XNode node, IEnumerable<XElement> newContent)
         {
             XElement element = node as XElement;
             if (element != null)

@@ -16,6 +16,8 @@ using OpenXmlPowerTools.Spreadsheets;
 
 namespace OpenXmlPowerTools
 {
+
+    [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
     public class SmlToHtmlConverterSettings
     {
         public string PageTitle;
