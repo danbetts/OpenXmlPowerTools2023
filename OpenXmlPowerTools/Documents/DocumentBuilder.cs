@@ -14,7 +14,6 @@ namespace OpenXmlPowerTools.Documents
         public List<WmlSource> Sources { get; set; } = new List<WmlSource>();
         private HashSet<string> customXmlGuidList { get; set; } = null;
         private bool normalizeStyleIds { get; set; } = true;
-        private static Dictionary<XName, XName[]> relationshipMarkup = Constants.WordprocessingRelationshipMarkup;
 
         /// <summary>
         /// Set output path
@@ -119,15 +118,13 @@ namespace OpenXmlPowerTools.Documents
 
         private void Process(WordprocessingDocument target)
         {
-            if (Sources?.Any() != true) throw new ArgumentException("No sources to process.");
-            
             WmlPackage package = new WmlPackage();
             package.Document = target;
             package.Sources = Sources;
             package.Main.Declaration.SetDeclaration();
             package.Main.Root.ReplaceWith(Wordprocessing.CreateRoot());
 
-            if (package.KeepNoSections())
+            if (package.HasSources())
             {
                 if (normalizeStyleIds)
                 {
@@ -137,7 +134,7 @@ namespace OpenXmlPowerTools.Documents
                 package.CopyFirstSourceCoreParts();
                 HandleInsertId();
 
-                if (!Sources.Any(s => s.KeepSections))
+                if (package.KeepNoSections())
                 {
                     package.RemoveAllSectionsExceptLast();
                 }
@@ -145,7 +142,7 @@ namespace OpenXmlPowerTools.Documents
                         
                 HandleHeadersAndFooters();
 
-                if (Sources.Any(s => s.KeepSections))
+                if (Sources.Any(s => s.KeepSections == true))
                 {
                     package.CopyAllSections();
                 }
@@ -171,7 +168,7 @@ namespace OpenXmlPowerTools.Documents
                             if (source.KeepSections && !source.KeepHeadersAndFooters)
                                 doc.RemoveHeadersAndFootersFromSections();
                             else if (source.KeepSections)
-                                doc.ProcessSectionsForLinkToPreviousHeadersAndFooters();
+                                doc.LinkToPreviousHeadersAndFooters();
 
                             var body = doc.GetBody();
 
@@ -204,7 +201,7 @@ namespace OpenXmlPowerTools.Documents
                             if (source.KeepSections && !source.KeepHeadersAndFooters)
                                 doc.RemoveHeadersAndFootersFromSections();
                             else if (source.KeepSections)
-                                doc.ProcessSectionsForLinkToPreviousHeadersAndFooters();
+                                doc.LinkToPreviousHeadersAndFooters();
 
                             var contents = doc.GetContents(source.Start, source.Count);
 
@@ -223,7 +220,7 @@ namespace OpenXmlPowerTools.Documents
             }
             void HandleKeepSections()
             {
-                target.FixUpSectionProperties();
+                target.FixSectionProperties();
 
                 var targetMain = package.Main;
                 var sections = targetMain.Descendants(W.sectPr).ToList();

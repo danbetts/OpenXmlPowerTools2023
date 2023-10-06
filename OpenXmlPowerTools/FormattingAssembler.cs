@@ -838,7 +838,7 @@ namespace OpenXmlPowerTools
             pxd.Root.Descendants().Where(d => d.Name.Namespace == PtOpenXml.pt).Remove();
             if (settings.OrderElementsPerStandard)
             {
-                XElement newRoot = (XElement)Wordprocessing.WmlOrderElementsPerStandard(pxd.Root);
+                XElement newRoot = (XElement)Wordprocessing.OrderElementsPerStandard(pxd.Root);
                 pxd.Root.ReplaceWith(newRoot);
             }
         }

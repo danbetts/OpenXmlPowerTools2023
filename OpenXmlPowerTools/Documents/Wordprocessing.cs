@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
@@ -15,301 +14,9 @@ namespace OpenXmlPowerTools.Documents
 {
     public static class Wordprocessing
     {
-        //public static Dictionary<XName, XName[]> RelationshipMarkup => Constants.WordprocessingRelationshipMarkup;
-        public static CachedHeaderFooter[] CachedHeadersAndFooters = new CachedHeaderFooter[]
-        {
-            new CachedHeaderFooter() { Ref = W.headerReference, Type = "first" },
-            new CachedHeaderFooter() { Ref = W.headerReference, Type = "even" },
-            new CachedHeaderFooter() { Ref = W.headerReference, Type = "default" },
-            new CachedHeaderFooter() { Ref = W.footerReference, Type = "first" },
-            new CachedHeaderFooter() { Ref = W.footerReference, Type = "even" },
-            new CachedHeaderFooter() { Ref = W.footerReference, Type = "default" },
-        };
-
         private static HashSet<string> UnknownFonts = new HashSet<string>();
-        private static HashSet<string> KnownFamilies = null;
 
-        #region Orders
-        public static Dictionary<XName, int> OrderPBdr = new Dictionary<XName, int>
-        {
-            { W.top, 10 },
-            { W.left, 20 },
-            { W.bottom, 30 },
-            { W.right, 40 },
-            { W.between, 50 },
-            { W.bar, 60 },
-        };
-        public static Dictionary<XName, int> OrderSettings = new Dictionary<XName, int>
-        {
-            { W.writeProtection, 10},
-            { W.view, 20},
-            { W.zoom, 30},
-            { W.removePersonalInformation, 40},
-            { W.removeDateAndTime, 50},
-            { W.doNotDisplayPageBoundaries, 60},
-            { W.displayBackgroundShape, 70},
-            { W.printPostScriptOverText, 80},
-            { W.printFractionalCharacterWidth, 90},
-            { W.printFormsData, 100},
-            { W.embedTrueTypeFonts, 110},
-            { W.embedSystemFonts, 120},
-            { W.saveSubsetFonts, 130},
-            { W.saveFormsData, 140},
-            { W.mirrorMargins, 150},
-            { W.alignBordersAndEdges, 160},
-            { W.bordersDoNotSurroundHeader, 170},
-            { W.bordersDoNotSurroundFooter, 180},
-            { W.gutterAtTop, 190},
-            { W.hideSpellingErrors, 200},
-            { W.hideGrammaticalErrors, 210},
-            { W.activeWritingStyle, 220},
-            { W.proofState, 230},
-            { W.formsDesign, 240},
-            { W.attachedTemplate, 250},
-            { W.linkStyles, 260},
-            { W.stylePaneFormatFilter, 270},
-            { W.stylePaneSortMethod, 280},
-            { W.documentType, 290},
-            { W.mailMerge, 300},
-            { W.revisionView, 310},
-            { W.trackRevisions, 320},
-            { W.doNotTrackMoves, 330},
-            { W.doNotTrackFormatting, 340},
-            { W.documentProtection, 350},
-            { W.autoFormatOverride, 360},
-            { W.styleLockTheme, 370},
-            { W.styleLockQFSet, 380},
-            { W.defaultTabStop, 390},
-            { W.autoHyphenation, 400},
-            { W.consecutiveHyphenLimit, 410},
-            { W.hyphenationZone, 420},
-            { W.doNotHyphenateCaps, 430},
-            { W.showEnvelope, 440},
-            { W.summaryLength, 450},
-            { W.clickAndTypeStyle, 460},
-            { W.defaultTableStyle, 470},
-            { W.evenAndOddHeaders, 480},
-            { W.bookFoldRevPrinting, 490},
-            { W.bookFoldPrinting, 500},
-            { W.bookFoldPrintingSheets, 510},
-            { W.drawingGridHorizontalSpacing, 520},
-            { W.drawingGridVerticalSpacing, 530},
-            { W.displayHorizontalDrawingGridEvery, 540},
-            { W.displayVerticalDrawingGridEvery, 550},
-            { W.doNotUseMarginsForDrawingGridOrigin, 560},
-            { W.drawingGridHorizontalOrigin, 570},
-            { W.drawingGridVerticalOrigin, 580},
-            { W.doNotShadeFormData, 590},
-            { W.noPunctuationKerning, 600},
-            { W.characterSpacingControl, 610},
-            { W.printTwoOnOne, 620},
-            { W.strictFirstAndLastChars, 630},
-            { W.noLineBreaksAfter, 640},
-            { W.noLineBreaksBefore, 650},
-            { W.savePreviewPicture, 660},
-            { W.doNotValidateAgainstSchema, 670},
-            { W.saveInvalidXml, 680},
-            { W.ignoreMixedContent, 690},
-            { W.alwaysShowPlaceholderText, 700},
-            { W.doNotDemarcateInvalidXml, 710},
-            { W.saveXmlDataOnly, 720},
-            { W.useXSLTWhenSaving, 730},
-            { W.saveThroughXslt, 740},
-            { W.showXMLTags, 750},
-            { W.alwaysMergeEmptyNamespace, 760},
-            { W.updateFields, 770},
-            { W.footnotePr, 780},
-            { W.endnotePr, 790},
-            { W.compat, 800},
-            { W.docVars, 810},
-            { W.rsids, 820},
-            { M.mathPr, 830},
-            { W.attachedSchema, 840},
-            { W.themeFontLang, 850},
-            { W.clrSchemeMapping, 860},
-            { W.doNotIncludeSubdocsInStats, 870},
-            { W.doNotAutoCompressPictures, 880},
-            { W.forceUpgrade, 890}, 
-            //{W.captions, 900}, 
-            { W.readModeInkLockDown, 910},
-            { W.smartTagType, 920}, 
-            //{W.sl:schemaLibrary, 930}, 
-            { W.doNotEmbedSmartTags, 940},
-            { W.decimalSymbol, 950},
-            { W.listSeparator, 960},
-        };
-        public static Dictionary<XName, int> OrderTableBorders = new Dictionary<XName, int>
-        {
-            { W.top, 10 },
-            { W.left, 20 },
-            { W.start, 30 },
-            { W.bottom, 40 },
-            { W.right, 50 },
-            { W.end, 60 },
-            { W.insideH, 70 },
-            { W.insideV, 80 },
-        };
-        public static Dictionary<XName, int> OrderTableCellBorders = new Dictionary<XName, int>
-        {
-            { W.top, 10 },
-            { W.start, 20 },
-            { W.left, 30 },
-            { W.bottom, 40 },
-            { W.right, 50 },
-            { W.end, 60 },
-            { W.insideH, 70 },
-            { W.insideV, 80 },
-            { W.tl2br, 90 },
-            { W.tr2bl, 100 },
-        };
-        public static Dictionary<XName, int> OrderTableCellPart = new Dictionary<XName, int>
-        {
-            { W.cnfStyle, 10 },
-            { W.tcW, 20 },
-            { W.gridSpan, 30 },
-            { W.hMerge, 40 },
-            { W.vMerge, 50 },
-            { W.tcBorders, 60 },
-            { W.shd, 70 },
-            { W.noWrap, 80 },
-            { W.tcMar, 90 },
-            { W.textDirection, 100 },
-            { W.tcFitText, 110 },
-            { W.vAlign, 120 },
-            { W.hideMark, 130 },
-            { W.headers, 140 },
-        };
-        public static Dictionary<XName, int> OrderTablePart = new Dictionary<XName, int>
-        {
-            { W.tblStyle, 10 },
-            { W.tblpPr, 20 },
-            { W.tblOverlap, 30 },
-            { W.bidiVisual, 40 },
-            { W.tblStyleRowBandSize, 50 },
-            { W.tblStyleColBandSize, 60 },
-            { W.tblW, 70 },
-            { W.jc, 80 },
-            { W.tblCellSpacing, 90 },
-            { W.tblInd, 100 },
-            { W.tblBorders, 110 },
-            { W.shd, 120 },
-            { W.tblLayout, 130 },
-            { W.tblCellMar, 140 },
-            { W.tblLook, 150 },
-            { W.tblCaption, 160 },
-            { W.tblDescription, 170 },
-        };
-        #endregion
-
-        public static bool IsWordprocessing(string ext) => Constants.WordprocessingExtensions.Contains(ext.ToLower());
-        public static int CalcWidthOfRunInTwips(XElement r)
-        {
-            if (KnownFamilies == null)
-            {
-                KnownFamilies = new HashSet<string>();
-                var families = FontFamily.Families;
-                foreach (var fam in families)
-                    KnownFamilies.Add(fam.Name);
-            }
-
-            var fontName = (string)r.Attribute(PtOpenXml.pt + "FontName");
-            if (fontName == null)
-                fontName = (string)r.Ancestors(W.p).First().Attribute(PtOpenXml.pt + "FontName");
-            if (fontName == null)
-                throw new OpenXmlPowerToolsException("Internal Error, should have FontName attribute");
-            if (UnknownFonts.Contains(fontName))
-                return 0;
-
-            var rPr = r.Element(W.rPr);
-            if (rPr == null)
-                throw new OpenXmlPowerToolsException("Internal Error, should have run properties");
-            var languageType = (string)r.Attribute(PtOpenXml.LanguageType);
-            decimal? szn = null;
-            if (languageType == "bidi")
-                szn = (decimal?)rPr.Elements(W.szCs).Attributes(W.val).FirstOrDefault();
-            else
-                szn = (decimal?)rPr.Elements(W.sz).Attributes(W.val).FirstOrDefault();
-            if (szn == null)
-                szn = 22m;
-
-            var sz = szn.GetValueOrDefault();
-
-            // unknown font families will throw ArgumentException, in which case just return 0
-            if (!KnownFamilies.Contains(fontName))
-                return 0;
-            // in theory, all unknown fonts are found by the above test, but if not...
-            FontFamily ff;
-            try
-            {
-                ff = new FontFamily(fontName);
-            }
-            catch (ArgumentException)
-            {
-                UnknownFonts.Add(fontName);
-
-                return 0;
-            }
-            FontStyle fs = FontStyle.Regular;
-            var bold = GetBoolProp(rPr, W.b) || GetBoolProp(rPr, W.bCs);
-            var italic = GetBoolProp(rPr, W.i) || GetBoolProp(rPr, W.iCs);
-            if (bold && !italic)
-                fs = FontStyle.Bold;
-            if (italic && !bold)
-                fs = FontStyle.Italic;
-            if (bold && italic)
-                fs = FontStyle.Bold | FontStyle.Italic;
-
-            var runText = r.DescendantsTrimmed(W.txbxContent)
-                .Where(e => e.Name == W.t)
-                .Select(t => (string)t)
-                .StringConcatenate();
-
-            var tabLength = r.DescendantsTrimmed(W.txbxContent)
-                .Where(e => e.Name == W.tab)
-                .Select(t => (decimal)t.Attribute(PtOpenXml.TabWidth))
-                .Sum();
-
-            if (runText.Length == 0 && tabLength == 0)
-                return 0;
-
-            int multiplier = 1;
-            if (runText.Length <= 2)
-                multiplier = 100;
-            else if (runText.Length <= 4)
-                multiplier = 50;
-            else if (runText.Length <= 8)
-                multiplier = 25;
-            else if (runText.Length <= 16)
-                multiplier = 12;
-            else if (runText.Length <= 32)
-                multiplier = 6;
-            if (multiplier != 1)
-            {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < multiplier; i++)
-                    sb.Append(runText);
-                runText = sb.ToString();
-            }
-
-            var w = MetricsGetter.GetTextWidth(ff, fs, sz, runText);
-
-            return (int)(w / 96m * 1440m / multiplier + tabLength * 1440m);
-        }
-        public static bool GetBoolProp(XElement runProps, XName xName)
-        {
-            var p = runProps.Element(xName);
-            if (p == null)
-                return false;
-            var v = p.Attribute(W.val);
-            if (v == null)
-                return true;
-            var s = v.Value.ToLower();
-            if (s == "0" || s == "false")
-                return false;
-            if (s == "1" || s == "true")
-                return true;
-            return false;
-        }
+        public static bool IsWordprocessing(string ext) => Extensions.Contains(ext.ToLower());
         public static int StringToTwips(string twipsOrPoints)
         {
             // if the pos value is in points, not twips
@@ -320,62 +27,104 @@ namespace OpenXmlPowerTools.Documents
             }
             return int.Parse(twipsOrPoints);
         }
+
+        #region XElement / XAttribute / XNode
         public static int? AttributeToTwips(XAttribute attribute)
         {
-            if (attribute == null)
-            {
-                return null;
-            }
+            if (attribute == null) return null;
 
             string twipsOrPoints = (string)attribute;
 
-            // if the pos value is in points, not twips
-            if (twipsOrPoints.EndsWith("pt"))
-            {
-                decimal decimalValue = decimal.Parse(twipsOrPoints.Substring(0, twipsOrPoints.Length - 2));
-                return (int)(decimalValue * 20);
-            }
-            if (twipsOrPoints.Contains('.'))
-            {
-                decimal decimalValue = decimal.Parse(twipsOrPoints);
-                return (int)decimalValue;
-            }
-            return int.Parse(twipsOrPoints);
+            if (twipsOrPoints.EndsWith("pt")) return (int)(decimal.Parse(twipsOrPoints.Substring(0, twipsOrPoints.Length - 2)) * 20);
+            else if (twipsOrPoints.Contains('.')) return (int)decimal.Parse(twipsOrPoints);
+            else return int.Parse(twipsOrPoints);
         }
+        public static object OrderElementsPerStandard(XNode node)
+        {
+            if (node == null) return node;
+            var element = node as XElement;
+
+            if (element.Name == W.p) return ProcessRoot(W.pPr);
+            else if (element.Name == W.r) return ProcessRoot(W.rPr);
+            else if (element.Name == W.pPr) return ProcessBranch(ParagraphPropertiesOrder);
+            else if (element.Name == W.rPr) return ProcessBranch(RunPropertiesOrder);
+            else if (element.Name == W.tblPr) return ProcessBranch(TablePropertiesOrder);
+            else if (element.Name == W.tcPr) return ProcessBranch(TableCellPropertiesOrder);
+            else if (element.Name == W.tcBorders) return ProcessBranch(TableCellBordersOrder);
+            else if (element.Name == W.tblBorders) return ProcessBranch(TableBordersOrder);
+            else if (element.Name == W.pBdr) return ProcessBranch(ParagraphBordersOrder);
+            else if (element.Name == W.settings) return ProcessBranch(SettingsOrder);
+            else return ProcessNode();
+
+            object ProcessRoot(XName xName)
+            {
+                return new XElement(element.Name,
+                    element.Attributes(),
+                    element.Elements(xName).Select(e => (XElement)OrderElementsPerStandard(e)),
+                    element.Elements().Where(e => e.Name != xName).Select(e => (XElement)OrderElementsPerStandard(e)));
+            }
+            object ProcessBranch(Dictionary<XName, int> order)
+            {
+                return new XElement(element.Name, element.Attributes(), element.Elements()
+                   .Select(e => (XElement)OrderElementsPerStandard(e))
+                   .OrderBy(e =>
+                   {
+                       return order.ContainsKey(e.Name)
+                       ? order[e.Name]
+                       : 999;
+                   }));
+            }
+            object ProcessNode()
+            {
+                return new XElement(element.Name, element.Attributes(), element.Nodes().Select(n => OrderElementsPerStandard(n)));
+            }
+        }
+        public static void AddReferenceToExistingHeaderOrFooter(this XElement sect, string rId, XName reference, string toType)
+        {
+            if (reference == W.headerReference)
+            {
+                var referenceToAdd = new XElement(W.headerReference, new XAttribute(W.type, toType), new XAttribute(R.id, rId));
+                sect.AddFirst(referenceToAdd);
+            }
+            else
+            {
+                var referenceToAdd = new XElement(W.footerReference, new XAttribute(W.type, toType), new XAttribute(R.id, rId));
+                sect.AddFirst(referenceToAdd);
+            }
+        }
+        // This method is a mess
         public static XElement CoalesceAdjacentRunsWithIdenticalFormatting(XElement runContainer)
         {
             const string dontConsolidate = "DontConsolidate";
 
             IEnumerable<IGrouping<string, XElement>> groupedAdjacentRunsWithIdenticalFormatting =
-                runContainer
-                    .Elements()
-                    .GroupAdjacent(ce =>
+                runContainer.Elements().GroupAdjacent(ce =>
+                {
+                    if (ce.Name == W.r)
                     {
-                        if (ce.Name == W.r)
-                        {
-                            if (ce.Elements().Count(e => e.Name != W.rPr) != 1)
-                                return dontConsolidate;
-
-                            if (ce.Attribute(PtOpenXml.AbstractNumId) != null)
-                                return dontConsolidate;
-
-                            XElement rPr = ce.Element(W.rPr);
-                            string rPrString = rPr != null ? rPr.ToString(SaveOptions.None) : string.Empty;
-
-                            if (ce.Element(W.t) != null)
-                                return "Wt" + rPrString;
-
-                            if (ce.Element(W.instrText) != null)
-                                return "WinstrText" + rPrString;
-
+                        if (ce.Elements().Count(e => e.Name != W.rPr) != 1)
                             return dontConsolidate;
-                        }
 
-                        if (ce.Name == W.ins)
+                        if (ce.Attribute(PtOpenXml.AbstractNumId) != null)
+                            return dontConsolidate;
+
+                        XElement rPr = ce.Element(W.rPr);
+                        string rPrString = rPr != null ? rPr.ToString(SaveOptions.None) : string.Empty;
+
+                        if (ce.Element(W.t) != null)
+                            return "Wt" + rPrString;
+
+                        if (ce.Element(W.instrText) != null)
+                            return "WinstrText" + rPrString;
+
+                        return dontConsolidate;
+                    }
+
+                    if (ce.Name == W.ins)
+                    {
+                        if (ce.Elements(W.del).Any())
                         {
-                            if (ce.Elements(W.del).Any())
-                            {
-                                return dontConsolidate;
+                            return dontConsolidate;
 #if false
                                 // for w:ins/w:del/w:r/w:delText
                                 if ((ce.Elements(W.del).Elements(W.r).Elements().Count(e => e.Name != W.rPr) != 1) ||
@@ -406,54 +155,54 @@ namespace OpenXmlPowerTools.Documents
                                            .Select(rPr => rPr.ToString(SaveOptions.None))
                                            .StringConcatenate();
 #endif
-                            }
-
-                            // w:ins/w:r/w:t
-                            if ((ce.Elements().Elements().Count(e => e.Name != W.rPr) != 1) ||
-                                !ce.Elements().Elements(W.t).Any())
-                                return dontConsolidate;
-
-                            XAttribute dateIns2 = ce.Attribute(W.date);
-
-                            string authorIns2 = (string)ce.Attribute(W.author) ?? string.Empty;
-                            string dateInsString2 = dateIns2 != null
-                                ? ((DateTime)dateIns2).ToString("s")
-                                : string.Empty;
-
-                            string idIns2 = (string)ce.Attribute(W.id);
-
-                            return "Wins2" +
-                                   authorIns2 +
-                                   dateInsString2 +
-                                   idIns2 +
-                                   ce.Elements()
-                                       .Elements(W.rPr)
-                                       .Select(rPr => rPr.ToString(SaveOptions.None))
-                                       .StringConcatenate();
                         }
 
-                        if (ce.Name == W.del)
-                        {
-                            if ((ce.Elements(W.r).Elements().Count(e => e.Name != W.rPr) != 1) ||
-                                !ce.Elements().Elements(W.delText).Any())
-                                return dontConsolidate;
+                        // w:ins/w:r/w:t
+                        if ((ce.Elements().Elements().Count(e => e.Name != W.rPr) != 1) ||
+                            !ce.Elements().Elements(W.t).Any())
+                            return dontConsolidate;
 
-                            XAttribute dateDel2 = ce.Attribute(W.date);
+                        XAttribute dateIns2 = ce.Attribute(W.date);
 
-                            string authorDel2 = (string)ce.Attribute(W.author) ?? string.Empty;
-                            string dateDelString2 = dateDel2 != null ? ((DateTime)dateDel2).ToString("s") : string.Empty;
+                        string authorIns2 = (string)ce.Attribute(W.author) ?? string.Empty;
+                        string dateInsString2 = dateIns2 != null
+                            ? ((DateTime)dateIns2).ToString("s")
+                            : string.Empty;
 
-                            return "Wdel" +
-                                   authorDel2 +
-                                   dateDelString2 +
-                                   ce.Elements(W.r)
-                                       .Elements(W.rPr)
-                                       .Select(rPr => rPr.ToString(SaveOptions.None))
-                                       .StringConcatenate();
-                        }
+                        string idIns2 = (string)ce.Attribute(W.id);
 
-                        return dontConsolidate;
-                    });
+                        return "Wins2" +
+                               authorIns2 +
+                               dateInsString2 +
+                               idIns2 +
+                               ce.Elements()
+                                   .Elements(W.rPr)
+                                   .Select(rPr => rPr.ToString(SaveOptions.None))
+                                   .StringConcatenate();
+                    }
+
+                    if (ce.Name == W.del)
+                    {
+                        if ((ce.Elements(W.r).Elements().Count(e => e.Name != W.rPr) != 1) ||
+                            !ce.Elements().Elements(W.delText).Any())
+                            return dontConsolidate;
+
+                        XAttribute dateDel2 = ce.Attribute(W.date);
+
+                        string authorDel2 = (string)ce.Attribute(W.author) ?? string.Empty;
+                        string dateDelString2 = dateDel2 != null ? ((DateTime)dateDel2).ToString("s") : string.Empty;
+
+                        return "Wdel" +
+                               authorDel2 +
+                               dateDelString2 +
+                               ce.Elements(W.r)
+                                   .Elements(W.rPr)
+                                   .Select(rPr => rPr.ToString(SaveOptions.None))
+                                   .StringConcatenate();
+                    }
+
+                    return dontConsolidate;
+                });
 
             var runContainerWithConsolidatedRuns = new XElement(runContainer.Name,
                 runContainer.Attributes(),
@@ -535,153 +284,110 @@ namespace OpenXmlPowerTools.Documents
 
             return runContainerWithConsolidatedRuns;
         }
-        public static object WmlOrderElementsPerStandard(XNode node)
+        // This method is a mess
+        public static int CalcWidthOfRunInTwips(XElement r)
         {
-            XElement element = node as XElement;
-            if (element != null)
+            HashSet<string> KnownFamilies = null;
+            if (KnownFamilies == null)
             {
-                if (element.Name == W.pPr)
-                    return new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements().Select(e => (XElement)WmlOrderElementsPerStandard(e)).OrderBy(e =>
-                        {
-                            if (Constants.OrderPPr.ContainsKey(e.Name))
-                                return Constants.OrderPPr[e.Name];
-                            return 999;
-                        }));
-
-                if (element.Name == W.rPr)
-                    return new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements().Select(e => (XElement)WmlOrderElementsPerStandard(e)).OrderBy(e =>
-                        {
-                            if (Constants.OrderRPr.ContainsKey(e.Name))
-                                return Constants.OrderRPr[e.Name];
-                            return 999;
-                        }));
-
-                if (element.Name == W.tblPr)
-                    return new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements().Select(e => (XElement)WmlOrderElementsPerStandard(e)).OrderBy(e =>
-                        {
-                            if (OrderTablePart.ContainsKey(e.Name))
-                                return OrderTablePart[e.Name];
-                            return 999;
-                        }));
-
-                if (element.Name == W.tcPr)
-                    return new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements().Select(e => (XElement)WmlOrderElementsPerStandard(e)).OrderBy(e =>
-                        {
-                            if (OrderTableCellPart.ContainsKey(e.Name))
-                                return OrderTableCellPart[e.Name];
-                            return 999;
-                        }));
-
-                if (element.Name == W.tcBorders)
-                    return new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements().Select(e => (XElement)WmlOrderElementsPerStandard(e)).OrderBy(e =>
-                        {
-                            if (OrderTableBorders.ContainsKey(e.Name))
-                                return OrderTableBorders[e.Name];
-                            return 999;
-                        }));
-
-                if (element.Name == W.tblBorders)
-                    return new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements().Select(e => (XElement)WmlOrderElementsPerStandard(e)).OrderBy(e =>
-                        {
-                            if (OrderTableBorders.ContainsKey(e.Name))
-                                return OrderTableBorders[e.Name];
-                            return 999;
-                        }));
-
-                if (element.Name == W.pBdr)
-                    return new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements().Select(e => (XElement)WmlOrderElementsPerStandard(e)).OrderBy(e =>
-                        {
-                            if (OrderPBdr.ContainsKey(e.Name))
-                                return OrderPBdr[e.Name];
-                            return 999;
-                        }));
-
-                if (element.Name == W.p)
-                {
-                    var newP = new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements(W.pPr).Select(e => (XElement)WmlOrderElementsPerStandard(e)),
-                        element.Elements().Where(e => e.Name != W.pPr).Select(e => (XElement)WmlOrderElementsPerStandard(e)));
-                    return newP;
-                }
-
-                if (element.Name == W.r)
-                    return new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements(W.rPr).Select(e => (XElement)WmlOrderElementsPerStandard(e)),
-                        element.Elements().Where(e => e.Name != W.rPr).Select(e => (XElement)WmlOrderElementsPerStandard(e)));
-
-                if (element.Name == W.settings)
-                    return new XElement(element.Name,
-                        element.Attributes(),
-                        element.Elements().Select(e => (XElement)WmlOrderElementsPerStandard(e)).OrderBy(e =>
-                        {
-                            if (OrderSettings.ContainsKey(e.Name))
-                                return OrderSettings[e.Name];
-                            return 999;
-                        }));
-
-                return new XElement(element.Name,
-                    element.Attributes(),
-                    element.Nodes().Select(n => WmlOrderElementsPerStandard(n)));
+                KnownFamilies = new HashSet<string>();
+                var families = FontFamily.Families;
+                foreach (var fam in families)
+                    KnownFamilies.Add(fam.Name);
             }
-            return node;
+
+            var fontName = (string)r.Attribute(PtOpenXml.pt + "FontName");
+            if (fontName == null)
+                fontName = (string)r.Ancestors(W.p).First().Attribute(PtOpenXml.pt + "FontName");
+            if (fontName == null)
+                throw new OpenXmlPowerToolsException("Internal Error, should have FontName attribute");
+            if (UnknownFonts.Contains(fontName))
+                return 0;
+
+            var rPr = r.Element(W.rPr);
+            if (rPr == null)
+                throw new OpenXmlPowerToolsException("Internal Error, should have run properties");
+            var languageType = (string)r.Attribute(PtOpenXml.LanguageType);
+            decimal? szn = null;
+            if (languageType == "bidi")
+                szn = (decimal?)rPr.Elements(W.szCs).Attributes(W.val).FirstOrDefault();
+            else
+                szn = (decimal?)rPr.Elements(W.sz).Attributes(W.val).FirstOrDefault();
+            if (szn == null)
+                szn = 22m;
+
+            var sz = szn.GetValueOrDefault();
+
+            // unknown font families will throw ArgumentException, in which case just return 0
+            if (!KnownFamilies.Contains(fontName))
+                return 0;
+            // in theory, all unknown fonts are found by the above test, but if not...
+            FontFamily ff;
+            try
+            {
+                ff = new FontFamily(fontName);
+            }
+            catch (ArgumentException)
+            {
+                UnknownFonts.Add(fontName);
+
+                return 0;
+            }
+            FontStyle fs = FontStyle.Regular;
+            var bold = GetBoolProp(rPr, W.b) || GetBoolProp(rPr, W.bCs);
+            var italic = GetBoolProp(rPr, W.i) || GetBoolProp(rPr, W.iCs);
+            if (bold && !italic)
+                fs = FontStyle.Bold;
+            if (italic && !bold)
+                fs = FontStyle.Italic;
+            if (bold && italic)
+                fs = FontStyle.Bold | FontStyle.Italic;
+
+            var runText = r.DescendantsTrimmed(W.txbxContent)
+                .Where(e => e.Name == W.t)
+                .Select(t => (string)t)
+                .StringConcatenate();
+
+            var tabLength = r.DescendantsTrimmed(W.txbxContent)
+                .Where(e => e.Name == W.tab)
+                .Select(t => (decimal)t.Attribute(PtOpenXml.TabWidth))
+                .Sum();
+
+            if (runText.Length == 0 && tabLength == 0)
+                return 0;
+
+            int multiplier = 1;
+            if (runText.Length <= 2) multiplier = 100;
+            else if (runText.Length <= 4) multiplier = 50;
+            else if (runText.Length <= 8) multiplier = 25;
+            else if (runText.Length <= 16) multiplier = 12;
+            else if (runText.Length <= 32) multiplier = 6;
+            if (multiplier != 1)
+            {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < multiplier; i++)
+                    sb.Append(runText);
+                runText = sb.ToString();
+            }
+
+            var w = MetricsGetter.GetTextWidth(ff, fs, sz, runText);
+
+            return (int)(w / 96m * 1440m / multiplier + tabLength * 1440m);
         }
-        public static WmlDocument BreakLinkToTemplate(WmlDocument source)
+        public static bool GetBoolProp(XElement runProps, XName xName)
         {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                ms.Write(source.DocumentByteArray, 0, source.DocumentByteArray.Length);
-                using (WordprocessingDocument wDoc = WordprocessingDocument.Open(ms, true))
-                {
-                    var efpp = wDoc.ExtendedFilePropertiesPart;
-                    if (efpp != null)
-                    {
-                        var xd = efpp.GetXDocument();
-                        var template = xd.Descendants(EP.Template).FirstOrDefault();
-                        if (template != null)
-                            template.Value = "";
-                        efpp.PutXDocument();
-                    }
-                }
-                var result = new WmlDocument(source.FileName, ms.ToArray());
-                return result;
-            }
-        }
+            var value = runProps?.Element(xName)?.Attribute(W.val) ?? null;
 
-        #region Document
-        public static void AddReferenceToExistingHeaderOrFooter(this MainDocumentPart mainDocPart, XElement sect, string rId, XName reference, string toType)
-        {
-            if (reference == W.headerReference)
-            {
-                var referenceToAdd = new XElement(W.headerReference,
-                    new XAttribute(W.type, toType),
-                    new XAttribute(R.id, rId));
-                sect.AddFirst(referenceToAdd);
-            }
+            if (value == null) return true;
             else
             {
-                var referenceToAdd = new XElement(W.footerReference,
-                    new XAttribute(W.type, toType),
-                    new XAttribute(R.id, rId));
-                sect.AddFirst(referenceToAdd);
+                var lower = value.Value.ToLower();
+                return (lower == "1" || lower == "true");
             }
         }
+        #endregion
 
+        #region Creators
         /// <summary>
         /// Create a new WordprocessingDocument for a specified file path
         /// </summary>
@@ -722,24 +428,6 @@ namespace OpenXmlPowerTools.Documents
             }
         }
 
-        public static OpenXmlPowerToolsDocument CreateSplitDocument(this WordprocessingDocument source, IEnumerable<XElement> contents, string newFileName)
-        {
-            using (OpenXmlMemoryStreamDocument streamDoc = CreateWordprocessingDocument())
-            {
-                using (WordprocessingDocument document = streamDoc.GetWordprocessingDocument())
-                {
-                    source.MainDocumentPart.GetXDocument().FixRanges(contents);
-                    //Open.SetContent(document, contents);
-                }
-                OpenXmlPowerToolsDocument newDoc = streamDoc.GetModifiedDocument();
-                newDoc.FileName = newFileName;
-                return newDoc;
-            }
-        }
-        #endregion
-
-        #region WordprocessingDocument Extensions
-        #region Creators
         /// <summary>
         /// Create a new main document part
         /// </summary>
@@ -791,73 +479,30 @@ namespace OpenXmlPowerTools.Documents
                 new XElement(W.docParts, mainPart.Descendants(W.docPart))));
         }
         #endregion
-        #region Getters
-        public static XDocument GetMainPart(this WordprocessingDocument doc)
-        {
-            return doc.MainDocumentPart.GetXDocument();
-        }
-        public static XElement GetBody(this WordprocessingDocument doc) => doc.GetMainPart().GetBody();
-        public static XElement GetBody(this XDocument mainPart)
-        {
-            return mainPart.Root.Element(W.body);
-        }
-        public static IEnumerable<XElement> GetBodyElements(this WordprocessingDocument doc) => doc.GetMainPart().GetBodyElements();
-        public static IEnumerable<XElement> GetBodyElements(this XDocument mainPart)
-        {
-            return mainPart.GetBody().Elements();
-        }
-        public static IList<XElement> GetContents(this WordprocessingDocument doc, int start = 0, int count = int.MaxValue) => doc.GetMainPart().GetContents();
-        public static IList<XElement> GetContents(this XDocument mainPart, int start = 0, int count = int.MaxValue)
-        {
-            return mainPart.GetBodyElements().Skip(start).Take(count).ToList();
-        }
-        public static IEnumerable<Atbid> GetDivs(this WordprocessingDocument doc) => doc.GetMainPart().GetDivs();
-        public static IEnumerable<Atbid> GetDivs(this XDocument mainPart)
-        {
-            return mainPart.Root.Element(W.body).Elements()
-                .Select((p, i) => new Atbid { BlockLevelContent = p, Index = i, })
-                .Rollup(new Atbid { BlockLevelContent = null, Index = -1, Div = 0, }, (b, p) =>
-                {
-                    XElement elementBefore = b.BlockLevelContent.SiblingsBeforeSelfReverseDocumentOrder().FirstOrDefault();
-
-                    return (elementBefore != null && elementBefore.Descendants(W.sectPr).Any())
-                        ? new Atbid { BlockLevelContent = b.BlockLevelContent, Index = b.Index, Div = p.Div + 1, }
-                        : new Atbid { BlockLevelContent = b.BlockLevelContent, Index = b.Index, Div = p.Div };
-                });
-        }
-        public static XElement GetLastElement(this WordprocessingDocument doc) => doc.GetMainPart().GetLastElement();
-        public static XElement GetLastElement(this XDocument mainPart)
-        {
-            return mainPart.Root.Element(W.body).Elements().LastOrDefault();
-        }
-        public static XDocument GetFontTablePart(this MainDocumentPart mainPart)
-        {
-            return mainPart.FontTablePart.GetXDocument();
-        }
-        public static XDocument GetStylePart(this WordprocessingDocument doc) => doc.MainDocumentPart.GetStylePart();
-        public static XDocument GetStylePart(this MainDocumentPart mainPart)
-        {
-            return mainPart.StyleDefinitionsPart.GetXDocument();
-        }
-        public static XDocument GetStylesWithEffectsPart(this WordprocessingDocument doc) => doc.MainDocumentPart.GetStylesWithEffectsPart();
-        public static XDocument GetStylesWithEffectsPart(this MainDocumentPart mainPart)
-        {
-            return mainPart.StylesWithEffectsPart.GetXDocument();
-        }
-        //public static XDocument GetHeaderPart(this MainDocumentPart mainPart)
-        //{
-        //    return mainPart.HeaderParts.GetXDocument();
-        //}
-        //target.MainDocumentPart.AddNewPart<HeaderPart>();
-        //        XDocument newHeaderXDoc = newHeaderPart.GetXDocument();
-        #endregion
-        #region Queries
-        public static bool AnySections(this WordprocessingDocument doc) => doc.GetMainPart().AnySections();
-        public static bool AnySections(this XDocument mainPart) => mainPart.Root.Descendants(W.sectPr).Any();
-        #endregion
-        #endregion
 
         #region WmlSource
+        public static WmlDocument BreakLinkToTemplate(WmlDocument source)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ms.Write(source.DocumentByteArray, 0, source.DocumentByteArray.Length);
+                using (WordprocessingDocument wDoc = WordprocessingDocument.Open(ms, true))
+                {
+                    var efpp = wDoc.ExtendedFilePropertiesPart;
+                    if (efpp != null)
+                    {
+                        var xd = efpp.GetXDocument();
+                        var template = xd.Descendants(EP.Template).FirstOrDefault();
+                        if (template != null)
+                            template.Value = "";
+                        efpp.PutXDocument();
+                    }
+                }
+                var result = new WmlDocument(source.FileName, ms.ToArray());
+                return result;
+            }
+        }
+        // This method is a mess
         public static IList<WmlSource> NormalizeStyleNamesAndIds(this IList<WmlSource> sources)
         {
             Dictionary<string, string> styleNameMap = new Dictionary<string, string>();
@@ -1019,6 +664,7 @@ namespace OpenXmlPowerTools.Documents
                 }
             }
         }
+        // This method is massive and complex (recusive solution?)       
         public static WmlDocument CoalesceGlossaryDocumentParts(this IList<WmlSource> sources, WmlPackage package)
         {
             List<WmlSource> allGlossaryDocuments = sources
@@ -1026,7 +672,7 @@ namespace OpenXmlPowerTools.Documents
                 .Where(s => s != null)
                 .Select(s => new WmlSource(s)).ToList();
 
-            if (!allGlossaryDocuments.Any()) return null;
+            if (!allGlossaryDocuments.Any() == true) return null;
 
             WmlDocument coalescedRaw = new DocumentBuilder().SetSources(allGlossaryDocuments).Build();
 
@@ -1046,16 +692,16 @@ namespace OpenXmlPowerTools.Documents
 
             WmlDocument ExtractGlossaryDocument(WmlDocument wmlGlossaryDocument)
             {
-                using (MemoryStream ms = new MemoryStream())
+                using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    ms.Write(wmlGlossaryDocument.DocumentByteArray, 0, wmlGlossaryDocument.DocumentByteArray.Length);
-                    using (WordprocessingDocument source = WordprocessingDocument.Open(ms, false))
+                    memoryStream.Write(wmlGlossaryDocument.DocumentByteArray, 0, wmlGlossaryDocument.DocumentByteArray.Length);
+                    using (WordprocessingDocument source = WordprocessingDocument.Open(memoryStream, false))
                     {
                         if (source.MainDocumentPart.GlossaryDocumentPart == null)
                             return null;
 
-                        var fromXd = source.MainDocumentPart.GlossaryDocumentPart.GetXDocument();
-                        if (fromXd.Root == null)
+                        var sourceGlossary = source.MainDocumentPart.GlossaryDocumentPart.GetXDocument();
+                        if (sourceGlossary.Root == null)
                             return null;
 
                         using (MemoryStream outMs = new MemoryStream())
@@ -1071,12 +717,12 @@ namespace OpenXmlPowerTools.Documents
                                 else
                                     mdpXd.Root.ReplaceWith(root);
                                 root.Add(new XElement(W.body,
-                                    fromXd.Root.Elements(W.docParts)));
+                                    sourceGlossary.Root.Elements(W.docParts)));
                                 mdp.PutXDocument();
 
-                                var newContent = fromXd.Root.Elements(W.docParts);
+                                var newContent = sourceGlossary.Root.Elements(W.docParts);
                                 CopyGlossaryDocumentPartsFromGD(source, target, newContent);
-                                source.MainDocumentPart.GlossaryDocumentPart.CopyRelatedPartsForContentParts(mdp, package.RelationshipMarkup, newContent, package.Images);
+                                source.MainDocumentPart.GlossaryDocumentPart.CopyRelatedPartsForContentParts(mdp, RelationshipMarkup, newContent, package.Images);
                             }
                             return new WmlDocument("Glossary.docx", outMs.ToArray());
                         }
@@ -1129,13 +775,13 @@ namespace OpenXmlPowerTools.Documents
                     {
                         DocumentSettingsPart newSettingsPart = target.MainDocumentPart.AddNewPart<DocumentSettingsPart>();
                         XDocument settingsXDoc = oldSettingsPart.GetXDocument();
-                        oldSettingsPart.AddRelationships(newSettingsPart, package.RelationshipMarkup, new[] { settingsXDoc.Root });
-                        //CopyFootnotesPart(sourceDocument, newDocument, settingsXDoc, images);
-                        //CopyEndnotesPart(sourceDocument, newDocument, settingsXDoc, images);
+                        oldSettingsPart.AddRelationships(newSettingsPart, RelationshipMarkup, new[] { settingsXDoc.Root });
+                        source.CopyFootnotesPart(package, settingsXDoc);
+                        source.CopyEndnotesPart(package, settingsXDoc);
                         XDocument newXDoc = target.MainDocumentPart.DocumentSettingsPart.GetXDocument();
                         newXDoc.Declaration.SetDeclaration();
                         newXDoc.Add(settingsXDoc.Root);
-                        oldSettingsPart.CopyRelatedPartsForContentParts(newSettingsPart, package.RelationshipMarkup, new[] { newXDoc.Root }, package.Images);
+                        oldSettingsPart.CopyRelatedPartsForContentParts(newSettingsPart, RelationshipMarkup, new[] { newXDoc.Root }, package.Images);
                         newSettingsPart.PutXDocument(newXDoc);
                     }
 
@@ -1144,7 +790,7 @@ namespace OpenXmlPowerTools.Documents
                     {
                         WebSettingsPart newWebSettingsPart = target.MainDocumentPart.AddNewPart<WebSettingsPart>();
                         XDocument settingsXDoc = oldWebSettingsPart.GetXDocument();
-                        oldWebSettingsPart.AddRelationships(newWebSettingsPart, package.RelationshipMarkup, new[] { settingsXDoc.Root });
+                        oldWebSettingsPart.AddRelationships(newWebSettingsPart, RelationshipMarkup, new[] { settingsXDoc.Root });
                         XDocument newXDoc = target.MainDocumentPart.WebSettingsPart.GetXDocument();
                         newXDoc.Declaration.SetDeclaration();
                         newXDoc.Add(settingsXDoc.Root);
@@ -1156,6 +802,7 @@ namespace OpenXmlPowerTools.Documents
                     {
                         CopyNumberingForGlossaryDocumentPartFromGD(oldNumberingDefinitionsPart, newContent);
                     }
+
                     void CopyNumberingForGlossaryDocumentPartFromGD(NumberingDefinitionsPart sourceNumberingPart, IEnumerable<XElement> targetContent)
                     {
                         Dictionary<int, int> numIdMap = new Dictionary<int, int>();
@@ -1306,16 +953,15 @@ namespace OpenXmlPowerTools.Documents
                             sourceNumberingPart != null)
                         {
                             sourceNumberingPart.AddRelationships(target.MainDocumentPart.NumberingDefinitionsPart,
-                                package.RelationshipMarkup, new[] { target.MainDocumentPart.NumberingDefinitionsPart.GetXDocument().Root });
+                                RelationshipMarkup, new[] { target.MainDocumentPart.NumberingDefinitionsPart.GetXDocument().Root });
                             sourceNumberingPart.CopyRelatedPartsForContentParts(target.MainDocumentPart.NumberingDefinitionsPart,
-                                package.RelationshipMarkup, new[] { target.MainDocumentPart.NumberingDefinitionsPart.GetXDocument().Root }, package.Images);
+                                RelationshipMarkup, new[] { target.MainDocumentPart.NumberingDefinitionsPart.GetXDocument().Root }, package.Images);
                         }
                         if (target.MainDocumentPart.NumberingDefinitionsPart != null)
                             target.MainDocumentPart.NumberingDefinitionsPart.PutXDocument();
                     }
                 }
             }
-
         }
         public static void CopyAllSections(this WmlPackage package)
         {
@@ -1335,6 +981,7 @@ namespace OpenXmlPowerTools.Documents
                 }
             }
         }
+        // This is empty
         public static void InsertId(this WmlPackage package)
         {
 
@@ -1471,8 +1118,8 @@ namespace OpenXmlPowerTools.Documents
                 targetHeader.Declaration.SetDeclaration();
                 targetHeader.Add(oldHeaderXDoc.Root);
                 headerReference.Attribute(R.id).Value = target.MainDocumentPart.GetIdOfPart(targetHeaderPart);
-                oldHeaderPart.AddRelationships(targetHeaderPart, package.RelationshipMarkup, new[] { targetHeader.Root });
-                oldHeaderPart.CopyRelatedPartsForContentParts(targetHeaderPart, package.RelationshipMarkup, new[] { targetHeader.Root }, package.Images);
+                oldHeaderPart.AddRelationships(targetHeaderPart, RelationshipMarkup, new[] { targetHeader.Root });
+                oldHeaderPart.CopyRelatedPartsForContentParts(targetHeaderPart, RelationshipMarkup, new[] { targetHeader.Root }, package.Images);
             }
 
             var footerReferences = sectionMarkup.Elements(W.footerReference);
@@ -1492,61 +1139,12 @@ namespace OpenXmlPowerTools.Documents
                     targetFooter.Declaration.SetDeclaration();
                     targetFooter.Add(sourceFooter.Root);
                     footerReference.Attribute(R.id).Value = package.MainPart.GetIdOfPart(targetFooterPart);
-                    sourceFooterPart.AddRelationships(targetFooterPart, package.RelationshipMarkup, new[] { targetFooter.Root });
-                    sourceFooterPart.CopyRelatedPartsForContentParts(targetFooterPart, package.RelationshipMarkup, new[] { targetFooter.Root }, package.Images);
+                    sourceFooterPart.AddRelationships(targetFooterPart, RelationshipMarkup, new[] { targetFooter.Root });
+                    sourceFooterPart.CopyRelatedPartsForContentParts(targetFooterPart, RelationshipMarkup, new[] { targetFooter.Root }, package.Images);
                 }
                 else throw new DocumentBuilderException("Invalid document - invalid footer part.");
 
             }
-        }
-        public static void AdjustUniqueIds(this WordprocessingDocument source, WordprocessingDocument target, IEnumerable<XElement> newContent)
-        {
-            // adjust bookmark unique ids
-            int maxId = 0;
-            if (target.MainDocumentPart.GetXDocument().Descendants(W.bookmarkStart).Any())
-                maxId = target.MainDocumentPart.GetXDocument().Descendants(W.bookmarkStart)
-                    .Select(d => (int)d.Attribute(W.id)).Max();
-            Dictionary<int, int> bookmarkIdMap = new Dictionary<int, int>();
-            foreach (var item in newContent.DescendantsAndSelf().Where(bm => bm.Name == W.bookmarkStart ||
-                bm.Name == W.bookmarkEnd))
-            {
-                int id;
-                if (!int.TryParse((string)item.Attribute(W.id), out id))
-                    throw new DocumentBuilderException("Invalid document - invalid value for bookmark ID");
-                if (!bookmarkIdMap.ContainsKey(id))
-                    bookmarkIdMap.Add(id, ++maxId);
-            }
-            foreach (var bookmarkElement in newContent.DescendantsAndSelf().Where(e => e.Name == W.bookmarkStart ||
-                e.Name == W.bookmarkEnd))
-                bookmarkElement.Attribute(W.id).Value = bookmarkIdMap[(int)bookmarkElement.Attribute(W.id)].ToString();
-
-            // adjust shape unique ids
-            // This doesn't work because OLEObjects refer to shapes by ID.
-            // Punting on this, because sooner or later, this will be a non-issue.
-            //foreach (var item in newContent.DescendantsAndSelf(VML.shape))
-            //{
-            //    Guid g = Guid.NewGuid();
-            //    string s = "R" + g.ToString().Replace("-", "");
-            //    item.Attribute(NoNamespace.id).Value = s;
-            //}
-        }
-        public static void AdjustDocPrIds(this WordprocessingDocument target)
-        {
-            int docPrId = 0;
-            foreach (var item in target.MainDocumentPart.GetXDocument().Descendants(WP.docPr))
-                item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
-            foreach (var header in target.MainDocumentPart.HeaderParts)
-                foreach (var item in header.GetXDocument().Descendants(WP.docPr))
-                    item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
-            foreach (var footer in target.MainDocumentPart.FooterParts)
-                foreach (var item in footer.GetXDocument().Descendants(WP.docPr))
-                    item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
-            if (target.MainDocumentPart.FootnotesPart != null)
-                foreach (var item in target.MainDocumentPart.FootnotesPart.GetXDocument().Descendants(WP.docPr))
-                    item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
-            if (target.MainDocumentPart.EndnotesPart != null)
-                foreach (var item in target.MainDocumentPart.EndnotesPart.GetXDocument().Descendants(WP.docPr))
-                    item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
         }
         public static void AppendDocument(this WordprocessingDocument source, WmlPackage package, IList<XElement> targetContent, bool keepSection, string insertId)
         {
@@ -1562,45 +1160,47 @@ namespace OpenXmlPowerTools.Documents
             MainDocumentPart targetMainPart = target.MainDocumentPart;
 
             sourceMain.FixRanges(targetContent);
-            sourceMainPart.AddRelationships(targetMainPart, package.RelationshipMarkup, targetContent);
-            sourceMainPart.CopyRelatedPartsForContentParts(targetMainPart, package.RelationshipMarkup, targetContent, package.Images);
+            sourceMainPart.AddRelationships(targetMainPart, RelationshipMarkup, targetContent);
+            sourceMainPart.CopyRelatedPartsForContentParts(targetMainPart, RelationshipMarkup, targetContent, package.Images);
 
-            // Append contents
             XDocument targetMain = target.GetMainPart();
             targetMain.Declaration.SetDeclaration();
+            
             if (keepSection == false)
             {
                 List<XElement> adjustedContents = targetContent.Where(e => e.Name != W.sectPr).ToList();
                 adjustedContents.DescendantsAndSelf(W.sectPr).Remove();
                 targetContent = adjustedContents;
             }
+
             var listOfSectionProps = targetContent.DescendantsAndSelf(W.sectPr).ToList();
+            
             foreach (var sectPr in listOfSectionProps)
             {
                 source.AddSectionAndDependencies(package, sectPr);
             }
 
-            CopyStylesAndFonts(targetContent);
+            source.CopyStylesAndFonts(package, targetContent);
             source.CopyNumbering(package, targetContent);
             source.CopyComments(package, targetContent);
-            CopyFootnotes();
-            CopyEndnotes();
+            source.CopyFootnotes(package, targetContent);
+            source.CopyEndnotes(package, targetContent);
             source.AdjustUniqueIds(target, targetContent);
             targetContent.RemoveGfxdata();
-            CopyCustomXmlParts();
+            source.CopyCustomXmlParts(package, targetContent);
             CopyWebExtensions(source, target);
 
             if (insertId != null)
             {
-                XElement insertElementToReplace = targetMain
-                    .Descendants(PtOpenXml.Insert)
-                    .FirstOrDefault(i => (string)i.Attribute(PtOpenXml.Id) == insertId);
+                XElement insertElementToReplace = targetMain.Descendants(PtOpenXml.Insert).FirstOrDefault(i => (string)i.Attribute(PtOpenXml.Id) == insertId);
                 if (insertElementToReplace != null)
+                {
                     insertElementToReplace.AddAnnotation(new ReplaceSemaphore());
+                }
+
                 targetMain.Element(W.document).ReplaceWith((XElement)targetMain.Root.InsertTransform(targetContent));
             }
-            else
-                targetMain.Root.Element(W.body).Add(targetContent);
+            else targetMain.Root.Element(W.body).Add(targetContent);
 
             if (targetMain.Descendants().Any(d => (d.Name.Namespace == PtOpenXml.pt || d.Name.Namespace == PtOpenXml.ptOpenXml) ||
                     (d.Attributes().Any(att => att.Name.Namespace == PtOpenXml.pt || att.Name.Namespace == PtOpenXml.ptOpenXml))))
@@ -1617,200 +1217,6 @@ namespace OpenXmlPowerTools.Documents
                     root.AddToIgnorable("pt14");
                 }
             }
-            void CopyStylesAndFonts(IEnumerable<XElement> content)
-            {
-                // Copy all styles to the new document
-                if (source.MainDocumentPart.StyleDefinitionsPart != null)
-                {
-                    XDocument sourceStyle = sourceMainPart.GetStylePart();
-                    if (targetMainPart.StyleDefinitionsPart == null)
-                    {
-                        targetMainPart.AddNewPart<StyleDefinitionsPart>();
-                        XDocument targetStyle = targetMainPart.GetStylePart();
-                        targetStyle.Declaration.SetDeclaration();
-                        targetStyle.Add(sourceStyle.Root);
-                    }
-                    else
-                    {
-                        XDocument targetStylePart = targetMainPart.GetStylePart();
-                        MergeStyles(source, target, sourceStyle, targetStylePart, content);
-                        sourceStyle.MergeLatentStyles(targetStylePart);
-                    }
-                }
-
-                // Copy all styles with effects to the new document
-                if (source.MainDocumentPart.StylesWithEffectsPart != null)
-                {
-                    XDocument sourceStyle = source.MainDocumentPart.GetStylesWithEffectsPart();
-                    if (targetMainPart.StylesWithEffectsPart == null)
-                    {
-                        targetMainPart.AddNewPart<StylesWithEffectsPart>();
-                        XDocument targetStyle = targetMainPart.GetStylesWithEffectsPart();
-                        targetStyle.Declaration.SetDeclaration();
-                        targetStyle.Add(sourceStyle.Root);
-                    }
-                    else
-                    {
-                        XDocument targetStyle = targetMainPart.GetStylesWithEffectsPart();
-                        MergeStyles(source, target, sourceStyle, targetStyle, content);
-                        sourceStyle.MergeLatentStyles(targetStyle);
-                    }
-                }
-
-                // Copy fontTable to the new document
-                if (source.MainDocumentPart.FontTablePart != null)
-                {
-                    XDocument oldFontTable = sourceMainPart.GetFontTablePart();
-                    if (targetMainPart.FontTablePart == null)
-                    {
-                        targetMainPart.AddNewPart<FontTablePart>();
-                        XDocument newFontTable = targetMainPart.GetFontTablePart();
-                        newFontTable.Declaration.SetDeclaration();
-                        newFontTable.Add(oldFontTable.Root);
-                    }
-                    else
-                    {
-                        oldFontTable.MergeFontTables(targetMainPart.GetFontTablePart());
-                    }
-                }
-            }
-            void CopyEndnotes()
-            {
-                int number = 0;
-                XDocument oldEndnotes = null;
-                XDocument newEndnotes = null;
-                foreach (XElement endnote in targetContent.DescendantsAndSelf(W.endnoteReference))
-                {
-                    if (oldEndnotes == null)
-                        oldEndnotes = source.MainDocumentPart.EndnotesPart.GetXDocument();
-                    if (newEndnotes == null)
-                    {
-                        if (target.MainDocumentPart.EndnotesPart != null)
-                        {
-                            newEndnotes = target
-                                .MainDocumentPart
-                                .EndnotesPart
-                                .GetXDocument();
-                            var ids = newEndnotes
-                                .Root
-                                .Elements(W.endnote)
-                                .Select(f => (int)f.Attribute(W.id));
-                            if (ids.Any())
-                                number = ids.Max() + 1;
-                        }
-                        else
-                        {
-                            target.MainDocumentPart.AddNewPart<EndnotesPart>();
-                            newEndnotes = target.MainDocumentPart.EndnotesPart.GetXDocument();
-                            newEndnotes.Declaration.SetDeclaration();
-                            newEndnotes.Add(new XElement(W.endnotes, Constants.NamespaceAttributes));
-                        }
-                    }
-                    string id = (string)endnote.Attribute(W.id);
-                    XElement element = oldEndnotes
-                        .Descendants()
-                        .Elements(W.endnote)
-                        .Where(p => ((string)p.Attribute(W.id)) == id)
-                        .First();
-                    XElement newElement = new XElement(element);
-                    newElement.Attribute(W.id).Value = number.ToString();
-                    newEndnotes.Root.Add(newElement);
-                    endnote.Attribute(W.id).Value = number.ToString();
-                    number++;
-                }
-                if (source.MainDocumentPart.EndnotesPart != null &&
-                    target.MainDocumentPart.EndnotesPart != null)
-                {
-                    source.MainDocumentPart.EndnotesPart.AddRelationships(target.MainDocumentPart.EndnotesPart,
-                        package.RelationshipMarkup, new[] { target.MainDocumentPart.EndnotesPart.GetXDocument().Root });
-                    source.MainDocumentPart.EndnotesPart.CopyRelatedPartsForContentParts(target.MainDocumentPart.EndnotesPart,
-                        package.RelationshipMarkup, new[] { target.MainDocumentPart.EndnotesPart.GetXDocument().Root }, package.Images);
-                }
-            }
-            void CopyCustomXmlParts()
-            {
-                List<string> itemList = new List<string>();
-                foreach (string itemId in targetContent
-                    .Descendants(W.dataBinding)
-                    .Select(e => (string)e.Attribute(W.storeItemID)))
-                    if (!itemList.Contains(itemId))
-                        itemList.Add(itemId);
-                foreach (CustomXmlPart customXmlPart in source.MainDocumentPart.CustomXmlParts)
-                {
-                    OpenXmlPart propertyPart = customXmlPart
-                        .Parts
-                        .Select(p => p.OpenXmlPart)
-                        .Where(p => p.ContentType == "application/vnd.openxmlformats-officedocument.customXmlProperties+xml")
-                        .FirstOrDefault();
-                    if (propertyPart != null)
-                    {
-                        XDocument propertyPartDoc = propertyPart.GetXDocument();
-                        if (itemList.Contains(propertyPartDoc.Root.Attribute(DS.itemID).Value))
-                        {
-                            CustomXmlPart newPart = target.MainDocumentPart.AddCustomXmlPart(customXmlPart.ContentType);
-                            newPart.GetXDocument().Add(customXmlPart.GetXDocument().Root);
-                            foreach (OpenXmlPart propPart in customXmlPart.Parts.Select(p => p.OpenXmlPart))
-                            {
-                                CustomXmlPropertiesPart newPropPart = newPart.AddNewPart<CustomXmlPropertiesPart>();
-                                newPropPart.GetXDocument().Add(propPart.GetXDocument().Root);
-                            }
-                        }
-                    }
-                }
-            }
-            void CopyFootnotes()
-            {
-                int number = 0;
-                XDocument oldFootnotes = null;
-                XDocument newFootnotes = null;
-                foreach (XElement footnote in targetContent.DescendantsAndSelf(W.footnoteReference))
-                {
-                    if (oldFootnotes == null)
-                        oldFootnotes = source.MainDocumentPart.FootnotesPart.GetXDocument();
-                    if (newFootnotes == null)
-                    {
-                        if (target.MainDocumentPart.FootnotesPart != null)
-                        {
-                            newFootnotes = target.MainDocumentPart.FootnotesPart.GetXDocument();
-                            var ids = newFootnotes
-                                .Root
-                                .Elements(W.footnote)
-                                .Select(f => (int)f.Attribute(W.id));
-                            if (ids.Any())
-                                number = ids.Max() + 1;
-                        }
-                        else
-                        {
-                            target.MainDocumentPart.AddNewPart<FootnotesPart>();
-                            newFootnotes = target.MainDocumentPart.FootnotesPart.GetXDocument();
-                            newFootnotes.Declaration.SetDeclaration();
-                            newFootnotes.Add(new XElement(W.footnotes, Constants.NamespaceAttributes));
-                        }
-                    }
-                    string id = (string)footnote.Attribute(W.id);
-                    XElement element = oldFootnotes
-                        .Descendants()
-                        .Elements(W.footnote)
-                        .Where(p => ((string)p.Attribute(W.id)) == id)
-                        .FirstOrDefault();
-                    if (element != null)
-                    {
-                        XElement newElement = new XElement(element);
-                        newElement.Attribute(W.id).Value = number.ToString();
-                        newFootnotes.Root.Add(newElement);
-                        footnote.Attribute(W.id).Value = number.ToString();
-                        number++;
-                    }
-                }
-                if (source.MainDocumentPart.FootnotesPart != null &&
-                    target.MainDocumentPart.FootnotesPart != null)
-                {
-                    source.MainDocumentPart.FootnotesPart.AddRelationships(target.MainDocumentPart.FootnotesPart,
-                        package.RelationshipMarkup, new[] { target.MainDocumentPart.FootnotesPart.GetXDocument().Root });
-                    source.MainDocumentPart.FootnotesPart.CopyRelatedPartsForContentParts(target.MainDocumentPart.FootnotesPart,
-                        package.RelationshipMarkup, new[] { target.MainDocumentPart.FootnotesPart.GetXDocument().Root }, package.Images);
-                }
-            }
         }
         public static void AppendPart(this WordprocessingDocument source, WmlPackage package, IEnumerable<XElement> targetContent, bool keepSection, string insertId, OpenXmlPart part)
         {
@@ -1819,8 +1225,8 @@ namespace OpenXmlPowerTools.Documents
             partXDoc.Declaration.SetDeclaration();
 
             partXDoc.FixRanges(targetContent);
-            source.MainDocumentPart.AddRelationships(part, package.RelationshipMarkup, targetContent);
-            source.MainDocumentPart.CopyRelatedPartsForContentParts(part, package.RelationshipMarkup, targetContent, package.Images);
+            source.MainDocumentPart.AddRelationships(part, RelationshipMarkup, targetContent);
+            source.MainDocumentPart.CopyRelatedPartsForContentParts(part, RelationshipMarkup, targetContent, package.Images);
 
             // never keep sections for content to be inserted into a header/footer
             List<XElement> adjustedContents = targetContent.Where(e => e.Name != W.sectPr).ToList();
@@ -1832,16 +1238,32 @@ namespace OpenXmlPowerTools.Documents
             source.AdjustUniqueIds(target, targetContent);
             targetContent.RemoveGfxdata();
 
-            if (insertId == null)
-                throw new OpenXmlPowerToolsException("Internal error");
+            if (insertId == null) throw new OpenXmlPowerToolsException("Internal error");
 
-            XElement insertElementToReplace = partXDoc
-                .Descendants(PtOpenXml.Insert)
+            XElement insertElementToReplace = partXDoc.Descendants(PtOpenXml.Insert)
                 .FirstOrDefault(i => (string)i.Attribute(PtOpenXml.Id) == insertId);
-            if (insertElementToReplace != null)
-                insertElementToReplace.AddAnnotation(new ReplaceSemaphore());
+
+            if (insertElementToReplace != null) insertElementToReplace.AddAnnotation(new ReplaceSemaphore());
+            
             partXDoc.Elements().First().ReplaceWith((XElement)partXDoc.Root.InsertTransform(targetContent));
         }
+        public static OpenXmlPowerToolsDocument SplitDocument(this WordprocessingDocument source, IEnumerable<XElement> contents, string newFileName)
+        {
+            using (OpenXmlMemoryStreamDocument streamDoc = CreateWordprocessingDocument())
+            {
+                using (WordprocessingDocument document = streamDoc.GetWordprocessingDocument())
+                {
+                    source.MainDocumentPart.GetXDocument().FixRanges(contents);
+                    //Open.SetContent(document, contents);
+                }
+                OpenXmlPowerToolsDocument newDoc = streamDoc.GetModifiedDocument();
+                newDoc.FileName = newFileName;
+                return newDoc;
+            }
+        }
+
+        #region Copiers
+        // Messy
         public static void CopyComments(this WordprocessingDocument source, WmlPackage package, IEnumerable<XElement> targetContent)
         {
             var target = package.Document;
@@ -1907,11 +1329,195 @@ namespace OpenXmlPowerTools.Documents
                 target.MainDocumentPart.WordprocessingCommentsPart != null)
             {
                 source.MainDocumentPart.WordprocessingCommentsPart.AddRelationships(target.MainDocumentPart.WordprocessingCommentsPart,
-                    package.RelationshipMarkup, new[] { target.MainDocumentPart.WordprocessingCommentsPart.GetXDocument().Root });
+                    RelationshipMarkup, new[] { target.MainDocumentPart.WordprocessingCommentsPart.GetXDocument().Root });
                 source.MainDocumentPart.WordprocessingCommentsPart.CopyRelatedPartsForContentParts(target.MainDocumentPart.WordprocessingCommentsPart,
-                    package.RelationshipMarkup, new[] { target.MainDocumentPart.WordprocessingCommentsPart.GetXDocument().Root }, package.Images);
+                    RelationshipMarkup, new[] { target.MainDocumentPart.WordprocessingCommentsPart.GetXDocument().Root }, package.Images);
             }
         }
+        public static void CopyCustomXmlParts(this WordprocessingDocument source, WmlPackage package, IEnumerable<XElement> targetContent)
+        {
+            List<string> itemList = new List<string>();
+            var target = package.Document;
+
+            var itemIds = targetContent.Descendants(W.dataBinding).Select(e => (string)e.Attribute(W.storeItemID));
+            foreach (string itemId in itemIds)
+            {
+                if (!itemList.Contains(itemId)) itemList.Add(itemId);
+            }
+
+            foreach (CustomXmlPart customXmlPart in source.MainDocumentPart.CustomXmlParts)
+            {
+                OpenXmlPart propertyPart = customXmlPart.Parts.Select(p => p.OpenXmlPart)
+                    .Where(p => p.ContentType == "application/vnd.openxmlformats-officedocument.customXmlProperties+xml")
+                    .FirstOrDefault();
+
+                if (propertyPart != null)
+                {
+                    XDocument propertyPartDoc = propertyPart.GetXDocument();
+                    if (itemList.Contains(propertyPartDoc.Root.Attribute(DS.itemID).Value))
+                    {
+                        CustomXmlPart newPart = target.MainDocumentPart.AddCustomXmlPart(customXmlPart.ContentType);
+                        newPart.GetXDocument().Add(customXmlPart.GetXDocument().Root);
+
+                        foreach (OpenXmlPart propPart in customXmlPart.Parts.Select(p => p.OpenXmlPart))
+                        {
+                            CustomXmlPropertiesPart newPropPart = newPart.AddNewPart<CustomXmlPropertiesPart>();
+                            newPropPart.GetXDocument().Add(propPart.GetXDocument().Root);
+                        }
+                    }
+                }
+            }
+        }
+        public static void CopyEndnotes(this WordprocessingDocument source, WmlPackage package, IEnumerable<XElement> targetContent)
+        {
+            var sourcePart = source.MainDocumentPart.EndnotesPart;
+            var targetPart = package.Document.MainDocumentPart.EndnotesPart;
+            CopyPart(package, targetContent, sourcePart, targetPart);
+        }
+        public static void CopyFootnotes(this WordprocessingDocument source, WmlPackage package, IEnumerable<XElement> targetContent)
+        {
+            var sourcePart = source.MainDocumentPart.FootnotesPart;
+            var targetPart = package.Document.MainDocumentPart.FootnotesPart;
+            CopyPart(package, targetContent, sourcePart, targetPart);
+
+        }
+        private static void CopyPart(WmlPackage package, IEnumerable<XElement> targetContent, TypedOpenXmlPart sourcePart, TypedOpenXmlPart targetPart)
+        {
+            var target = package.Document;
+            var sourcePartXDoc = sourcePart.GetXDocument();
+            var targetPartXDoc = targetPart.GetXDocument();
+            var parts = targetContent.DescendantsAndSelf(W.endnoteReference).ToList();
+
+            for (int index = 0; index < parts.Count(); index++)
+            {
+                var part = parts[index];
+
+                if (targetPartXDoc != null)
+                {
+                    var ids = targetPartXDoc.Root.Elements(W.endnote).Select(f => (int)f.Attribute(W.id));
+                    if (ids.Any()) index = ids.Max() + 1;
+                }
+                else
+                {
+                    target.MainDocumentPart.AddNewPart<EndnotesPart>();
+                    targetPartXDoc = target.MainDocumentPart.EndnotesPart.GetXDocument();
+                    targetPartXDoc.Declaration.SetDeclaration();
+                    targetPartXDoc.Add(new XElement(W.endnotes, Constants.NamespaceAttributes));
+                }
+
+                XElement sourceElement = sourcePartXDoc.Descendants().Elements(W.endnote).Where(p => ((string)p.Attribute(W.id)) == (string)part.Attribute(W.id)).First();
+                XElement targetElement = new XElement(sourceElement);
+                targetElement.Attribute(W.id).Value = index.ToString();
+                targetPartXDoc.Root.Add(targetElement);
+                part.Attribute(W.id).Value = index.ToString();
+            }
+            if (sourcePart != null && targetPart != null)
+            {
+                sourcePart.AddRelationships(targetPart, RelationshipMarkup, new[] { targetPartXDoc.Root });
+                sourcePart.CopyRelatedPartsForContentParts(targetPart, RelationshipMarkup, new[] { targetPartXDoc.Root }, package.Images);
+            }
+        }
+        // messy
+        public static void CopyEndnotesPart(this WordprocessingDocument source, WmlPackage package, XDocument settingsXDoc)
+        {
+            var target = package.Document;
+            int number = 0;
+            XDocument oldEndnotes = null;
+            XDocument newEndnotes = null;
+            XElement endnotePr = settingsXDoc.Root.Element(W.endnotePr);
+            if (endnotePr == null)
+                return;
+            if (source.MainDocumentPart.EndnotesPart == null)
+                return;
+            foreach (XElement endnote in endnotePr.Elements(W.endnote))
+            {
+                if (oldEndnotes == null)
+                    oldEndnotes = source.MainDocumentPart.EndnotesPart.GetXDocument();
+                if (newEndnotes == null)
+                {
+                    if (target.MainDocumentPart.EndnotesPart != null)
+                    {
+                        newEndnotes = target.MainDocumentPart.EndnotesPart.GetXDocument();
+                        newEndnotes.Declaration.SetDeclaration();
+                        var ids = newEndnotes.Root
+                            .Elements(W.endnote)
+                            .Select(f => (int)f.Attribute(W.id));
+                        if (ids.Any())
+                            number = ids.Max() + 1;
+                    }
+                    else
+                    {
+                        target.MainDocumentPart.AddNewPart<EndnotesPart>();
+                        newEndnotes = target.MainDocumentPart.EndnotesPart.GetXDocument();
+                        newEndnotes.Declaration.SetDeclaration();
+                        newEndnotes.Add(new XElement(W.endnotes, Constants.NamespaceAttributes));
+                    }
+                }
+                string id = (string)endnote.Attribute(W.id);
+                XElement element = oldEndnotes.Descendants()
+                    .Elements(W.endnote)
+                    .Where(p => ((string)p.Attribute(W.id)) == id)
+                    .FirstOrDefault();
+                if (element != null)
+                {
+                    XElement newElement = new XElement(element);
+                    newElement.Attribute(W.id).Value = number.ToString();
+                    newEndnotes.Root.Add(newElement);
+                    endnote.Attribute(W.id).Value = number.ToString();
+                    number++;
+                }
+            }
+        }
+        public static void CopyFootnotesPart(this WordprocessingDocument source, WmlPackage package, XDocument settingsXDoc)
+        {
+            var target = package.Document;
+            int number = 0;
+            XDocument oldFootnotes = null;
+            XDocument newFootnotes = null;
+            XElement footnotePr = settingsXDoc.Root.Element(W.footnotePr);
+            if (footnotePr == null)
+                return;
+            if (source.MainDocumentPart.FootnotesPart == null)
+                return;
+            foreach (XElement footnote in footnotePr.Elements(W.footnote))
+            {
+                if (oldFootnotes == null)
+                    oldFootnotes = source.MainDocumentPart.FootnotesPart.GetXDocument();
+                if (newFootnotes == null)
+                {
+                    if (target.MainDocumentPart.FootnotesPart != null)
+                    {
+                        newFootnotes = target.MainDocumentPart.FootnotesPart.GetXDocument();
+                        newFootnotes.Declaration.SetDeclaration();
+                        var ids = newFootnotes.Root.Elements(W.footnote).Select(f => (int)f.Attribute(W.id));
+                        if (ids.Any())
+                            number = ids.Max() + 1;
+                    }
+                    else
+                    {
+                        target.MainDocumentPart.AddNewPart<FootnotesPart>();
+                        newFootnotes = target.MainDocumentPart.FootnotesPart.GetXDocument();
+                        newFootnotes.Declaration.SetDeclaration();
+                        newFootnotes.Add(new XElement(W.footnotes, Constants.NamespaceAttributes));
+                    }
+                }
+                string id = (string)footnote.Attribute(W.id);
+                XElement element = oldFootnotes.Descendants()
+                    .Elements(W.footnote)
+                    .Where(p => ((string)p.Attribute(W.id)) == id)
+                    .FirstOrDefault();
+                if (element != null)
+                {
+                    XElement newElement = new XElement(element);
+                    // the following adds the footnote into the new settings part
+                    newElement.Attribute(W.id).Value = number.ToString();
+                    newFootnotes.Root.Add(newElement);
+                    footnote.Attribute(W.id).Value = number.ToString();
+                    number++;
+                }
+            }
+        }
+        // messy
         public static void CopyGlossaryDocumentPart(this WmlDocument wmlGlossaryDocument, WmlPackage package)
         {
             var target = package.Document;
@@ -1921,12 +1527,12 @@ namespace OpenXmlPowerTools.Documents
                 using (WordprocessingDocument source = WordprocessingDocument.Open(ms, true))
                 {
                     var sourceMain = source.GetMainPart();
-                    var sourceGlossary = CreateGlossary(sourceMain);
+                    var sourceGlossary = sourceMain.CreateGlossary();
                     var outputGlossaryDocumentPart = target.MainDocumentPart.AddNewPart<GlossaryDocumentPart>();
                     outputGlossaryDocumentPart.PutXDocument(sourceGlossary);
 
                     CopyGlossaryDocumentPartsToGD(source, sourceMain.Root.Descendants(W.docPart));
-                    source.MainDocumentPart.CopyRelatedPartsForContentParts(outputGlossaryDocumentPart, package.RelationshipMarkup, new[] { sourceMain.Root }, package.Images);
+                    source.MainDocumentPart.CopyRelatedPartsForContentParts(outputGlossaryDocumentPart, RelationshipMarkup, new[] { sourceMain.Root }, package.Images);
                 }
             }
 
@@ -1959,13 +1565,13 @@ namespace OpenXmlPowerTools.Documents
                 {
                     DocumentSettingsPart newSettingsPart = target.MainDocumentPart.GlossaryDocumentPart.AddNewPart<DocumentSettingsPart>();
                     XDocument settingsXDoc = oldSettingsPart.GetXDocument();
-                    oldSettingsPart.AddRelationships(newSettingsPart, package.RelationshipMarkup, new[] { settingsXDoc.Root });
+                    oldSettingsPart.AddRelationships(newSettingsPart, RelationshipMarkup, new[] { settingsXDoc.Root });
                     //CopyFootnotesPart(sourceDocument, newDocument, settingsXDoc, images);
                     //CopyEndnotesPart(sourceDocument, newDocument, settingsXDoc, images);
                     XDocument newXDoc = target.MainDocumentPart.GlossaryDocumentPart.DocumentSettingsPart.GetXDocument();
                     newXDoc.Declaration.SetDeclaration();
                     newXDoc.Add(settingsXDoc.Root);
-                    oldSettingsPart.CopyRelatedPartsForContentParts(newSettingsPart, package.RelationshipMarkup, new[] { newXDoc.Root }, package.Images);
+                    oldSettingsPart.CopyRelatedPartsForContentParts(newSettingsPart, RelationshipMarkup, new[] { newXDoc.Root }, package.Images);
                     newSettingsPart.PutXDocument(newXDoc);
                 }
 
@@ -1974,7 +1580,7 @@ namespace OpenXmlPowerTools.Documents
                 {
                     WebSettingsPart newWebSettingsPart = target.MainDocumentPart.GlossaryDocumentPart.AddNewPart<WebSettingsPart>();
                     XDocument settingsXDoc = oldWebSettingsPart.GetXDocument();
-                    oldWebSettingsPart.AddRelationships(newWebSettingsPart, package.RelationshipMarkup, new[] { settingsXDoc.Root });
+                    oldWebSettingsPart.AddRelationships(newWebSettingsPart, RelationshipMarkup, new[] { settingsXDoc.Root });
                     XDocument newXDoc = target.MainDocumentPart.GlossaryDocumentPart.WebSettingsPart.GetXDocument();
                     newXDoc.Declaration.SetDeclaration();
                     newXDoc.Add(settingsXDoc.Root);
@@ -2137,16 +1743,17 @@ namespace OpenXmlPowerTools.Documents
                         sourceNumberingPart != null)
                     {
                         sourceNumberingPart.AddRelationships(target.MainDocumentPart.GlossaryDocumentPart.NumberingDefinitionsPart,
-                            package.RelationshipMarkup, new[] { target.MainDocumentPart.GlossaryDocumentPart.NumberingDefinitionsPart.GetXDocument().Root });
+                            RelationshipMarkup, new[] { target.MainDocumentPart.GlossaryDocumentPart.NumberingDefinitionsPart.GetXDocument().Root });
                         sourceNumberingPart.CopyRelatedPartsForContentParts(target.MainDocumentPart.GlossaryDocumentPart.NumberingDefinitionsPart,
-                            package.RelationshipMarkup, new[] { target.MainDocumentPart.GlossaryDocumentPart.NumberingDefinitionsPart.GetXDocument().Root }, package.Images);
+                            RelationshipMarkup, new[] { target.MainDocumentPart.GlossaryDocumentPart.NumberingDefinitionsPart.GetXDocument().Root }, package.Images);
                     }
                     if (target.MainDocumentPart.GlossaryDocumentPart.NumberingDefinitionsPart != null)
                         target.MainDocumentPart.GlossaryDocumentPart.NumberingDefinitionsPart.PutXDocument();
                 }
             }
         }
-        public static void CopyNumbering(this WordprocessingDocument source, WmlPackage package, IEnumerable<XElement> newContent)
+        // messy
+        public static void CopyNumbering(this WordprocessingDocument source, WmlPackage package, IEnumerable<XElement> targetContent)
         {
             var target = package.Document;
             var sourceMainPart = source.MainDocumentPart;
@@ -2158,7 +1765,7 @@ namespace OpenXmlPowerTools.Documents
             XDocument oldNumbering = null;
             XDocument newNumbering = null;
 
-            foreach (XElement numReference in newContent.DescendantsAndSelf(W.numPr))
+            foreach (XElement numReference in targetContent.DescendantsAndSelf(W.numPr))
             {
                 XElement idElement = numReference.Descendants(W.numId).FirstOrDefault();
                 if (idElement != null)
@@ -2302,9 +1909,9 @@ namespace OpenXmlPowerTools.Documents
                 source.MainDocumentPart.NumberingDefinitionsPart != null)
             {
                 source.MainDocumentPart.NumberingDefinitionsPart.AddRelationships(target.MainDocumentPart.NumberingDefinitionsPart,
-                    package.RelationshipMarkup, new[] { target.MainDocumentPart.NumberingDefinitionsPart.GetXDocument().Root });
+                    RelationshipMarkup, new[] { target.MainDocumentPart.NumberingDefinitionsPart.GetXDocument().Root });
                 source.MainDocumentPart.NumberingDefinitionsPart.CopyRelatedPartsForContentParts(target.MainDocumentPart.NumberingDefinitionsPart,
-                    package.RelationshipMarkup, new[] { target.MainDocumentPart.NumberingDefinitionsPart.GetXDocument().Root }, package.Images);
+                    RelationshipMarkup, new[] { target.MainDocumentPart.NumberingDefinitionsPart.GetXDocument().Root }, package.Images);
             }
         }
         public static void CopyOrCacheHeaderOrFooter(this WordprocessingDocument doc, CachedHeaderFooter[] cachedHeaderFooter, XElement sect, XName referenceXName, string type)
@@ -2313,7 +1920,7 @@ namespace OpenXmlPowerTools.Documents
             if (referenceElement == null)
             {
                 var cachedPartRid = cachedHeaderFooter.FirstOrDefault(z => z.Ref == referenceXName && z.Type == type).CachedPartRid;
-                doc.MainDocumentPart.AddReferenceToExistingHeaderOrFooter(sect, cachedPartRid, referenceXName, type);
+                sect.AddReferenceToExistingHeaderOrFooter(cachedPartRid, referenceXName, type);
             }
             else
             {
@@ -2410,15 +2017,14 @@ namespace OpenXmlPowerTools.Documents
                 {
                     DocumentSettingsPart targetPart = target.MainDocumentPart.AddNewPart<DocumentSettingsPart>();
                     XDocument sourceXDoc = sourcePart.GetXDocument();
-                    sourcePart.AddRelationships(targetPart, package.RelationshipMarkup, new[] { sourceXDoc.Root });
-                    CopyFootnotesPart(sourceXDoc);
-                    CopyEndnotesPart(sourceXDoc);
+                    sourcePart.AddRelationships(targetPart, RelationshipMarkup, new[] { sourceXDoc.Root });
+                    source.CopyFootnotesPart(package, sourceXDoc);
+                    source.CopyEndnotesPart(package, sourceXDoc);
                     XDocument targetXDoc = target.MainDocumentPart.DocumentSettingsPart.GetXDocument();
                     targetXDoc.Declaration.SetDeclaration();
                     targetXDoc.Add(sourceXDoc.Root);
-                    sourcePart.CopyRelatedPartsForContentParts(targetPart, package.RelationshipMarkup, new[] { targetXDoc.Root }, package.Images);
+                    sourcePart.CopyRelatedPartsForContentParts(targetPart, RelationshipMarkup, new[] { targetXDoc.Root }, package.Images);
                 }
-
             }
             void AddWebSettingsPart()
             {
@@ -2427,7 +2033,7 @@ namespace OpenXmlPowerTools.Documents
                 {
                     WebSettingsPart targetPart = target.MainDocumentPart.AddNewPart<WebSettingsPart>();
                     XDocument sourceXDoc = sourcePart.GetXDocument();
-                    sourcePart.AddRelationships(targetPart, package.RelationshipMarkup, new[] { sourceXDoc.Root });
+                    sourcePart.AddRelationships(targetPart, RelationshipMarkup, new[] { sourceXDoc.Root });
                     XDocument targetXDoc = target.MainDocumentPart.WebSettingsPart.GetXDocument();
                     targetXDoc.Declaration.SetDeclaration();
                     targetXDoc.Add(sourceXDoc.Root);
@@ -2442,7 +2048,7 @@ namespace OpenXmlPowerTools.Documents
                     XDocument targetXDoc = target.MainDocumentPart.ThemePart.GetXDocument();
                     targetXDoc.Declaration.SetDeclaration();
                     targetXDoc.Add(sourcePart.GetXDocument().Root);
-                    sourcePart.CopyRelatedPartsForContentParts(targetPart, package.RelationshipMarkup, new[] { targetPart.GetXDocument().Root }, package.Images);
+                    sourcePart.CopyRelatedPartsForContentParts(targetPart, RelationshipMarkup, new[] { targetPart.GetXDocument().Root }, package.Images);
                 }
             }
 
@@ -2486,104 +2092,67 @@ namespace OpenXmlPowerTools.Documents
                     newXDoc.Add(fontTablePart.GetXDocument().Root);
                 }
             }
-            void CopyEndnotesPart(XDocument settingsXDoc)
+
+        }
+        public static void CopyStylesAndFonts(this WordprocessingDocument source, WmlPackage package, IEnumerable<XElement> targetContent)
+        {
+            var target = package.Document;
+            var sourceMainPart = source.MainDocumentPart;
+            var targetMainPart = target.MainDocumentPart;
+            // Copy all styles to the new document
+            if (source.MainDocumentPart.StyleDefinitionsPart != null)
             {
-                int number = 0;
-                XDocument oldEndnotes = null;
-                XDocument newEndnotes = null;
-                XElement endnotePr = settingsXDoc.Root.Element(W.endnotePr);
-                if (endnotePr == null)
-                    return;
-                if (source.MainDocumentPart.EndnotesPart == null)
-                    return;
-                foreach (XElement endnote in endnotePr.Elements(W.endnote))
+                XDocument sourceStyle = sourceMainPart.GetStylePart();
+                if (targetMainPart.StyleDefinitionsPart == null)
                 {
-                    if (oldEndnotes == null)
-                        oldEndnotes = source.MainDocumentPart.EndnotesPart.GetXDocument();
-                    if (newEndnotes == null)
-                    {
-                        if (target.MainDocumentPart.EndnotesPart != null)
-                        {
-                            newEndnotes = target.MainDocumentPart.EndnotesPart.GetXDocument();
-                            newEndnotes.Declaration.SetDeclaration();
-                            var ids = newEndnotes.Root
-                                .Elements(W.endnote)
-                                .Select(f => (int)f.Attribute(W.id));
-                            if (ids.Any())
-                                number = ids.Max() + 1;
-                        }
-                        else
-                        {
-                            target.MainDocumentPart.AddNewPart<EndnotesPart>();
-                            newEndnotes = target.MainDocumentPart.EndnotesPart.GetXDocument();
-                            newEndnotes.Declaration.SetDeclaration();
-                            newEndnotes.Add(new XElement(W.endnotes, Constants.NamespaceAttributes));
-                        }
-                    }
-                    string id = (string)endnote.Attribute(W.id);
-                    XElement element = oldEndnotes.Descendants()
-                        .Elements(W.endnote)
-                        .Where(p => ((string)p.Attribute(W.id)) == id)
-                        .FirstOrDefault();
-                    if (element != null)
-                    {
-                        XElement newElement = new XElement(element);
-                        newElement.Attribute(W.id).Value = number.ToString();
-                        newEndnotes.Root.Add(newElement);
-                        endnote.Attribute(W.id).Value = number.ToString();
-                        number++;
-                    }
+                    targetMainPart.AddNewPart<StyleDefinitionsPart>();
+                    XDocument targetStyle = targetMainPart.GetStylePart();
+                    targetStyle.Declaration.SetDeclaration();
+                    targetStyle.Add(sourceStyle.Root);
                 }
-            }
-            void CopyFootnotesPart(XDocument settingsXDoc)
-            {
-                int number = 0;
-                XDocument oldFootnotes = null;
-                XDocument newFootnotes = null;
-                XElement footnotePr = settingsXDoc.Root.Element(W.footnotePr);
-                if (footnotePr == null)
-                    return;
-                if (source.MainDocumentPart.FootnotesPart == null)
-                    return;
-                foreach (XElement footnote in footnotePr.Elements(W.footnote))
+                else
                 {
-                    if (oldFootnotes == null)
-                        oldFootnotes = source.MainDocumentPart.FootnotesPart.GetXDocument();
-                    if (newFootnotes == null)
-                    {
-                        if (target.MainDocumentPart.FootnotesPart != null)
-                        {
-                            newFootnotes = target.MainDocumentPart.FootnotesPart.GetXDocument();
-                            newFootnotes.Declaration.SetDeclaration();
-                            var ids = newFootnotes.Root.Elements(W.footnote).Select(f => (int)f.Attribute(W.id));
-                            if (ids.Any())
-                                number = ids.Max() + 1;
-                        }
-                        else
-                        {
-                            target.MainDocumentPart.AddNewPart<FootnotesPart>();
-                            newFootnotes = target.MainDocumentPart.FootnotesPart.GetXDocument();
-                            newFootnotes.Declaration.SetDeclaration();
-                            newFootnotes.Add(new XElement(W.footnotes, Constants.NamespaceAttributes));
-                        }
-                    }
-                    string id = (string)footnote.Attribute(W.id);
-                    XElement element = oldFootnotes.Descendants()
-                        .Elements(W.footnote)
-                        .Where(p => ((string)p.Attribute(W.id)) == id)
-                        .FirstOrDefault();
-                    if (element != null)
-                    {
-                        XElement newElement = new XElement(element);
-                        // the following adds the footnote into the new settings part
-                        newElement.Attribute(W.id).Value = number.ToString();
-                        newFootnotes.Root.Add(newElement);
-                        footnote.Attribute(W.id).Value = number.ToString();
-                        number++;
-                    }
+                    XDocument targetStylePart = targetMainPart.GetStylePart();
+                    MergeStyles(source, target, sourceStyle, targetStylePart, targetContent);
+                    sourceStyle.MergeLatentStyles(targetStylePart);
                 }
             }
 
+            // Copy all styles with effects to the new document
+            if (source.MainDocumentPart.StylesWithEffectsPart != null)
+            {
+                XDocument sourceStyle = source.MainDocumentPart.GetStylesWithEffectsPart();
+                if (targetMainPart.StylesWithEffectsPart == null)
+                {
+                    targetMainPart.AddNewPart<StylesWithEffectsPart>();
+                    XDocument targetStyle = targetMainPart.GetStylesWithEffectsPart();
+                    targetStyle.Declaration.SetDeclaration();
+                    targetStyle.Add(sourceStyle.Root);
+                }
+                else
+                {
+                    XDocument targetStyle = targetMainPart.GetStylesWithEffectsPart();
+                    MergeStyles(source, target, sourceStyle, targetStyle, targetContent);
+                    sourceStyle.MergeLatentStyles(targetStyle);
+                }
+            }
+
+            // Copy fontTable to the new document
+            if (source.MainDocumentPart.FontTablePart != null)
+            {
+                XDocument oldFontTable = sourceMainPart.GetFontTablePart();
+                if (targetMainPart.FontTablePart == null)
+                {
+                    targetMainPart.AddNewPart<FontTablePart>();
+                    XDocument newFontTable = targetMainPart.GetFontTablePart();
+                    newFontTable.Declaration.SetDeclaration();
+                    newFontTable.Add(oldFontTable.Root);
+                }
+                else
+                {
+                    oldFontTable.MergeFontTables(targetMainPart.GetFontTablePart());
+                }
+            }
         }
         public static void CopyWebExtensions(this WordprocessingDocument source, WordprocessingDocument target)
         {
@@ -2600,34 +2169,75 @@ namespace OpenXmlPowerTools.Documents
                 }
             }
         }
-        public static void FixUpSectionProperties(this WordprocessingDocument newDocument)
+        #endregion
+
+        #region Modifiers
+        public static void AdjustUniqueIds(this WordprocessingDocument source, WordprocessingDocument target, IEnumerable<XElement> newContent)
+        {
+            // adjust bookmark unique ids
+            int maxId = 0;
+            if (target.MainDocumentPart.GetXDocument().Descendants(W.bookmarkStart).Any())
+                maxId = target.MainDocumentPart.GetXDocument().Descendants(W.bookmarkStart)
+                    .Select(d => (int)d.Attribute(W.id)).Max();
+            Dictionary<int, int> bookmarkIdMap = new Dictionary<int, int>();
+            foreach (var item in newContent.DescendantsAndSelf().Where(bm => bm.Name == W.bookmarkStart ||
+                bm.Name == W.bookmarkEnd))
+            {
+                int id;
+                if (!int.TryParse((string)item.Attribute(W.id), out id))
+                    throw new DocumentBuilderException("Invalid document - invalid value for bookmark ID");
+                if (!bookmarkIdMap.ContainsKey(id))
+                    bookmarkIdMap.Add(id, ++maxId);
+            }
+            foreach (var bookmarkElement in newContent.DescendantsAndSelf().Where(e => e.Name == W.bookmarkStart ||
+                e.Name == W.bookmarkEnd))
+                bookmarkElement.Attribute(W.id).Value = bookmarkIdMap[(int)bookmarkElement.Attribute(W.id)].ToString();
+
+            // adjust shape unique ids
+            // This doesn't work because OLEObjects refer to shapes by ID.
+            // Punting on this, because sooner or later, this will be a non-issue.
+            //foreach (var item in newContent.DescendantsAndSelf(VML.shape))
+            //{
+            //    Guid g = Guid.NewGuid();
+            //    string s = "R" + g.ToString().Replace("-", "");
+            //    item.Attribute(NoNamespace.id).Value = s;
+            //}
+        }
+        // messy
+        public static void AdjustDocPrIds(this WordprocessingDocument target)
+        {
+            int docPrId = 0;
+            foreach (var item in target.MainDocumentPart.GetXDocument().Descendants(WP.docPr))
+                item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
+            foreach (var header in target.MainDocumentPart.HeaderParts)
+                foreach (var item in header.GetXDocument().Descendants(WP.docPr))
+                    item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
+            foreach (var footer in target.MainDocumentPart.FooterParts)
+                foreach (var item in footer.GetXDocument().Descendants(WP.docPr))
+                    item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
+            if (target.MainDocumentPart.FootnotesPart != null)
+                foreach (var item in target.MainDocumentPart.FootnotesPart.GetXDocument().Descendants(WP.docPr))
+                    item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
+            if (target.MainDocumentPart.EndnotesPart != null)
+                foreach (var item in target.MainDocumentPart.EndnotesPart.GetXDocument().Descendants(WP.docPr))
+                    item.Attribute(NoNamespace.id).Value = (++docPrId).ToString();
+        }
+        public static void FixSectionProperties(this WordprocessingDocument newDocument)
         {
             XDocument mainDocumentXDoc = newDocument.MainDocumentPart.GetXDocument();
             mainDocumentXDoc.Declaration.SetDeclaration();
             XElement body = mainDocumentXDoc.Root.Element(W.body);
-            var sectionPropertiesToMove = body
-                .Elements()
-                .Take(body.Elements().Count() - 1)
-                .Where(e => e.Name == W.sectPr)
-                .ToList();
-            foreach (var s in sectionPropertiesToMove)
+            var sectionPropQueue = new Queue<XElement>(body.Elements().Take(body.Elements().Count() - 1).Where(e => e.Name == W.sectPr));
+
+            while (sectionPropQueue.Count > 0)
             {
-                var p = s.SiblingsBeforeSelfReverseDocumentOrder().First();
-                if (p.Element(W.pPr) == null)
-                    p.AddFirst(new XElement(W.pPr));
-                p.Element(W.pPr).Add(s);
+                var sectionProp = sectionPropQueue.Dequeue();
+                var p = sectionProp.SiblingsBeforeSelfReverseDocumentOrder().First();
+                if (p.Element(W.pPr) == null) p.AddFirst(new XElement(W.pPr));
+                p.Element(W.pPr).Add(sectionProp);
             }
-            foreach (var s in sectionPropertiesToMove)
-                s.Remove();
         }
-        public static Dictionary<string, string> GetStyleNameMap(this WordprocessingDocument wDoc)
-        {
-            var sxDoc = wDoc.MainDocumentPart.StyleDefinitionsPart.GetXDocument();
-            var thisDocumentDictionary = sxDoc.Root.Elements(W.style).ToDictionary(z => (string)z.Elements(W.name).Attributes(W.val).FirstOrDefault(),
-                                                                                   z => (string)z.Attribute(W.styleId));
-            return thisDocumentDictionary;
-        }
-        public static void ProcessSectionsForLinkToPreviousHeadersAndFooters(this WordprocessingDocument doc)
+        public static void LinkToPreviousHeadersAndFooters(this WordprocessingDocument doc)
         {
             CachedHeaderFooter[] cachedHeaderFooter = new[]
             {
@@ -2656,7 +2266,7 @@ namespace OpenXmlPowerTools.Documents
                     if (headerEven == null)
                     {
                         if (headerDefault != null)
-                            doc.MainDocumentPart.AddReferenceToExistingHeaderOrFooter(sect, (string)headerDefault.Attribute(R.id), W.headerReference, "even");
+                            sect.AddReferenceToExistingHeaderOrFooter((string)headerDefault.Attribute(R.id), W.headerReference, "even");
                         else
                             doc.MainDocumentPart.InitEmptyHeaderOrFooter(sect, W.headerReference, "even");
                     }
@@ -2664,7 +2274,7 @@ namespace OpenXmlPowerTools.Documents
                     if (headerFirst == null)
                     {
                         if (headerDefault != null)
-                            doc.MainDocumentPart.AddReferenceToExistingHeaderOrFooter(sect, (string)headerDefault.Attribute(R.id), W.headerReference, "first");
+                            sect.AddReferenceToExistingHeaderOrFooter((string)headerDefault.Attribute(R.id), W.headerReference, "first");
                         else
                             doc.MainDocumentPart.InitEmptyHeaderOrFooter(sect, W.headerReference, "first");
                     }
@@ -2672,7 +2282,7 @@ namespace OpenXmlPowerTools.Documents
                     if (footerEven == null)
                     {
                         if (footerDefault != null)
-                            doc.MainDocumentPart.AddReferenceToExistingHeaderOrFooter(sect, (string)footerDefault.Attribute(R.id), W.footerReference, "even");
+                            sect.AddReferenceToExistingHeaderOrFooter((string)footerDefault.Attribute(R.id), W.footerReference, "even");
                         else
                             doc.MainDocumentPart.InitEmptyHeaderOrFooter(sect, W.footerReference, "even");
                     }
@@ -2680,7 +2290,7 @@ namespace OpenXmlPowerTools.Documents
                     if (footerFirst == null)
                     {
                         if (footerDefault != null)
-                            doc.MainDocumentPart.AddReferenceToExistingHeaderOrFooter(sect, (string)footerDefault.Attribute(R.id), W.footerReference, "first");
+                            sect.AddReferenceToExistingHeaderOrFooter((string)footerDefault.Attribute(R.id), W.footerReference, "first");
                         else
                             doc.MainDocumentPart.InitEmptyHeaderOrFooter(sect, W.footerReference, "first");
                     }
@@ -2708,83 +2318,6 @@ namespace OpenXmlPowerTools.Documents
                 }
             }
             doc.MainDocumentPart.PutXDocument();
-        }
-        public static void RemoveHeadersAndFootersFromSections(this WordprocessingDocument doc)
-        {
-            var mdXDoc = doc.MainDocumentPart.GetXDocument();
-            var sections = mdXDoc.Descendants(W.sectPr).ToList();
-            foreach (var sect in sections)
-            {
-                sect.Elements(W.headerReference).Remove();
-                sect.Elements(W.footerReference).Remove();
-            }
-            doc.MainDocumentPart.PutXDocument();
-        }
-        public static void TestForUnsupportedDocument(this WordprocessingDocument doc, int sourceNumber)
-        {
-            //What does not work:
-            //- sub docs
-            //- bidi text appears to work but has not been tested
-            //- languages other than en-us appear to work but have not been tested
-            //- documents with activex controls
-            //- mail merge WmlSource documents (look for dataSource in settings)
-            //- documents with ink
-            //- documents with frame sets and frames
-
-            if (doc.MainDocumentPart.GetXDocument().Root == null)
-                throw new DocumentBuilderException(string.Format("Source {0} is an invalid document - MainDocumentPart contains no content.", sourceNumber));
-
-            if ((string)doc.MainDocumentPart.GetXDocument().Root.Name.NamespaceName == "http://purl.oclc.org/ooxml/wordprocessingml/main")
-                throw new DocumentBuilderException(string.Format("Source {0} is saved in strict mode, not supported", sourceNumber));
-
-            // note: if ever want to support section changes, need to address the code that rationalizes headers and footers, propagating to sections that inherit headers/footers from prev section
-            foreach (var d in doc.MainDocumentPart.GetXDocument().Descendants())
-            {
-                if (d.Name == W.sectPrChange)
-                    throw new DocumentBuilderException(string.Format("Source {0} contains section changes (w:sectPrChange), not supported", sourceNumber));
-
-                // note: if ever want to support Open-Xml-PowerTools attributes, need to make sure that all attributes are propagated in all cases
-                //if (d.Name.Namespace == PtOpenXml.ptOpenXml ||
-                //    d.Name.Namespace == PtOpenXml.pt)
-                //    throw new DocumentBuilderException(string.Format("Source {0} contains Open-Xml-PowerTools markup, not supported", sourceNumber));
-                //if (d.Attributes().Any(a => a.Name.Namespace == PtOpenXml.ptOpenXml || a.Name.Namespace == PtOpenXml.pt))
-                //    throw new DocumentBuilderException(string.Format("Source {0} contains Open-Xml-PowerTools markup, not supported", sourceNumber));
-            }
-
-            doc.MainDocumentPart.TestPartForUnsupportedContent(sourceNumber);
-            foreach (var hdr in doc.MainDocumentPart.HeaderParts)
-                hdr.TestPartForUnsupportedContent(sourceNumber);
-            foreach (var ftr in doc.MainDocumentPart.FooterParts)
-                ftr.TestPartForUnsupportedContent(sourceNumber);
-            if (doc.MainDocumentPart.FootnotesPart != null)
-                doc.MainDocumentPart.FootnotesPart.TestPartForUnsupportedContent(sourceNumber);
-            if (doc.MainDocumentPart.EndnotesPart != null)
-                doc.MainDocumentPart.EndnotesPart.TestPartForUnsupportedContent(sourceNumber);
-
-            if (doc.MainDocumentPart.DocumentSettingsPart != null &&
-                doc.MainDocumentPart.DocumentSettingsPart.GetXDocument().Descendants().Any(d => d.Name == W.src ||
-                d.Name == W.recipientData || d.Name == W.mailMerge))
-                throw new DocumentBuilderException(String.Format("Source {0} is unsupported document - contains Mail Merge content",
-                    sourceNumber));
-            if (doc.MainDocumentPart.WebSettingsPart != null &&
-                doc.MainDocumentPart.WebSettingsPart.GetXDocument().Descendants().Any(d => d.Name == W.frameset))
-                throw new DocumentBuilderException(String.Format("Source {0} is unsupported document - contains a frameset", sourceNumber));
-            var numberingElements = doc.MainDocumentPart
-                .GetXDocument()
-                .Descendants(W.numPr)
-                .Where(n =>
-                {
-                    bool zeroId = (int?)n.Attribute(W.id) == 0;
-                    bool hasChildInsId = n.Elements(W.ins).Any();
-                    if (zeroId || hasChildInsId)
-                        return false;
-                    return true;
-                })
-                .ToList();
-            if (numberingElements.Any() &&
-                doc.MainDocumentPart.NumberingDefinitionsPart == null)
-                throw new DocumentBuilderException(String.Format(
-                    "Source {0} is invalid document - contains numbering markup but no numbering part", sourceNumber));
         }
         public static void MergeStyles(this WordprocessingDocument source, WordprocessingDocument target, XDocument fromStyles, XDocument toStyles, IEnumerable<XElement> newContent)
         {
@@ -3030,6 +2563,451 @@ namespace OpenXmlPowerTools.Documents
             }
 #endif
         }
+        public static void RemoveHeadersAndFootersFromSections(this WordprocessingDocument doc)
+        {
+            var mdXDoc = doc.MainDocumentPart.GetXDocument();
+            var sections = mdXDoc.Descendants(W.sectPr).ToList();
+            foreach (var sect in sections)
+            {
+                sect.Elements(W.headerReference).Remove();
+                sect.Elements(W.footerReference).Remove();
+            }
+            doc.MainDocumentPart.PutXDocument();
+        }
+        #endregion
+
+        #region Queries
+        public static bool AnySections(this WordprocessingDocument doc) => doc.GetMainPart().AnySections();
+        public static bool AnySections(this XDocument mainPart) => mainPart.Root.Descendants(W.sectPr).Any();
+        public static XDocument GetMainPart(this WordprocessingDocument doc)
+        {
+            return doc.MainDocumentPart.GetXDocument();
+        }
+        public static XElement GetBody(this WordprocessingDocument doc) => doc.GetMainPart().GetBody();
+        public static XElement GetBody(this XDocument mainPart)
+        {
+            return mainPart.Root.Element(W.body);
+        }
+        public static IEnumerable<XElement> GetBodyElements(this WordprocessingDocument doc) => doc.GetMainPart().GetBodyElements();
+        public static IEnumerable<XElement> GetBodyElements(this XDocument mainPart)
+        {
+            return mainPart.GetBody().Elements();
+        }
+        public static IEnumerable<XElement> GetContents(this WordprocessingDocument doc, int start = 0, int count = int.MaxValue) => doc.GetMainPart().GetContents();
+        public static IEnumerable<XElement> GetContents(this XDocument mainPart, int start = 0, int count = int.MaxValue)
+        {
+            return mainPart.GetBodyElements().Skip(start).Take(count).ToList();
+        }
+        public static IEnumerable<FooterPart> GetFooterParts(this WordprocessingDocument doc) => doc.MainDocumentPart.GetFooterParts();
+        public static IEnumerable<FooterPart> GetFooterParts(this MainDocumentPart mainPart) => mainPart.FooterParts;
+        public static IEnumerable<HeaderPart> GetHeaderParts(this WordprocessingDocument doc) => doc.MainDocumentPart.GetHeaderParts();
+        public static IEnumerable<HeaderPart> GetHeaderParts(this MainDocumentPart mainPart) => mainPart.HeaderParts;
+        public static IEnumerable<Atbid> GetDivs(this WordprocessingDocument doc) => doc.GetMainPart().GetDivs();
+        public static IEnumerable<Atbid> GetDivs(this XDocument mainPart)
+        {
+            return mainPart.Root.Element(W.body).Elements()
+                .Select((p, i) => new Atbid { BlockLevelContent = p, Index = i, })
+                .Rollup(new Atbid { BlockLevelContent = null, Index = -1, Div = 0, }, (b, p) =>
+                {
+                    XElement elementBefore = b.BlockLevelContent.SiblingsBeforeSelfReverseDocumentOrder().FirstOrDefault();
+
+                    return (elementBefore != null && elementBefore.Descendants(W.sectPr).Any())
+                        ? new Atbid { BlockLevelContent = b.BlockLevelContent, Index = b.Index, Div = p.Div + 1, }
+                        : new Atbid { BlockLevelContent = b.BlockLevelContent, Index = b.Index, Div = p.Div };
+                });
+        }
+        public static Dictionary<string, string> GetStyleNameMap(this WordprocessingDocument wDoc)
+        {
+            return wDoc.MainDocumentPart.StyleDefinitionsPart.GetXDocument().Root.Elements(W.style)
+                .ToDictionary(z => (string)z.Elements(W.name).Attributes(W.val).FirstOrDefault(), z => (string)z.Attribute(W.styleId));
+        }
+        public static XElement GetLastElement(this WordprocessingDocument doc) => doc.GetMainPart().GetLastElement();
+        public static XElement GetLastElement(this XDocument mainPart) => mainPart.Root.Element(W.body).Elements().LastOrDefault();
+        public static XDocument GetFontTablePart(this WordprocessingDocument doc) => doc.MainDocumentPart.GetFontTablePart();
+        public static XDocument GetFontTablePart(this MainDocumentPart mainPart) => mainPart.FontTablePart.GetXDocument();
+        public static XDocument GetEndnotesPart(this WordprocessingDocument doc) => doc.MainDocumentPart.GetEndnotesPart();
+        public static XDocument GetEndnotesPart(this MainDocumentPart mainPart) => mainPart.EndnotesPart.GetXDocument();
+        public static XDocument GetStylePart(this WordprocessingDocument doc) => doc.MainDocumentPart.GetStylePart();
+        public static XDocument GetStylePart(this MainDocumentPart mainPart) => mainPart.StyleDefinitionsPart.GetXDocument();
+        public static XDocument GetStylesWithEffectsPart(this WordprocessingDocument doc) => doc.MainDocumentPart.GetStylesWithEffectsPart();
+        public static XDocument GetStylesWithEffectsPart(this MainDocumentPart mainPart) => mainPart.StylesWithEffectsPart.GetXDocument();
+        #endregion
+
+        public static void TestForUnsupportedDocument(this WordprocessingDocument doc, int sourceNumber)
+        {
+            //What does not work:
+            //- sub docs
+            //- bidi text appears to work but has not been tested
+            //- languages other than en-us appear to work but have not been tested
+            //- documents with activex controls
+            //- mail merge WmlSource documents (look for dataSource in settings)
+            //- documents with ink
+            //- documents with frame sets and frames
+
+            if (doc.MainDocumentPart.GetXDocument().Root == null)
+                throw new DocumentBuilderException(string.Format("Source {0} is an invalid document - MainDocumentPart contains no content.", sourceNumber));
+
+            if ((string)doc.MainDocumentPart.GetXDocument().Root.Name.NamespaceName == "http://purl.oclc.org/ooxml/wordprocessingml/main")
+                throw new DocumentBuilderException(string.Format("Source {0} is saved in strict mode, not supported", sourceNumber));
+
+            // note: if ever want to support section changes, need to address the code that rationalizes headers and footers, propagating to sections that inherit headers/footers from prev section
+            foreach (var d in doc.MainDocumentPart.GetXDocument().Descendants())
+            {
+                if (d.Name == W.sectPrChange)
+                    throw new DocumentBuilderException(string.Format("Source {0} contains section changes (w:sectPrChange), not supported", sourceNumber));
+
+                // note: if ever want to support Open-Xml-PowerTools attributes, need to make sure that all attributes are propagated in all cases
+                //if (d.Name.Namespace == PtOpenXml.ptOpenXml ||
+                //    d.Name.Namespace == PtOpenXml.pt)
+                //    throw new DocumentBuilderException(string.Format("Source {0} contains Open-Xml-PowerTools markup, not supported", sourceNumber));
+                //if (d.Attributes().Any(a => a.Name.Namespace == PtOpenXml.ptOpenXml || a.Name.Namespace == PtOpenXml.pt))
+                //    throw new DocumentBuilderException(string.Format("Source {0} contains Open-Xml-PowerTools markup, not supported", sourceNumber));
+            }
+
+            doc.MainDocumentPart.TestPartForUnsupportedContent(sourceNumber);
+            foreach (var hdr in doc.MainDocumentPart.HeaderParts)
+                hdr.TestPartForUnsupportedContent(sourceNumber);
+            foreach (var ftr in doc.MainDocumentPart.FooterParts)
+                ftr.TestPartForUnsupportedContent(sourceNumber);
+            if (doc.MainDocumentPart.FootnotesPart != null)
+                doc.MainDocumentPart.FootnotesPart.TestPartForUnsupportedContent(sourceNumber);
+            if (doc.MainDocumentPart.EndnotesPart != null)
+                doc.MainDocumentPart.EndnotesPart.TestPartForUnsupportedContent(sourceNumber);
+
+            if (doc.MainDocumentPart.DocumentSettingsPart != null &&
+                doc.MainDocumentPart.DocumentSettingsPart.GetXDocument().Descendants().Any(d => d.Name == W.src ||
+                d.Name == W.recipientData || d.Name == W.mailMerge))
+                throw new DocumentBuilderException(String.Format("Source {0} is unsupported document - contains Mail Merge content",
+                    sourceNumber));
+            if (doc.MainDocumentPart.WebSettingsPart != null &&
+                doc.MainDocumentPart.WebSettingsPart.GetXDocument().Descendants().Any(d => d.Name == W.frameset))
+                throw new DocumentBuilderException(String.Format("Source {0} is unsupported document - contains a frameset", sourceNumber));
+            var numberingElements = doc.MainDocumentPart
+                .GetXDocument()
+                .Descendants(W.numPr)
+                .Where(n =>
+                {
+                    bool zeroId = (int?)n.Attribute(W.id) == 0;
+                    bool hasChildInsId = n.Elements(W.ins).Any();
+                    if (zeroId || hasChildInsId)
+                        return false;
+                    return true;
+                })
+                .ToList();
+            if (numberingElements.Any() &&
+                doc.MainDocumentPart.NumberingDefinitionsPart == null)
+                throw new DocumentBuilderException(String.Format(
+                    "Source {0} is invalid document - contains numbering markup but no numbering part", sourceNumber));
+        }
+        #endregion
+
+        #region Collections - At bottom because they don't collapse with collapse all.
+        public static CachedHeaderFooter[] CachedHeadersAndFooters = new CachedHeaderFooter[]
+        {
+            new CachedHeaderFooter() { Ref = W.headerReference, Type = "first" },
+            new CachedHeaderFooter() { Ref = W.headerReference, Type = "even" },
+            new CachedHeaderFooter() { Ref = W.headerReference, Type = "default" },
+            new CachedHeaderFooter() { Ref = W.footerReference, Type = "first" },
+            new CachedHeaderFooter() { Ref = W.footerReference, Type = "even" },
+            new CachedHeaderFooter() { Ref = W.footerReference, Type = "default" },
+        };
+        public static Dictionary<XName, int> ParagraphBordersOrder = new Dictionary<XName, int>
+        {
+            { W.top, 10 },
+            { W.left, 20 },
+            { W.bottom, 30 },
+            { W.right, 40 },
+            { W.between, 50 },
+            { W.bar, 60 },
+        };
+        public static Dictionary<XName, int> ParagraphPropertiesOrder = new Dictionary<XName, int>
+        {
+            { W.pStyle, 10 },
+            { W.keepNext, 20 },
+            { W.keepLines, 30 },
+            { W.pageBreakBefore, 40 },
+            { W.framePr, 50 },
+            { W.widowControl, 60 },
+            { W.numPr, 70 },
+            { W.suppressLineNumbers, 80 },
+            { W.pBdr, 90 },
+            { W.shd, 100 },
+            { W.tabs, 120 },
+            { W.suppressAutoHyphens, 130 },
+            { W.kinsoku, 140 },
+            { W.wordWrap, 150 },
+            { W.overflowPunct, 160 },
+            { W.topLinePunct, 170 },
+            { W.autoSpaceDE, 180 },
+            { W.autoSpaceDN, 190 },
+            { W.bidi, 200 },
+            { W.adjustRightInd, 210 },
+            { W.snapToGrid, 220 },
+            { W.spacing, 230 },
+            { W.ind, 240 },
+            { W.contextualSpacing, 250 },
+            { W.mirrorIndents, 260 },
+            { W.suppressOverlap, 270 },
+            { W.jc, 280 },
+            { W.textDirection, 290 },
+            { W.textAlignment, 300 },
+            { W.textboxTightWrap, 310 },
+            { W.outlineLvl, 320 },
+            { W.divId, 330 },
+            { W.cnfStyle, 340 },
+            { W.rPr, 350 },
+            { W.sectPr, 360 },
+            { W.pPrChange, 370 },
+        };
+        public static Dictionary<XName, int> RunPropertiesOrder = new Dictionary<XName, int>
+        {
+            { W.moveFrom, 5 },
+            { W.moveTo, 7 },
+            { W.ins, 10 },
+            { W.del, 20 },
+            { W.rStyle, 30 },
+            { W.rFonts, 40 },
+            { W.b, 50 },
+            { W.bCs, 60 },
+            { W.i, 70 },
+            { W.iCs, 80 },
+            { W.caps, 90 },
+            { W.smallCaps, 100 },
+            { W.strike, 110 },
+            { W.dstrike, 120 },
+            { W.outline, 130 },
+            { W.shadow, 140 },
+            { W.emboss, 150 },
+            { W.imprint, 160 },
+            { W.noProof, 170 },
+            { W.snapToGrid, 180 },
+            { W.vanish, 190 },
+            { W.webHidden, 200 },
+            { W.color, 210 },
+            { W.spacing, 220 },
+            { W._w, 230 },
+            { W.kern, 240 },
+            { W.position, 250 },
+            { W.sz, 260 },
+            { W14.wShadow, 270 },
+            { W14.wTextOutline, 280 },
+            { W14.wTextFill, 290 },
+            { W14.wScene3d, 300 },
+            { W14.wProps3d, 310 },
+            { W.szCs, 320 },
+            { W.highlight, 330 },
+            { W.u, 340 },
+            { W.effect, 350 },
+            { W.bdr, 360 },
+            { W.shd, 370 },
+            { W.fitText, 380 },
+            { W.vertAlign, 390 },
+            { W.rtl, 400 },
+            { W.cs, 410 },
+            { W.em, 420 },
+            { W.lang, 430 },
+            { W.eastAsianLayout, 440 },
+            { W.specVanish, 450 },
+            { W.oMath, 460 },
+        };
+        public static Dictionary<XName, int> SettingsOrder = new Dictionary<XName, int>
+        {
+            { W.writeProtection, 10},
+            { W.view, 20},
+            { W.zoom, 30},
+            { W.removePersonalInformation, 40},
+            { W.removeDateAndTime, 50},
+            { W.doNotDisplayPageBoundaries, 60},
+            { W.displayBackgroundShape, 70},
+            { W.printPostScriptOverText, 80},
+            { W.printFractionalCharacterWidth, 90},
+            { W.printFormsData, 100},
+            { W.embedTrueTypeFonts, 110},
+            { W.embedSystemFonts, 120},
+            { W.saveSubsetFonts, 130},
+            { W.saveFormsData, 140},
+            { W.mirrorMargins, 150},
+            { W.alignBordersAndEdges, 160},
+            { W.bordersDoNotSurroundHeader, 170},
+            { W.bordersDoNotSurroundFooter, 180},
+            { W.gutterAtTop, 190},
+            { W.hideSpellingErrors, 200},
+            { W.hideGrammaticalErrors, 210},
+            { W.activeWritingStyle, 220},
+            { W.proofState, 230},
+            { W.formsDesign, 240},
+            { W.attachedTemplate, 250},
+            { W.linkStyles, 260},
+            { W.stylePaneFormatFilter, 270},
+            { W.stylePaneSortMethod, 280},
+            { W.documentType, 290},
+            { W.mailMerge, 300},
+            { W.revisionView, 310},
+            { W.trackRevisions, 320},
+            { W.doNotTrackMoves, 330},
+            { W.doNotTrackFormatting, 340},
+            { W.documentProtection, 350},
+            { W.autoFormatOverride, 360},
+            { W.styleLockTheme, 370},
+            { W.styleLockQFSet, 380},
+            { W.defaultTabStop, 390},
+            { W.autoHyphenation, 400},
+            { W.consecutiveHyphenLimit, 410},
+            { W.hyphenationZone, 420},
+            { W.doNotHyphenateCaps, 430},
+            { W.showEnvelope, 440},
+            { W.summaryLength, 450},
+            { W.clickAndTypeStyle, 460},
+            { W.defaultTableStyle, 470},
+            { W.evenAndOddHeaders, 480},
+            { W.bookFoldRevPrinting, 490},
+            { W.bookFoldPrinting, 500},
+            { W.bookFoldPrintingSheets, 510},
+            { W.drawingGridHorizontalSpacing, 520},
+            { W.drawingGridVerticalSpacing, 530},
+            { W.displayHorizontalDrawingGridEvery, 540},
+            { W.displayVerticalDrawingGridEvery, 550},
+            { W.doNotUseMarginsForDrawingGridOrigin, 560},
+            { W.drawingGridHorizontalOrigin, 570},
+            { W.drawingGridVerticalOrigin, 580},
+            { W.doNotShadeFormData, 590},
+            { W.noPunctuationKerning, 600},
+            { W.characterSpacingControl, 610},
+            { W.printTwoOnOne, 620},
+            { W.strictFirstAndLastChars, 630},
+            { W.noLineBreaksAfter, 640},
+            { W.noLineBreaksBefore, 650},
+            { W.savePreviewPicture, 660},
+            { W.doNotValidateAgainstSchema, 670},
+            { W.saveInvalidXml, 680},
+            { W.ignoreMixedContent, 690},
+            { W.alwaysShowPlaceholderText, 700},
+            { W.doNotDemarcateInvalidXml, 710},
+            { W.saveXmlDataOnly, 720},
+            { W.useXSLTWhenSaving, 730},
+            { W.saveThroughXslt, 740},
+            { W.showXMLTags, 750},
+            { W.alwaysMergeEmptyNamespace, 760},
+            { W.updateFields, 770},
+            { W.footnotePr, 780},
+            { W.endnotePr, 790},
+            { W.compat, 800},
+            { W.docVars, 810},
+            { W.rsids, 820},
+            { M.mathPr, 830},
+            { W.attachedSchema, 840},
+            { W.themeFontLang, 850},
+            { W.clrSchemeMapping, 860},
+            { W.doNotIncludeSubdocsInStats, 870},
+            { W.doNotAutoCompressPictures, 880},
+            { W.forceUpgrade, 890}, 
+            //{W.captions, 900}, 
+            { W.readModeInkLockDown, 910},
+            { W.smartTagType, 920}, 
+            //{W.sl:schemaLibrary, 930}, 
+            { W.doNotEmbedSmartTags, 940},
+            { W.decimalSymbol, 950},
+            { W.listSeparator, 960},
+        };
+        public static Dictionary<XName, int> TableBordersOrder = new Dictionary<XName, int>
+        {
+            { W.top, 10 },
+            { W.left, 20 },
+            { W.start, 30 },
+            { W.bottom, 40 },
+            { W.right, 50 },
+            { W.end, 60 },
+            { W.insideH, 70 },
+            { W.insideV, 80 },
+        };
+        public static Dictionary<XName, int> TableCellBordersOrder = new Dictionary<XName, int>
+        {
+            { W.top, 10 },
+            { W.start, 20 },
+            { W.left, 30 },
+            { W.bottom, 40 },
+            { W.right, 50 },
+            { W.end, 60 },
+            { W.insideH, 70 },
+            { W.insideV, 80 },
+            { W.tl2br, 90 },
+            { W.tr2bl, 100 },
+        };
+        public static Dictionary<XName, int> TableCellPropertiesOrder = new Dictionary<XName, int>
+        {
+            { W.cnfStyle, 10 },
+            { W.tcW, 20 },
+            { W.gridSpan, 30 },
+            { W.hMerge, 40 },
+            { W.vMerge, 50 },
+            { W.tcBorders, 60 },
+            { W.shd, 70 },
+            { W.noWrap, 80 },
+            { W.tcMar, 90 },
+            { W.textDirection, 100 },
+            { W.tcFitText, 110 },
+            { W.vAlign, 120 },
+            { W.hideMark, 130 },
+            { W.headers, 140 },
+        };
+        public static Dictionary<XName, int> TablePropertiesOrder = new Dictionary<XName, int>
+        {
+            { W.tblStyle, 10 },
+            { W.tblpPr, 20 },
+            { W.tblOverlap, 30 },
+            { W.bidiVisual, 40 },
+            { W.tblStyleRowBandSize, 50 },
+            { W.tblStyleColBandSize, 60 },
+            { W.tblW, 70 },
+            { W.jc, 80 },
+            { W.tblCellSpacing, 90 },
+            { W.tblInd, 100 },
+            { W.tblBorders, 110 },
+            { W.shd, 120 },
+            { W.tblLayout, 130 },
+            { W.tblCellMar, 140 },
+            { W.tblLook, 150 },
+            { W.tblCaption, 160 },
+            { W.tblDescription, 170 },
+        };
+        public static Dictionary<XName, XName[]> RelationshipMarkup => new Dictionary<XName, XName[]>()
+        {
+            //{ button,           new [] { image }},
+            { A.blip,             new [] { R.embed, R.link }},
+            { A.hlinkClick,       new [] { R.id }},
+            { A.relIds,           new [] { R.cs, R.dm, R.lo, R.qs }},
+            //{ a14:imgLayer,     new [] { R.embed }},
+            //{ ax:ocx,           new [] { R.id }},
+            { C.chart,            new [] { R.id }},
+            { C.externalData,     new [] { R.id }},
+            { C.userShapes,       new [] { R.id }},
+            { DGM.relIds,         new [] { R.cs, R.dm, R.lo, R.qs }},
+            { O.OLEObject,        new [] { R.id }},
+            { VML.fill,           new [] { R.id }},
+            { VML.imagedata,      new [] { R.href, R.id, R.pict }},
+            { VML.stroke,         new [] { R.id }},
+            { W.altChunk,         new [] { R.id }},
+            { W.attachedTemplate, new [] { R.id }},
+            { W.control,          new [] { R.id }},
+            { W.dataSource,       new [] { R.id }},
+            { W.embedBold,        new [] { R.id }},
+            { W.embedBoldItalic,  new [] { R.id }},
+            { W.embedItalic,      new [] { R.id }},
+            { W.embedRegular,     new [] { R.id }},
+            { W.footerReference,  new [] { R.id }},
+            { W.headerReference,  new [] { R.id }},
+            { W.headerSource,     new [] { R.id }},
+            { W.hyperlink,        new [] { R.id }},
+            { W.printerSettings,  new [] { R.id }},
+            { W.recipientData,    new [] { R.id }},  // Mail merge, not required
+            { W.saveThroughXslt,  new [] { R.id }},
+            { W.sourceFileName,   new [] { R.id }},  // Framesets, not required
+            { W.src,              new [] { R.id }},  // Mail merge, not required
+            { W.subDoc,           new [] { R.id }},  // Sub documents, not required
+            //{ w14:contentPart,  new [] { R.id }},
+            { WNE.toolbarData,    new [] { R.id }},
+        };
+        public static string[] Extensions = new[] { ".docx", ".docm", ".dotx", ".dotm", };
         #endregion
     }
 }

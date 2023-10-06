@@ -1713,7 +1713,7 @@ namespace OpenXmlPowerTools
 
                     // little bit of cleanup
                     MoveLastSectPrToChildOfBody(newXDoc);
-                    XElement newXDoc2Root = (XElement)Wordprocessing.WmlOrderElementsPerStandard(newXDoc.Root);
+                    XElement newXDoc2Root = (XElement)Wordprocessing.OrderElementsPerStandard(newXDoc.Root);
                     xDoc.Root.ReplaceWith(newXDoc2Root);
 
                     /**********************************************************************************************/
@@ -2490,7 +2490,7 @@ namespace OpenXmlPowerTools
                                 }
                             }
                         }
-                        XElement newTempElement = (XElement)Wordprocessing.WmlOrderElementsPerStandard(tempElement);
+                        XElement newTempElement = (XElement)Wordprocessing.OrderElementsPerStandard(tempElement);
                         var newContentElement = newTempElement.Descendants().FirstOrDefault(d => d.Name == W.footnote || d.Name == W.endnote);
                         if (newContentElement == null)
                             throw new OpenXmlPowerToolsException("Internal error");
@@ -2584,7 +2584,7 @@ namespace OpenXmlPowerTools
                             }
                         }
                     }
-                    XElement newTempElement = (XElement)Wordprocessing.WmlOrderElementsPerStandard(tempElement);
+                    XElement newTempElement = (XElement)Wordprocessing.OrderElementsPerStandard(tempElement);
                     var newContentElement = newTempElement
                         .Descendants()
                         .FirstOrDefault(d => d.Name == W.footnote || d.Name == W.endnote);
@@ -2682,7 +2682,7 @@ namespace OpenXmlPowerTools
                                 }
                             }
                         }
-                        XElement newTempElement = (XElement)Wordprocessing.WmlOrderElementsPerStandard(tempElement);
+                        XElement newTempElement = (XElement)Wordprocessing.OrderElementsPerStandard(tempElement);
                         var newContentElement = newTempElement.Descendants().FirstOrDefault(d => d.Name == W.footnote || d.Name == W.endnote);
                         if (newContentElement == null)
                             throw new OpenXmlPowerToolsException("Internal error");
@@ -2822,7 +2822,7 @@ namespace OpenXmlPowerTools
             {
                 MarkContentAsDeletedOrInserted(footnotesPartWithRevisionsXDoc, settings);
                 CoalesceAdjacentRunsWithIdenticalFormatting(footnotesPartWithRevisionsXDoc);
-                XElement newXDocRoot = (XElement)Wordprocessing.WmlOrderElementsPerStandard(footnotesPartWithRevisionsXDoc.Root);
+                XElement newXDocRoot = (XElement)Wordprocessing.OrderElementsPerStandard(footnotesPartWithRevisionsXDoc.Root);
                 footnotesPartWithRevisionsXDoc.Root.ReplaceWith(newXDocRoot);
                 IgnorePt14Namespace(footnotesPartWithRevisionsXDoc.Root);
                 footnotesPartWithRevisions.PutXDocument();
@@ -2831,7 +2831,7 @@ namespace OpenXmlPowerTools
             {
                 MarkContentAsDeletedOrInserted(endnotesPartWithRevisionsXDoc, settings);
                 CoalesceAdjacentRunsWithIdenticalFormatting(endnotesPartWithRevisionsXDoc);
-                XElement newXDocRoot = (XElement)Wordprocessing.WmlOrderElementsPerStandard(endnotesPartWithRevisionsXDoc.Root);
+                XElement newXDocRoot = (XElement)Wordprocessing.OrderElementsPerStandard(endnotesPartWithRevisionsXDoc.Root);
                 endnotesPartWithRevisionsXDoc.Root.ReplaceWith(newXDocRoot);
                 IgnorePt14Namespace(endnotesPartWithRevisionsXDoc.Root);
                 endnotesPartWithRevisions.PutXDocument();
@@ -6820,7 +6820,7 @@ namespace OpenXmlPowerTools
 
             // little bit of cleanup
             MoveLastSectPrToChildOfBody(newXDoc);
-            XElement newXDoc2Root = (XElement)Wordprocessing.WmlOrderElementsPerStandard(newXDoc.Root);
+            XElement newXDoc2Root = (XElement)Wordprocessing.OrderElementsPerStandard(newXDoc.Root);
             newXDoc.Root.ReplaceWith(newXDoc2Root);
             return newXDoc;
         }

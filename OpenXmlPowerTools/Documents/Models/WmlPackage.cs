@@ -22,18 +22,19 @@ namespace OpenXmlPowerTools.Documents
         private Dictionary<XName, XName[]> relationshipMarkup { get; set; }
         public Dictionary<XName, XName[]> RelationshipMarkup
         {
-            get => relationshipMarkup = relationshipMarkup ?? Constants.WordprocessingRelationshipMarkup;
+            get => relationshipMarkup = relationshipMarkup ?? Wordprocessing.RelationshipMarkup;
             private set => relationshipMarkup = value;
         }
         public string[] extensions { get; set; }
         public string[] Extensions
         {
-            get => extensions = extensions ?? Constants.WordprocessingExtensions;
+            get => extensions = extensions ?? Wordprocessing.Extensions;
             private set => extensions = value;
         }
-        public bool KeepNoSections() => true; //!Sources.Any(p => p.KeepSections == true);
+        public bool HasSources() => Sources?.Any() == true;
+        public bool KeepNoSections() => Sources.All(p => p.KeepSections == false);
         public bool KeepAllSections() => Sources.All(p => p.KeepSections == true);
-        public bool KeepNoHeadersAndFooters() => !Sources.Any(p => p.KeepHeadersAndFooters == true);
+        public bool KeepNoHeadersAndFooters() => Sources.All(p => p.KeepHeadersAndFooters == false);
         public bool KeepAllHeadersAndFooters() => Sources.All(p => p.KeepHeadersAndFooters == true);
         public WmlPackage SetDocument(WordprocessingDocument document)
         {
