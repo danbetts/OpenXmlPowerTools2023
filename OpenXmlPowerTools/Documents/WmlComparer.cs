@@ -17,7 +17,15 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Drawing;
 using OpenXmlPowerTools.Commons;
+
+/* Unmerged change from project 'OpenXmlPowerTools (net48)'
+Before:
 using OpenXmlPowerTools;
+After:
+using OpenXmlPowerTools;
+using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Converters;
+*/
 
 // It is possible to optimize DescendantContentAtoms
 
