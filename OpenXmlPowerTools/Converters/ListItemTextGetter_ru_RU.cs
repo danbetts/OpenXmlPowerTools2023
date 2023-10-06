@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Converters
 {
     public class ListItemTextGetter_ru_RU
     {
@@ -101,7 +101,7 @@ namespace OpenXmlPowerTools
                 result += " ";
 
             // Get hundreds 
-            int h1 = (levelNumber % 1000) / 100;
+            int h1 = levelNumber % 1000 / 100;
             int h2 = levelNumber % 100;
             if (h1 >= 1)
                 result += Hundreds[h1 - 1];
@@ -152,7 +152,7 @@ namespace OpenXmlPowerTools
                 result += " ";
 
             // Get hundreds 
-            int h1 = (levelNumber % 1000) / 100;
+            int h1 = levelNumber % 1000 / 100;
             int h2 = levelNumber % 100;
             if (h1 >= 1 && h2 != 0)
                 result += Hundreds[h1 - 1];

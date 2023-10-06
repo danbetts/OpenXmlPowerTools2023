@@ -113,7 +113,7 @@ Following is my new theory of the correct algorithm:
       return value
 #endif
 
-namespace OpenXmlPowerTools.Htmls
+namespace OpenXmlPowerTools.Converters
 {
     class CssApplier
     {
@@ -337,7 +337,7 @@ namespace OpenXmlPowerTools.Htmls
                 Names = new[] { "font-size" },
                 Inherits = true,
                 Includes = (e, settings) => true,
-                InitialValue = (element, settings) => new CssExpression { Terms = new List<CssTerm> { new CssTerm { Value = ((double)settings.DefaultFontSize).ToString(CultureInfo.InvariantCulture), Type = CssTermType.String, Unit = CssUnit.PT } } },
+                InitialValue = (element, settings) => new CssExpression { Terms = new List<CssTerm> { new CssTerm { Value = settings.DefaultFontSize.ToString(CultureInfo.InvariantCulture), Type = CssTermType.String, Unit = CssUnit.PT } } },
                 ComputedValue = (element, assignedValue, settings) => ComputeAbsoluteFontSize(element, assignedValue, settings),
             },
 
@@ -555,7 +555,7 @@ namespace OpenXmlPowerTools.Htmls
                         return false;
                     return true;
                 },
-                InitialValue = (element, settings) => 
+                InitialValue = (element, settings) =>
                     {
                         if (settings.DefaultBlockContentMargin != null)
                         {
@@ -870,7 +870,7 @@ namespace OpenXmlPowerTools.Htmls
                         return false;
                     return true;
                 },
-                InitialValue = (element, settings) => 
+                InitialValue = (element, settings) =>
                 {
                     if (element.Parent == null)
                     {
@@ -1423,7 +1423,7 @@ namespace OpenXmlPowerTools.Htmls
                 double decFontSize;
                 if (!double.TryParse(fontSize.Terms.First().Value, NumberStyles.Float, CultureInfo.InvariantCulture, out decFontSize))
                     throw new OpenXmlPowerToolsException("Internal error");
-                newPtSize = (unit == CssUnit.EM) ? decFontSize * decValue : decFontSize * decValue / 2;
+                newPtSize = unit == CssUnit.EM ? decFontSize * decValue : decFontSize * decValue / 2;
             }
             else if (unit == CssUnit.REM)
             {
@@ -1436,9 +1436,9 @@ namespace OpenXmlPowerTools.Htmls
                 if (unit == CssUnit.IN)
                     newPtSize = decValue * 72.0d;
                 if (unit == CssUnit.CM)
-                    newPtSize = (decValue / 2.54d) * 72.0d;
+                    newPtSize = decValue / 2.54d * 72.0d;
                 if (unit == CssUnit.MM)
-                    newPtSize = (decValue / 25.4d) * 72.0d;
+                    newPtSize = decValue / 25.4d * 72.0d;
                 if (unit == CssUnit.PC)
                     newPtSize = decValue * 12d;
                 if (unit == CssUnit.PX)
@@ -1525,9 +1525,9 @@ namespace OpenXmlPowerTools.Htmls
                 if (unit == CssUnit.IN)
                     newPtSize = decValue * 72.0d;
                 if (unit == CssUnit.CM)
-                    newPtSize = (decValue / 2.54d) * 72.0d;
+                    newPtSize = decValue / 2.54d * 72.0d;
                 if (unit == CssUnit.MM)
-                    newPtSize = (decValue / 25.4d) * 72.0d;
+                    newPtSize = decValue / 25.4d * 72.0d;
                 if (unit == CssUnit.PC)
                     newPtSize = decValue * 12d;
                 if (unit == CssUnit.PX)
@@ -1720,7 +1720,7 @@ namespace OpenXmlPowerTools.Htmls
         private static int CountAttributesInSimpleSelector(CssSimpleSelector simpleSelector)
         {
             int count = (simpleSelector.Attribute != null ? 1 : 0) +
-                ((simpleSelector.Class != null && simpleSelector.Class != "") ? 1 : 0) +
+                (simpleSelector.Class != null && simpleSelector.Class != "" ? 1 : 0) +
                 (simpleSelector.Child != null ? CountAttributesInSimpleSelector(simpleSelector.Child) : 0);
             return count;
         }
@@ -1733,9 +1733,9 @@ namespace OpenXmlPowerTools.Htmls
 
         private static int CountElementNamesInSimpleSelector(CssSimpleSelector simpleSelector)
         {
-            int count = (simpleSelector.ElementName != null &&
+            int count = simpleSelector.ElementName != null &&
                     simpleSelector.ElementName != "" &&
-                    simpleSelector.ElementName != "*")
+                    simpleSelector.ElementName != "*"
                     ? 1 : 0 +
                 (simpleSelector.Child != null ? CountElementNamesInSimpleSelector(simpleSelector.Child) : 0);
             return count;
@@ -1764,7 +1764,7 @@ namespace OpenXmlPowerTools.Htmls
             else
             {
                 Property current = propList[property.Name];
-                if (((System.IComparable<Property>)property).CompareTo(current) == 1)
+                if (((IComparable<Property>)property).CompareTo(current) == 1)
                     propList[property.Name] = property;
             }
         }
@@ -1778,7 +1778,7 @@ namespace OpenXmlPowerTools.Htmls
             else
             {
                 Property current = propList[property.Name];
-                if (((System.IComparable<Property>)property).CompareTo(current) == 1)
+                if (((IComparable<Property>)property).CompareTo(current) == 1)
                     propList[property.Name] = property;
             }
         }
@@ -2447,7 +2447,7 @@ namespace OpenXmlPowerTools.Htmls
                                 {
                                     Property ep = new Property()
                                     {
-                                        Name = String.Format(shPr.Pattern, direction),
+                                        Name = string.Format(shPr.Pattern, direction),
                                         Expression = new CssExpression { Terms = new List<CssTerm> { p.Expression.Terms.First() } },
                                         HighOrderSort = p.HighOrderSort,
                                         IdAttributesInSelector = p.IdAttributesInSelector,
@@ -2463,7 +2463,7 @@ namespace OpenXmlPowerTools.Htmls
                                 {
                                     Property ep = new Property()
                                     {
-                                        Name = String.Format(shPr.Pattern, direction),
+                                        Name = string.Format(shPr.Pattern, direction),
                                         Expression = new CssExpression { Terms = new List<CssTerm> { p.Expression.Terms.First() } },
                                         HighOrderSort = p.HighOrderSort,
                                         IdAttributesInSelector = p.IdAttributesInSelector,
@@ -2477,7 +2477,7 @@ namespace OpenXmlPowerTools.Htmls
                                 {
                                     Property ep = new Property()
                                     {
-                                        Name = String.Format(shPr.Pattern, direction),
+                                        Name = string.Format(shPr.Pattern, direction),
                                         Expression = new CssExpression { Terms = new List<CssTerm> { p.Expression.Terms.Skip(1).First() } },
                                         HighOrderSort = p.HighOrderSort,
                                         IdAttributesInSelector = p.IdAttributesInSelector,
@@ -2491,7 +2491,7 @@ namespace OpenXmlPowerTools.Htmls
                             case 3:
                                 Property ep3 = new Property()
                                 {
-                                    Name = String.Format(shPr.Pattern, "top"),
+                                    Name = string.Format(shPr.Pattern, "top"),
                                     Expression = new CssExpression { Terms = new List<CssTerm> { p.Expression.Terms.First() } },
                                     HighOrderSort = p.HighOrderSort,
                                     IdAttributesInSelector = p.IdAttributesInSelector,
@@ -2504,7 +2504,7 @@ namespace OpenXmlPowerTools.Htmls
                                 {
                                     Property ep2 = new Property()
                                     {
-                                        Name = String.Format(shPr.Pattern, direction),
+                                        Name = string.Format(shPr.Pattern, direction),
                                         Expression = new CssExpression { Terms = new List<CssTerm> { p.Expression.Terms.Skip(1).First() } },
                                         HighOrderSort = p.HighOrderSort,
                                         IdAttributesInSelector = p.IdAttributesInSelector,
@@ -2516,7 +2516,7 @@ namespace OpenXmlPowerTools.Htmls
                                 }
                                 Property ep4 = new Property()
                                 {
-                                    Name = String.Format(shPr.Pattern, "bottom"),
+                                    Name = string.Format(shPr.Pattern, "bottom"),
                                     Expression = new CssExpression { Terms = new List<CssTerm> { p.Expression.Terms.Skip(2).First() } },
                                     HighOrderSort = p.HighOrderSort,
                                     IdAttributesInSelector = p.IdAttributesInSelector,
@@ -2532,7 +2532,7 @@ namespace OpenXmlPowerTools.Htmls
                                 {
                                     Property ep = new Property()
                                     {
-                                        Name = String.Format(shPr.Pattern, direction),
+                                        Name = string.Format(shPr.Pattern, direction),
                                         Expression = new CssExpression { Terms = new List<CssTerm> { p.Expression.Terms.Skip(skip++).First() } },
                                         HighOrderSort = p.HighOrderSort,
                                         IdAttributesInSelector = p.IdAttributesInSelector,
@@ -2714,7 +2714,7 @@ namespace OpenXmlPowerTools.Htmls
         {
             int depth = element.Ancestors().Count() * 2;
             XElement dummyElement = new XElement(element.Name, element.Attributes());
-            sb.Append(String.Format("{0}{1}", "".PadRight(depth), dummyElement) + Environment.NewLine);
+            sb.Append(string.Format("{0}{1}", "".PadRight(depth), dummyElement) + Environment.NewLine);
             Dictionary<string, Property> propList = element.Annotation<Dictionary<string, Property>>();
             if (propList != null)
             {
@@ -2723,10 +2723,10 @@ namespace OpenXmlPowerTools.Htmls
                 foreach (var kvp in propList.OrderBy(p => p.Key).ThenBy(p => p.Value))
                 {
                     Property prop = kvp.Value;
-                    string propString = String.Format("{0} High:{1} Id:{2} Att:{3} Ell:{4} Seq:{5}",
+                    string propString = string.Format("{0} High:{1} Id:{2} Att:{3} Ell:{4} Seq:{5}",
                         (prop.Name + ":" + prop.Expression + " ").PadRight(50 - depth + 2, '.'), (int)prop.HighOrderSort, prop.IdAttributesInSelector, prop.AttributesInSelector,
                         prop.ElementNamesInSelector, prop.SequenceNumber);
-                    sb.Append(String.Format("{0}{1}", "".PadRight(depth + 2), propString) + Environment.NewLine);
+                    sb.Append(string.Format("{0}{1}", "".PadRight(depth + 2), propString) + Environment.NewLine);
                 }
                 sb.Append(Environment.NewLine);
             }
@@ -2738,7 +2738,7 @@ namespace OpenXmlPowerTools.Htmls
                 foreach (var prop in computedProperties.OrderBy(cp => cp.Key))
                 {
                     string propString = prop.Key + ":" + prop.Value;
-                    sb.Append(String.Format("{0}{1}", "".PadRight(depth + 2), propString) + Environment.NewLine);
+                    sb.Append(string.Format("{0}{1}", "".PadRight(depth + 2), propString) + Environment.NewLine);
                 }
                 sb.Append(Environment.NewLine);
             }
@@ -2878,7 +2878,7 @@ namespace OpenXmlPowerTools.Htmls
         {
             if (o == null)
                 return;
-            string text = String.Format(format, o);
+            string text = string.Format(format, o);
             StringBuilder sb2 = new StringBuilder("".PadRight(indent * 2) + text);
             //sb2.Replace("&", "&amp;");
             //sb2.Replace("<", "&lt;");
@@ -2923,30 +2923,30 @@ namespace OpenXmlPowerTools.Htmls
                 UserHigh = 10,
             };
 
-            int System.IComparable<Property>.CompareTo(Property other)
+            int IComparable<Property>.CompareTo(Property other)
             {
                 // if this is less than other, return -1
                 // if this is greater than other, return 1
 
                 int gt = 1;
                 int lt = -1;
-                if (this.HighOrderSort < other.HighOrderSort)
+                if (HighOrderSort < other.HighOrderSort)
                     return lt;
-                if (this.HighOrderSort > other.HighOrderSort)
+                if (HighOrderSort > other.HighOrderSort)
                     return gt;
-                if (this.IdAttributesInSelector < other.IdAttributesInSelector)
+                if (IdAttributesInSelector < other.IdAttributesInSelector)
                     return lt;
-                if (this.IdAttributesInSelector > other.IdAttributesInSelector)
+                if (IdAttributesInSelector > other.IdAttributesInSelector)
                     return gt;
-                if (this.AttributesInSelector < other.AttributesInSelector)
+                if (AttributesInSelector < other.AttributesInSelector)
                     return lt;
-                if (this.AttributesInSelector > other.AttributesInSelector)
+                if (AttributesInSelector > other.AttributesInSelector)
                     return gt;
-                if (this.ElementNamesInSelector < other.ElementNamesInSelector)
+                if (ElementNamesInSelector < other.ElementNamesInSelector)
                     return lt;
-                if (this.ElementNamesInSelector > other.ElementNamesInSelector)
+                if (ElementNamesInSelector > other.ElementNamesInSelector)
                     return gt;
-                return this.SequenceNumber.CompareTo(other.SequenceNumber);
+                return SequenceNumber.CompareTo(other.SequenceNumber);
             }
         }
 
@@ -2989,8 +2989,8 @@ namespace OpenXmlPowerTools.Htmls
                         string v1 = lt.First().Value;
                         string v2 = lt.ElementAt(1).Value;
                         string v3 = lt.ElementAt(2).Value;
-                        string colorInHex = String.Format("{0:x2}{1:x2}{2:x2}", (int)((float.Parse(v1) / 100.0) * 255),
-                            (int)((float.Parse(v2) / 100.0) * 255), (int)((float.Parse(v3) / 100.0) * 255));
+                        string colorInHex = string.Format("{0:x2}{1:x2}{2:x2}", (int)(float.Parse(v1) / 100.0 * 255),
+                            (int)(float.Parse(v2) / 100.0 * 255), (int)(float.Parse(v3) / 100.0 * 255));
                         return colorInHex;
                     }
                     else
@@ -2998,7 +2998,7 @@ namespace OpenXmlPowerTools.Htmls
                         string v1 = lt.First().Value;
                         string v2 = lt.ElementAt(1).Value;
                         string v3 = lt.ElementAt(2).Value;
-                        string colorInHex = String.Format("{0:x2}{1:x2}{2:x2}", int.Parse(v1), int.Parse(v2), int.Parse(v3));
+                        string colorInHex = string.Format("{0:x2}{1:x2}{2:x2}", int.Parse(v1), int.Parse(v2), int.Parse(v3));
                         return colorInHex;
                     }
                 }

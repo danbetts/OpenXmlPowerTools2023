@@ -19,9 +19,9 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Drawing;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools;
+using OpenXmlPowerTools.Documents;
 
-namespace OpenXmlPowerTools.Documents
+namespace OpenXmlPowerTools.Converters
 {
     public class ContentTypeRule
     {

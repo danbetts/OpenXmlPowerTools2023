@@ -2,10 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using DocumentFormat.OpenXml.Packaging;
-using OpenXmlPowerTools.Commons;
 using OpenXmlPowerTools.Documents;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Commons
 {
     public class RevisionAccepter
     {

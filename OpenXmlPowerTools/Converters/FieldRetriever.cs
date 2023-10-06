@@ -9,7 +9,7 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools.Commons;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Converters
 {
     public class FieldRetriever
     {
@@ -197,7 +197,7 @@ namespace OpenXmlPowerTools
                 return new
                 {
                     Element = t1,
-                    Id = t2.Id,
+                    t2.Id,
                     WmlFieldInfoStack = t2.FiStack,
                 };
             });
@@ -228,7 +228,7 @@ namespace OpenXmlPowerTools
             {
                 Stack<FieldElementTypeInfo> s = desc.Annotation<Stack<FieldElementTypeInfo>>();
 
-                if (s != null )
+                if (s != null)
                 {
                     foreach (var item in s)
                     {
@@ -267,7 +267,7 @@ namespace OpenXmlPowerTools
             List<string> tokens = new List<string>();
             for (int c = 0; c < field.Length; c++)
             {
-                if (Char.IsWhiteSpace(field[c]))
+                if (char.IsWhiteSpace(field[c]))
                 {
                     if (state == State.InToken)
                     {

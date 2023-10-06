@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Converters
 {
     class ListItemTextGetter_Default
     {
@@ -74,8 +74,8 @@ namespace OpenXmlPowerTools
             if (numFmt == "upperRoman")
             {
                 int ones = levelNumber % 10;
-                int tens = (levelNumber % 100) / 10;
-                int hundreds = (levelNumber % 1000) / 100;
+                int tens = levelNumber % 100 / 10;
+                int hundreds = levelNumber % 1000 / 100;
                 int thousands = levelNumber / 1000;
                 return RomanThousands[thousands] + RomanHundreds[hundreds] +
                     RomanTens[tens] + RomanOnes[ones];
@@ -83,8 +83,8 @@ namespace OpenXmlPowerTools
             if (numFmt == "lowerRoman")
             {
                 int ones = levelNumber % 10;
-                int tens = (levelNumber % 100) / 10;
-                int hundreds = (levelNumber % 1000) / 100;
+                int tens = levelNumber % 100 / 10;
+                int hundreds = levelNumber % 1000 / 100;
                 int thousands = levelNumber / 1000;
                 return (RomanThousands[thousands] + RomanHundreds[hundreds] +
                     RomanTens[tens] + RomanOnes[ones]).ToLower();
@@ -139,7 +139,7 @@ namespace OpenXmlPowerTools
                         result.Substring(1);
                 if (t1 >= 1)
                     result += " ";
-                int h1 = (levelNumber % 1000) / 100;
+                int h1 = levelNumber % 1000 / 100;
                 int h2 = levelNumber % 100;
                 if (h1 >= 1)
                     result += OneThroughNineteen[h1 - 1] + " hundred";
@@ -177,7 +177,7 @@ namespace OpenXmlPowerTools
                 }
                 if (t1 >= 1)
                     result += " ";
-                int h1 = (levelNumber % 1000) / 100;
+                int h1 = levelNumber % 1000 / 100;
                 int h2 = levelNumber % 100;
                 if (h1 >= 1 && h2 != 0)
                     result += OneThroughNineteen[h1 - 1] + " hundred";

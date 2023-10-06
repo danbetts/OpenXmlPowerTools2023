@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using OpenXmlPowerTools.Commons;
 using OpenXmlPowerTools.Documents;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Commons
 {
     public class OpenXmlRegex
     {
@@ -133,7 +132,7 @@ namespace OpenXmlPowerTools
                 var replInfo = new ReplaceInternalInfo { Count = 0 };
                 foreach (XElement c in contentList)
                 {
-                    var newC = (XElement) WmlSearchAndReplaceTransform(c, regex, replacement, callback, trackRevisions,
+                    var newC = (XElement)WmlSearchAndReplaceTransform(c, regex, replacement, callback, trackRevisions,
                         revisionTrackingAuthor, replInfo, coalesceContent);
                     c.ReplaceNodes(newC.Nodes());
                 }
@@ -144,18 +143,18 @@ namespace OpenXmlPowerTools
                                      .Descendants()
                                      .Where(d => RevTrackMarkupWithId.Contains(d.Name))
                                      .Attributes(W.id)
-                                     .Select(a => (int) a))
+                                     .Select(a => (int)a))
                                  .Max() + 1;
                 IEnumerable<XElement> revTrackingWithoutId = root
                     .DescendantsAndSelf()
-                    .Where(d => RevTrackMarkupWithId.Contains(d.Name) && (d.Attribute(W.id) == null));
+                    .Where(d => RevTrackMarkupWithId.Contains(d.Name) && d.Attribute(W.id) == null);
                 foreach (XElement item in revTrackingWithoutId)
                     item.Add(new XAttribute(W.id, nextId++));
 
                 List<IGrouping<int, XElement>> revTrackingWithDuplicateIds = root
                     .DescendantsAndSelf()
                     .Where(d => RevTrackMarkupWithId.Contains(d.Name))
-                    .GroupBy(d => (int) d.Attribute(W.id))
+                    .GroupBy(d => (int)d.Attribute(W.id))
                     .Where(g => g.Count() > 1)
                     .ToList();
                 foreach (IGrouping<int, XElement> group in revTrackingWithDuplicateIds)
@@ -169,7 +168,7 @@ namespace OpenXmlPowerTools
                 return replInfo.Count;
             }
 
-            if ((first.Name.Namespace == P.p) || (first.Name.Namespace == A.a))
+            if (first.Name.Namespace == P.p || first.Name.Namespace == A.a)
             {
                 if (trackRevisions)
                     throw new OpenXmlPowerToolsException("PPTX does not support revision tracking");
@@ -177,7 +176,7 @@ namespace OpenXmlPowerTools
                 var counter = new ReplaceInternalInfo { Count = 0 };
                 foreach (XElement c in contentList)
                 {
-                    var newC = (XElement) PmlSearchAndReplaceTransform(c, regex, replacement, callback, counter);
+                    var newC = (XElement)PmlSearchAndReplaceTransform(c, regex, replacement, callback, counter);
                     c.ReplaceNodes(newC.Nodes());
                 }
 
@@ -239,7 +238,7 @@ namespace OpenXmlPowerTools
                     foreach (Match match in matchCollection.Cast<Match>())
                     {
                         if (match.Length == 0) continue;
-                        if ((callback != null) && !callback(paragraph, match)) continue;
+                        if (callback != null && !callback(paragraph, match)) continue;
 
                         List<XElement> runCollection = alignedRuns
                             .Skip(match.Index)
@@ -283,7 +282,7 @@ namespace OpenXmlPowerTools
                                     XElement grandParentParagraph = parentIns.Parent;
                                     if (grandParentParagraph != null)
                                     {
-                                        if ((string) parentIns.Attributes(W.author).FirstOrDefault() ==
+                                        if ((string)parentIns.Attributes(W.author).FirstOrDefault() ==
                                             revisionTrackingAuthor)
                                         {
                                             List<XElement> parentInsSiblings = grandParentParagraph
@@ -354,9 +353,9 @@ namespace OpenXmlPowerTools
 
                         if (e.Name == W.pPr)
                             return e;
-                        if (((e.Name == W.r) && e.Elements(W.t).Any()) || e.Elements(W.tab).Any())
+                        if (e.Name == W.r && e.Elements(W.t).Any() || e.Elements(W.tab).Any())
                             return e;
-                        if ((e.Name == W.ins) && e.Elements(W.r).Elements(W.t).Any())
+                        if (e.Name == W.ins && e.Elements(W.r).Elements(W.t).Any())
                             return e;
 
                         return WmlSearchAndReplaceTransform(e, regex, replacement, callback,
@@ -391,7 +390,7 @@ namespace OpenXmlPowerTools
                 return element.Elements()
                     .Where(e => e.Name != W.rPr && e.Name != W.lastRenderedPageBreak)
                     .Select(e => e.Name == W.t
-                        ? ((string) e).Select(c =>
+                        ? ((string)e).Select(c =>
                             new XElement(W.r,
                                 element.Elements(W.rPr),
                                 new XElement(W.t, Common.GetXmlSpaceAttribute(c), c)))
@@ -430,7 +429,7 @@ namespace OpenXmlPowerTools
             if (element.Name == A.p)
             {
                 XElement paragraph = element;
-                string contents = element.Descendants(A.t).Select(t => (string) t).StringConcatenate();
+                string contents = element.Descendants(A.t).Select(t => (string)t).StringConcatenate();
                 if (!regex.IsMatch(contents))
                     return new XElement(element.Name, element.Attributes(), element.Nodes());
 
@@ -464,7 +463,7 @@ namespace OpenXmlPowerTools
                 {
                     foreach (Match match in matchCollection.Cast<Match>())
                     {
-                        if ((callback != null) && !callback(paragraph, match)) continue;
+                        if (callback != null && !callback(paragraph, match)) continue;
 
                         List<XElement> runCollection = alignedRuns
                             .Skip(match.Index)
@@ -506,7 +505,7 @@ namespace OpenXmlPowerTools
                             {
                                 if (ce.Name != A.r)
                                     return DontConsolidate;
-                                if ((ce.Elements().Count(e => e.Name != A.rPr) != 1) || (ce.Element(A.t) == null))
+                                if (ce.Elements().Count(e => e.Name != A.rPr) != 1 || ce.Element(A.t) == null)
                                     return DontConsolidate;
 
                                 XElement rPr = ce.Element(A.rPr);
@@ -516,7 +515,7 @@ namespace OpenXmlPowerTools
                         groupedAdjacentRunsWithIdenticalFormatting.Select(g =>
                         {
                             if (g.Key == DontConsolidate)
-                                return (object) g;
+                                return (object)g;
 
                             string textValue = g.Select(r => r.Element(A.t).Value).StringConcatenate();
                             XAttribute xs = Common.GetXmlSpaceAttribute(textValue);
@@ -530,7 +529,7 @@ namespace OpenXmlPowerTools
                 return paragraph;
             }
 
-            if ((element.Name == A.r) && element.Elements(A.t).Any())
+            if (element.Name == A.r && element.Elements(A.t).Any())
             {
                 return element.Elements()
                     .Where(e => e.Name != A.rPr)
@@ -538,11 +537,11 @@ namespace OpenXmlPowerTools
                     {
                         if (e.Name == A.t)
                         {
-                            var s = (string) e;
+                            var s = (string)e;
                             IEnumerable<XElement> collectionOfSubRuns = s.Select(c => new XElement(A.r,
                                 element.Elements(A.rPr),
                                 new XElement(A.t, Common.GetXmlSpaceAttribute(c), c)));
-                            return (object) collectionOfSubRuns;
+                            return (object)collectionOfSubRuns;
                         }
 
                         return new XElement(A.r,

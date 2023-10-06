@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using OpenXmlPowerTools.Commons;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Commons
 {
     public static class PtUtils
     {
@@ -57,7 +56,7 @@ namespace OpenXmlPowerTools
         public static string MakeValidXml(string p)
         {
             return p.Any(c => c < 0x20)
-                ? p.Select(c => c < 0x20 ? string.Format("_{0:X}_", (int) c) : c.ToString()).StringConcatenate()
+                ? p.Select(c => c < 0x20 ? string.Format("_{0:X}_", (int)c) : c.ToString()).StringConcatenate()
                 : p;
         }
 
@@ -588,7 +587,7 @@ namespace OpenXmlPowerTools
             this IEnumerable<TSource> source,
             Func<TSource, TKey> keySelector)
         {
-            TKey last = default(TKey);
+            TKey last = default;
             var haveLast = false;
             var list = new List<TSource>();
 
@@ -736,7 +735,7 @@ namespace OpenXmlPowerTools
         public static IEnumerable<XElement> DescendantsTrimmed(this XElement element,
             XName trimName)
         {
-            return DescendantsTrimmed(element, e => e.Name == trimName);
+            return element.DescendantsTrimmed(e => e.Name == trimName);
         }
 
         public static IEnumerable<XElement> DescendantsTrimmed(this XElement element,
@@ -820,7 +819,7 @@ namespace OpenXmlPowerTools
             if (a == null)
                 return null;
 
-            string s = ((string) a).ToLower();
+            string s = ((string)a).ToLower();
             switch (s)
             {
                 case "1":
@@ -836,7 +835,7 @@ namespace OpenXmlPowerTools
                 case "off":
                     return false;
                 default:
-                    return (bool) a;
+                    return (bool)a;
             }
         }
 
@@ -1160,12 +1159,12 @@ namespace OpenXmlPowerTools
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<TSource>) this).GetEnumerator();
+            return ((IEnumerable<TSource>)this).GetEnumerator();
         }
 
         IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator()
         {
-            return ((IEnumerable<TSource>) GroupList).GetEnumerator();
+            return ((IEnumerable<TSource>)GroupList).GetEnumerator();
         }
     }
 
@@ -1396,7 +1395,7 @@ namespace OpenXmlPowerTools
             Buckets = new Dictionary<string, BucketInfo>();
         }
     }
-    
+
     public class XEntity : XText
     {
         public override void WriteTo(XmlWriter writer)

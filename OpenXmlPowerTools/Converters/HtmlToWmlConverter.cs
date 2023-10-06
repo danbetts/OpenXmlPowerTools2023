@@ -8,9 +8,19 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Text.RegularExpressions;
 using OpenXmlPowerTools.Documents;
+
+/* Unmerged change from project 'OpenXmlPowerTools (net48)'
+Before:
+using OpenXmlPowerTools.Commons;
+After:
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools;
+using OpenXmlPowerTools.Htmls;
+using OpenXmlPowerTools.Converters;
+*/
 using OpenXmlPowerTools.Commons;
 
-namespace OpenXmlPowerTools.Htmls
+namespace OpenXmlPowerTools.Converters
 {
     public class HtmlToWmlConverterSettings
     {
@@ -56,7 +66,7 @@ namespace OpenXmlPowerTools.Htmls
             return HtmlToWmlConverterCore.ConvertHtmlToWml(defaultCss, authorCss, userCss, xhtml, settings, emptyDocument, annotatedHtmlDumpFileName);
         }
 
-        private static string s_Blank_wml_base64 = 
+        private static string s_Blank_wml_base64 =
 @"UEsDBBQABgAIAAAAIQAJJIeCgQEAAI4FAAATAAgCW0NvbnRlbnRfVHlwZXNdLnhtbCCiBAIooAAC
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -294,7 +304,8 @@ AAAAANgtAABkb2NQcm9wcy9hcHAueG1sUEsFBgAAAAAMAAwACQMAAH4wAAAAAA==";
 
         public static WmlDocument EmptyDocument
         {
-            get {
+            get
+            {
                 if (s_EmptyDocument == null)
                 {
                     s_EmptyDocument = new WmlDocument("EmptyDocument.docx", Convert.FromBase64String(s_Blank_wml_base64));
@@ -399,7 +410,7 @@ AAAAANgtAABkb2NQcm9wcy9hcHAueG1sUEsFBgAAAAAMAAwACQMAAH4wAAAAAA==";
                         return false;
                     return true;
                 })
-                .Select(l => l + Environment.NewLine )
+                .Select(l => l + Environment.NewLine)
                 .StringConcatenate();
             return cleanCss;
         }
@@ -412,7 +423,7 @@ AAAAANgtAABkb2NQcm9wcy9hcHAueG1sUEsFBgAAAAAMAAwACQMAAH4wAAAAAA==";
 
         public static Emu TwipsToEmus(long twips)
         {
-            float v1 = (float)twips / 20f;
+            float v1 = twips / 20f;
             float v2 = v1 / 72f;
             float v3 = v2 * s_EmusPerInch;
             long emus = (long)v3;

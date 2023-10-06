@@ -3,7 +3,7 @@
 
 using System.Drawing;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Converters
 {
     public static class ColorParser
     {
@@ -22,7 +22,7 @@ namespace OpenXmlPowerTools
             }
             catch
             {
-                color = default(Color);
+                color = default;
 
                 return false;
             }

@@ -7,9 +7,8 @@ using System.Linq;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Documents;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Documents
 {
     class ReverseRevisionsInfo
     {
@@ -1389,8 +1388,8 @@ namespace OpenXmlPowerTools
                             {
                                 if (i == 0 || i == gLen - 1)
                                     return g.Select(gc => FixUpDeletedOrInsertedFieldCodesTransform(gc.Ele));
-                                if (grouped[i-1].Key == 2 &&
-                                    grouped[i+1].Key == 2)
+                                if (grouped[i - 1].Key == 2 &&
+                                    grouped[i + 1].Key == 2)
                                 {
                                     return new XElement(W.del,
                                         g.Select(gc => TransformInstrTextToDelInstrText(gc.Ele)));
@@ -1492,7 +1491,7 @@ namespace OpenXmlPowerTools
 
                         if (gridSpan == null)
                             gridSpan = 1;
-                        
+
                         var z = Math.Min(gridLines.Length - 1, lastUsed + (int)gridSpan);
                         int w = gridLines.Where((g, i) => i > lastUsed && i <= z).Sum();
                         tcW.Value = w.ToString();
@@ -1558,16 +1557,16 @@ namespace OpenXmlPowerTools
                 if (potentialDeletedElements.Count > 0)
                 {
                     if (tag.TagType == TagTypeEnum.Element &&
-                        (tag.Element.Name != W.moveFromRangeStart &&
-                         tag.Element.Name != W.moveFromRangeEnd))
+                        tag.Element.Name != W.moveFromRangeStart &&
+                         tag.Element.Name != W.moveFromRangeEnd)
                     {
                         foreach (var id in potentialDeletedElements)
                             id.Value.PotentialStartElementTagsInRange.Add(tag.Element);
                         continue;
                     }
                     if (tag.TagType == TagTypeEnum.EmptyElement &&
-                        (tag.Element.Name != W.moveFromRangeStart &&
-                         tag.Element.Name != W.moveFromRangeEnd))
+                        tag.Element.Name != W.moveFromRangeStart &&
+                         tag.Element.Name != W.moveFromRangeEnd)
                     {
                         foreach (var id in potentialDeletedElements)
                         {
@@ -1577,8 +1576,8 @@ namespace OpenXmlPowerTools
                         continue;
                     }
                     if (tag.TagType == TagTypeEnum.EndElement &&
-                        (tag.Element.Name != W.moveFromRangeStart &&
-                        tag.Element.Name != W.moveFromRangeEnd))
+                        tag.Element.Name != W.moveFromRangeStart &&
+                        tag.Element.Name != W.moveFromRangeEnd)
                     {
                         foreach (var id in potentialDeletedElements)
                             id.Value.PotentialEndElementTagsInRange.Add(tag.Element);
@@ -1646,7 +1645,7 @@ namespace OpenXmlPowerTools
                             groupedBodyChildren.Select(g =>
                             {
                                 if (g.Key == MoveFromCollectionType.Other)
-                                    return (object)g;
+                                    return g;
 
                                 // This is a transform that produces the first element in the
                                 // collection, except that the paragraph in the descendents is
@@ -2111,7 +2110,8 @@ namespace OpenXmlPowerTools
                                     state = 1;
                                     currentKey += 1;
                                     deletedParagraphGroupingInfo.Add(
-                                        new GroupingInfo() {
+                                        new GroupingInfo()
+                                        {
                                             GroupingType = GroupingType.DeletedRange,
                                             GroupingKey = currentKey,
                                         });
@@ -2672,7 +2672,7 @@ namespace OpenXmlPowerTools
                                 && g.First().Descendants(W.cellDel).Any())
                                 return null;
                             if (g.Key.CollectionType == DeletedCellCollectionType.Other)
-                                return (object)g;
+                                return g;
                             XElement gridSpanElement = g
                                 .First()
                                 .Elements(W.tcPr)
@@ -2835,7 +2835,7 @@ namespace OpenXmlPowerTools
     {
         private static void InitializeParagraphInfo(XElement contentContext)
         {
-            if (!(W.BlockLevelContentContainers.Contains(contentContext.Name)))
+            if (!W.BlockLevelContentContainers.Contains(contentContext.Name))
                 throw new ArgumentException(
                     "GetParagraphInfo called for element that is not child of content container");
             XElement prev = null;

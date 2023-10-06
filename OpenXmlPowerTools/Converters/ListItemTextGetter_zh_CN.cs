@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Converters
 {
     public class ListItemTextGetter_zh_CN
     {
@@ -45,8 +45,8 @@ namespace OpenXmlPowerTools
             int thousandsRemainder = levelNumber % 1000;
             int hundredsRemainder = levelNumber % 100;
             int thousands = levelNumber / 1000;
-            int hundreds = (levelNumber % 1000) / 100;
-            int tens = (levelNumber % 100) / 10;
+            int hundreds = levelNumber % 1000 / 100;
+            int tens = levelNumber % 100 / 10;
             int ones = levelNumber % 10;
 
             if (numFmt == "chineseCounting")

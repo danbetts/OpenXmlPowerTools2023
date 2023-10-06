@@ -9,7 +9,7 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools.Commons;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Converters
 {
     public class ListItemRetrieverSettings
     {
@@ -277,7 +277,7 @@ namespace OpenXmlPowerTools
                     isOverride = false;
                     return FromParagraph.Start(ilvl);
                 }
-                else if (this.FromStyle != null)
+                else if (FromStyle != null)
                 {
                     if (takeOverride)
                     {
@@ -304,7 +304,7 @@ namespace OpenXmlPowerTools
                         return (int)startOverride;
                     return null;
                 }
-                else if (this.FromStyle != null)
+                else if (FromStyle != null)
                 {
                     var startOverride = FromStyle.StartOverride(ilvl);
                     if (startOverride != null)
@@ -338,7 +338,7 @@ namespace OpenXmlPowerTools
                 IsZeroNumId = isZeroNumId;
             }
         }
-        
+
         public static void SetParagraphLevel(XElement paragraph, int ilvl)
         {
             var pi = paragraph.Annotation<ParagraphInfo>();
@@ -577,7 +577,7 @@ namespace OpenXmlPowerTools
             return listItemSource;
         }
 
-        private static ListItemSource InitializeStyleListItemSource(XDocument numXDoc, XDocument stylesXDoc, XElement paragraph, string paragraphStyleName, 
+        private static ListItemSource InitializeStyleListItemSource(XDocument numXDoc, XDocument stylesXDoc, XElement paragraph, string paragraphStyleName,
             out int? ilvl, out bool? zeroNumId)
         {
             zeroNumId = null;
@@ -777,7 +777,7 @@ namespace OpenXmlPowerTools
 
             int[] levelNumbers = levelNumbersAnnotation.LevelNumbersArray;
             string languageIdentifier = GetLanguageIdentifier(paragraph, stylesXDoc);
-            string listItem = FormatListItem(listItemInfo, levelNumbers, GetParagraphLevel(paragraph), 
+            string listItem = FormatListItem(listItemInfo, levelNumbers, GetParagraphLevel(paragraph),
                 lvlText, stylesXDoc, languageIdentifier, settings);
             return listItem;
         }
@@ -878,7 +878,7 @@ namespace OpenXmlPowerTools
         private static void InitializeListItemRetrieverForPart(WordprocessingDocument wordDoc, OpenXmlPart part, ListItemRetrieverSettings settings)
         {
             var mainXDoc = part.GetXDocument();
-            
+
             var numPart = wordDoc.MainDocumentPart.NumberingDefinitionsPart;
             if (numPart == null)
                 return;
@@ -915,7 +915,7 @@ namespace OpenXmlPowerTools
                 {
                     ListItemInfo listItemInfo = paragraph.Annotation<ListItemInfo>();
                     if (!listItemInfo.IsListItem)
-                        return (int?)null;
+                        return null;
                     return listItemInfo.AbstractNumId;
                 })
                 .Where(a => a != null)
@@ -1007,7 +1007,7 @@ namespace OpenXmlPowerTools
 
                         if (previous == null ||
                             level >= previous.Count() ||
-                            (level == ilvl && startOverride != null && !startOverrideAlreadyUsed.Contains(numId)))
+                            level == ilvl && startOverride != null && !startOverrideAlreadyUsed.Contains(numId))
                         {
                             if (previous == null || level >= previous.Count())
                             {
@@ -1111,7 +1111,7 @@ namespace OpenXmlPowerTools
                 if (t.Substring(0, 1) != "%")
                     return t;
                 int indentationLevel;
-                if (!Int32.TryParse(t.Substring(1), out indentationLevel))
+                if (!int.TryParse(t.Substring(1), out indentationLevel))
                     return t;
                 indentationLevel -= 1;
                 if (indentationLevel >= levelNumbers.Length)

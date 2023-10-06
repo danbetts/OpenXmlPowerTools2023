@@ -1,6 +1,7 @@
 ﻿using System;
+using OpenXmlPowerTools.Documents;
 
-namespace OpenXmlPowerTools.Documents
+namespace OpenXmlPowerTools.Converters
 {
     /// <summary>
     /// WmlSource builder

@@ -8,10 +8,10 @@ using System.Text;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Drawing;
-using OpenXmlPowerTools.Documents;
 using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Converters
 {
     public class FormattingAssemblerSettings
     {
@@ -92,7 +92,7 @@ namespace OpenXmlPowerTools
             {
                 var pxd = part.GetXDocument();
                 pxd.Root.Descendants().Attributes().Where(a => a.IsNamespaceDeclaration).Remove();
-                FormattingAssembler.NormalizePropsForPart(pxd, settings);
+                NormalizePropsForPart(pxd, settings);
                 var newRoot = (XElement)CleanupTransform(pxd.Root);
                 pxd.Root.ReplaceWith(newRoot);
                 part.PutXDocument();
@@ -448,7 +448,7 @@ namespace OpenXmlPowerTools
                             {
                                 var hanging = (int)hangingAtt;
                                 var listItemRunLength = Wordprocessing.CalcWidthOfRunInTwips(listItemRun);
-                                hanging += (listItemRunLength / 2); // should be half of width of list item, in twips
+                                hanging += listItemRunLength / 2; // should be half of width of list item, in twips
                                 hangingAtt.Value = hanging.ToString();
                             }
                         }
@@ -1715,14 +1715,14 @@ namespace OpenXmlPowerTools
                 color2str = "000000";
             if (color1str != null && color2str != null && color1str != color2str)
             {
-                Int32 color1;
-                Int32 color2;
+                int color1;
+                int color2;
                 try
                 {
                     color1 = Convert.ToInt32(color1str, 16);
                 }
                 // if the above throws ArgumentException, FormatException, or OverflowException, then abort
-                catch (Exception) 
+                catch (Exception)
                 {
                     return sideToReplace;
                 }
@@ -2081,20 +2081,20 @@ namespace OpenXmlPowerTools
                 return null;
 
             rFonts = new XElement(W.rFonts,
-                (higherPriorityFont.Attribute(W.ascii) != null || higherPriorityFont.Attribute(W.asciiTheme) != null) ?
+                higherPriorityFont.Attribute(W.ascii) != null || higherPriorityFont.Attribute(W.asciiTheme) != null ?
                     new[] { higherPriorityFont.Attribute(W.ascii), higherPriorityFont.Attribute(W.asciiTheme) } :
                     new[] { lowerPriorityFont.Attribute(W.ascii), lowerPriorityFont.Attribute(W.asciiTheme) },
-                (higherPriorityFont.Attribute(W.hAnsi) != null || higherPriorityFont.Attribute(W.hAnsiTheme) != null) ?
+                higherPriorityFont.Attribute(W.hAnsi) != null || higherPriorityFont.Attribute(W.hAnsiTheme) != null ?
                     new[] { higherPriorityFont.Attribute(W.hAnsi), higherPriorityFont.Attribute(W.hAnsiTheme) } :
                     new[] { lowerPriorityFont.Attribute(W.hAnsi), lowerPriorityFont.Attribute(W.hAnsiTheme) },
-                (higherPriorityFont.Attribute(W.eastAsia) != null || higherPriorityFont.Attribute(W.eastAsiaTheme) != null) ?
+                higherPriorityFont.Attribute(W.eastAsia) != null || higherPriorityFont.Attribute(W.eastAsiaTheme) != null ?
                     new[] { higherPriorityFont.Attribute(W.eastAsia), higherPriorityFont.Attribute(W.eastAsiaTheme) } :
                     new[] { lowerPriorityFont.Attribute(W.eastAsia), lowerPriorityFont.Attribute(W.eastAsiaTheme) },
-                (higherPriorityFont.Attribute(W.cs) != null || higherPriorityFont.Attribute(W.cstheme) != null) ?
+                higherPriorityFont.Attribute(W.cs) != null || higherPriorityFont.Attribute(W.cstheme) != null ?
                     new[] { higherPriorityFont.Attribute(W.cs), higherPriorityFont.Attribute(W.cstheme) } :
                     new[] { lowerPriorityFont.Attribute(W.cs), lowerPriorityFont.Attribute(W.cstheme) },
-                (higherPriorityFont.Attribute(W.hint) != null ? higherPriorityFont.Attribute(W.hint) :
-                    lowerPriorityFont.Attribute(W.hint))
+                higherPriorityFont.Attribute(W.hint) != null ? higherPriorityFont.Attribute(W.hint) :
+                    lowerPriorityFont.Attribute(W.hint)
             );
 
             return rFonts;
@@ -2146,8 +2146,8 @@ namespace OpenXmlPowerTools
                     foreach (var ot in TableStyleOverrideTypes)
                     {
                         XName attName = TableStyleOverrideXNameMap[ot];
-                        if ((cellCnf != null && cellCnf.Attribute(attName).ToBoolean() == true) ||
-                            (rowCnf != null && rowCnf.Attribute(attName).ToBoolean() == true))
+                        if (cellCnf != null && cellCnf.Attribute(attName).ToBoolean() == true ||
+                            rowCnf != null && rowCnf.Attribute(attName).ToBoolean() == true)
                         {
                             XElement o = style
                                 .Elements(W.tblStylePr)
@@ -2326,10 +2326,10 @@ namespace OpenXmlPowerTools
                             paraStyle.Element(W.rPr));
                         yield return elementToYield2;
                     }
-                    localParaStyleName = (string)(paraStyle
+                    localParaStyleName = (string)paraStyle
                         .Elements(W.basedOn)
                         .Attributes(W.val)
-                        .FirstOrDefault());
+                        .FirstOrDefault();
                     continue;
                 }
 
@@ -2337,7 +2337,7 @@ namespace OpenXmlPowerTools
                     paraStyle.Element(W.pPr).Attributes(),
                     paraStyle.Element(W.pPr).Elements(),
                     paraStyle.Element(W.rPr));
-                yield return (elementToYield);
+                yield return elementToYield;
 
                 var listItemInfo = para.Annotation<ListItemRetriever.ListItemInfo>();
                 if (listItemInfo != null)
@@ -2352,7 +2352,7 @@ namespace OpenXmlPowerTools
                             lipPr.Attributes(),
                             lipPr.Elements(),
                             lirPr);
-                        yield return (elementToYield2);
+                        yield return elementToYield2;
                     }
                 }
 
@@ -2424,8 +2424,8 @@ namespace OpenXmlPowerTools
                     foreach (var ot in TableStyleOverrideTypes)
                     {
                         XName attName = TableStyleOverrideXNameMap[ot];
-                        if ((cellCnf != null && cellCnf.Attribute(attName).ToBoolean() == true) ||
-                            (rowCnf != null && rowCnf.Attribute(attName).ToBoolean() == true))
+                        if (cellCnf != null && cellCnf.Attribute(attName).ToBoolean() == true ||
+                            rowCnf != null && rowCnf.Attribute(attName).ToBoolean() == true)
                         {
                             XElement o = style
                                 .Elements(W.tblStylePr)
@@ -2824,23 +2824,23 @@ namespace OpenXmlPowerTools
                 var rFonts = rPr.Element(W.rFonts);
                 if (rFonts == null)
                 {
-                    this.AsciiFont = null;
-                    this.HAnsiFont = null;
-                    this.EastAsiaFont = null;
-                    this.CsFont = null;
-                    this.Hint = null;
+                    AsciiFont = null;
+                    HAnsiFont = null;
+                    EastAsiaFont = null;
+                    CsFont = null;
+                    Hint = null;
                 }
                 else
                 {
-                    this.AsciiFont = (string)(rFonts.Attribute(W.ascii));
-                    this.HAnsiFont = (string)(rFonts.Attribute(W.hAnsi));
-                    this.EastAsiaFont = (string)(rFonts.Attribute(W.eastAsia));
-                    this.CsFont = (string)(rFonts.Attribute(W.cs));
-                    this.Hint = (string)(rFonts.Attribute(W.hint));
+                    AsciiFont = (string)rFonts.Attribute(W.ascii);
+                    HAnsiFont = (string)rFonts.Attribute(W.hAnsi);
+                    EastAsiaFont = (string)rFonts.Attribute(W.eastAsia);
+                    CsFont = (string)rFonts.Attribute(W.cs);
+                    Hint = (string)rFonts.Attribute(W.hint);
                 }
-                XElement csel = this.Properties[W.cs];
+                XElement csel = Properties[W.cs];
                 bool cs = csel != null && (csel.Attribute(W.val) == null || csel.Attribute(W.val).ToBoolean() == true);
-                XElement rtlel = this.Properties[W.rtl];
+                XElement rtlel = Properties[W.rtl];
                 bool rtl = rtlel != null && (rtlel.Attribute(W.val) == null || rtlel.Attribute(W.val).ToBoolean() == true);
                 var bidi = false;
                 if (pPr != null)
@@ -2877,7 +2877,7 @@ namespace OpenXmlPowerTools
                     return true;
                 if (s == "off")
                     return false;
-                return (bool)(rPr.Element(propertyName).Attribute(W.val));
+                return (bool)rPr.Element(propertyName).Attribute(W.val);
             }
 
             private static XElement GetXmlProperty(XElement rPr, XName propertyName)
@@ -3160,7 +3160,7 @@ namespace OpenXmlPowerTools
                 .toArray();
             */
 
-            var charToExamine = str.FirstOrDefault(c => ! WeakAndNeutralDirectionalCharacters.Contains(c));
+            var charToExamine = str.FirstOrDefault(c => !WeakAndNeutralDirectionalCharacters.Contains(c));
             if (charToExamine == '\0')
                 charToExamine = str[0];
 
@@ -3268,9 +3268,9 @@ namespace OpenXmlPowerTools
                         ch == 0xAA ||
                         ch == 0xAD ||
                         ch == 0xAF ||
-                        (ch >= 0xB0 && ch <= 0xB4) ||
-                        (ch >= 0xB6 && ch <= 0xBA) ||
-                        (ch >= 0xBC && ch <= 0xBF) ||
+                        ch >= 0xB0 && ch <= 0xB4 ||
+                        ch >= 0xB6 && ch <= 0xBA ||
+                        ch >= 0xBC && ch <= 0xBF ||
                         ch == 0xD7 ||
                         ch == 0xF7)
                     {
@@ -3281,10 +3281,10 @@ namespace OpenXmlPowerTools
                     {
                         if (ch == 0xE0 ||
                             ch == 0xE1 ||
-                            (ch >= 0xE8 && ch <= 0xEA) ||
-                            (ch >= 0xEC && ch <= 0xED) ||
-                            (ch >= 0xF2 && ch <= 0xF3) ||
-                            (ch >= 0xF9 && ch <= 0xFA) ||
+                            ch >= 0xE8 && ch <= 0xEA ||
+                            ch >= 0xEC && ch <= 0xED ||
+                            ch >= 0xF2 && ch <= 0xF3 ||
+                            ch >= 0xF9 && ch <= 0xFA ||
                             ch == 0xFC)
                         {
                             return FontType.EastAsia;

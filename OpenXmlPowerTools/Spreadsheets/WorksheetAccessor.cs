@@ -8,7 +8,6 @@ using System.Linq;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Xml;
-using ExcelFormula;
 
 /* Unmerged change from project 'OpenXmlPowerTools (net48)'
 Before:

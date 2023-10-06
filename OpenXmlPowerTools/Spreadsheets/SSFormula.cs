@@ -2,12 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using OpenXmlPowerTools.Spreadsheets;
 
-namespace ExcelFormula
+namespace OpenXmlPowerTools.Spreadsheets
 {
     public class ParseFormula
     {
@@ -21,7 +18,14 @@ namespace ExcelFormula
             {
                 parserResult = parser.Formula();
             }
-            catch (Peg.Base.PegException)
+
+            /* Unmerged change from project 'OpenXmlPowerTools (net48)'
+            Before:
+                        catch (Peg.Base.PegException)
+            After:
+                        catch (PegException)
+            */
+            catch (PegException)
             {
             }
             if (!parserResult)
@@ -45,7 +49,14 @@ namespace ExcelFormula
         }
 
         // Recursive function that will replace values from last to first
-        private void ReplaceNode(Peg.Base.PegNode node, int id, string oldName, string newName, StringBuilder text)
+
+        /* Unmerged change from project 'OpenXmlPowerTools (net48)'
+        Before:
+                private void ReplaceNode(Peg.Base.PegNode node, int id, string oldName, string newName, StringBuilder text)
+        After:
+                private void ReplaceNode(PegNode node, int id, string oldName, string newName, StringBuilder text)
+        */
+        private void ReplaceNode(PegNode node, int id, string oldName, string newName, StringBuilder text)
         {
             if (node.next_ != null)
                 ReplaceNode(node.next_, id, oldName, newName, text);
@@ -59,7 +70,14 @@ namespace ExcelFormula
         }
 
         // Recursive function that will adjust relative cells from last to first
-        private void ReplaceRelativeCell(Peg.Base.PegNode node, int rowOffset, int colOffset, StringBuilder text)
+
+        /* Unmerged change from project 'OpenXmlPowerTools (net48)'
+        Before:
+                private void ReplaceRelativeCell(Peg.Base.PegNode node, int rowOffset, int colOffset, StringBuilder text)
+        After:
+                private void ReplaceRelativeCell(PegNode node, int rowOffset, int colOffset, StringBuilder text)
+        */
+        private void ReplaceRelativeCell(PegNode node, int rowOffset, int colOffset, StringBuilder text)
         {
             if (node.next_ != null)
                 ReplaceRelativeCell(node.next_, rowOffset, colOffset, text);
@@ -85,8 +103,8 @@ namespace ExcelFormula
             int columnNumber = 0;
             foreach (char c in cellReference)
             {
-                if (Char.IsLetter(c))
-                    columnNumber = columnNumber * 26 + System.Convert.ToInt32(c) - System.Convert.ToInt32('A') + 1;
+                if (char.IsLetter(c))
+                    columnNumber = columnNumber * 26 + Convert.ToInt32(c) - Convert.ToInt32('A') + 1;
             }
             return columnNumber;
         }
@@ -97,7 +115,7 @@ namespace ExcelFormula
             string result = "";
             do
             {
-                result = ((char)((columnNumber - 1) % 26 + (int)'A')).ToString() + result;
+                result = ((char)((columnNumber - 1) % 26 + 'A')).ToString() + result;
                 columnNumber = (columnNumber - 1) / 26;
             } while (columnNumber != 0);
             return result;

@@ -11,7 +11,6 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Validation;
-using OpenXmlPowerTools;
 using System.Text;
 using DocumentFormat.OpenXml;
 using System.Drawing.Imaging;
@@ -19,6 +18,7 @@ using OpenXmlPowerTools.Commons;
 using OpenXmlPowerTools.Documents;
 using OpenXmlPowerTools.Spreadsheets;
 using OpenXmlPowerTools.Presentations;
+using OpenXmlPowerTools.Converters;
 
 namespace OpenXmlPowerTools
 {

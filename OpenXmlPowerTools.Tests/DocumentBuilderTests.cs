@@ -15,6 +15,7 @@ using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using OpenXmlPowerTools;
 using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Converters;
 using OpenXmlPowerTools.Documents;
 using Xunit;
 

@@ -8,10 +8,10 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Documents;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Documents
 {
     public class ReferenceAdder
     {
@@ -42,7 +42,7 @@ namespace OpenXmlPowerTools
             // {1} rightTabPosition (default = 9350)
             // {2} switches
 
-            String xmlString =
+            string xmlString =
 @"<w:sdt xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'>
   <w:sdtPr>
     <w:docPartObj>
@@ -101,7 +101,7 @@ namespace OpenXmlPowerTools
   </w:sdtContent>
 </w:sdt>";
 
-            XmlReader sdtReader = XmlReader.Create(new StringReader(String.Format(xmlString, title, rightTabPos, switches)));
+            XmlReader sdtReader = XmlReader.Create(new StringReader(string.Format(xmlString, title, rightTabPos, switches)));
             XElement sdt = XElement.Load(sdtReader);
 
             XmlNamespaceManager namespaceManager;
@@ -177,7 +177,7 @@ namespace OpenXmlPowerTools
 </w:p>";
             XDocument mainXDoc = doc.MainDocumentPart.GetXDocument();
 
-            XmlReader paragraphReader = XmlReader.Create(new StringReader(String.Format(xmlString, rightTabPos, switches)));
+            XmlReader paragraphReader = XmlReader.Create(new StringReader(string.Format(xmlString, rightTabPos, switches)));
             XElement paragraph = XElement.Load(paragraphReader);
             XmlNameTable nameTable = paragraphReader.NameTable;
             XmlNamespaceManager namespaceManager = new XmlNamespaceManager(nameTable);
@@ -263,7 +263,7 @@ namespace OpenXmlPowerTools
 
             XDocument mainXDoc = doc.MainDocumentPart.GetXDocument();
 
-            XmlReader paragraphReader = XmlReader.Create(new StringReader(String.Format(xmlString, rightTabPos, switches)));
+            XmlReader paragraphReader = XmlReader.Create(new StringReader(string.Format(xmlString, rightTabPos, switches)));
             XElement paragraph = XElement.Load(paragraphReader);
             XmlNameTable nameTable = paragraphReader.NameTable;
             XmlNamespaceManager namespaceManager = new XmlNamespaceManager(nameTable);

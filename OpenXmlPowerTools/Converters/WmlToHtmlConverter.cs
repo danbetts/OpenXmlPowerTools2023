@@ -12,8 +12,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
-using OpenXmlPowerTools;
 using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 
 // 200e lrm - LTR
 // 200f rlm - RTL
@@ -22,7 +22,7 @@ using OpenXmlPowerTools.Commons;
 // Content-Language: en-US
 // Content-Language: fr-FR
 
-namespace OpenXmlPowerTools.Documents
+namespace OpenXmlPowerTools.Converters
 {
 
     [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]

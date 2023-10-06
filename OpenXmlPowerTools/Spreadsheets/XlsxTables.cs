@@ -18,7 +18,6 @@ using OpenXmlPowerTools;
 using OpenXmlPowerTools.Spreadsheets;
 */
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools;
 
 namespace OpenXmlPowerTools.Spreadsheets
 {

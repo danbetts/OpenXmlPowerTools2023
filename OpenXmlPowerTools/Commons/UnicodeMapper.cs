@@ -14,13 +14,12 @@ Email: thomas@barnekow.info
 
 ***************************************************************************/
 
-using OpenXmlPowerTools.Commons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Commons
 {
     public class UnicodeMapper
     {
@@ -166,7 +165,7 @@ namespace OpenXmlPowerTools
         /// <returns>The Unicode character used to represent the symbol.</returns>
         public static char SymToChar(string fontAttributeValue, char unicodeValue)
         {
-            return SymToChar(fontAttributeValue, (int) unicodeValue);
+            return SymToChar(fontAttributeValue, (int)unicodeValue);
         }
 
         /// <summary>
@@ -258,7 +257,7 @@ namespace OpenXmlPowerTools
             // Use the actual Unicode value if it has not yet been used with another font.
             // Otherwise, create a special Unicode value in the private use area to represent
             // the current w:sym element.
-            var unicodeChar = (char) Convert.ToInt32(charAttributeValue, 16);
+            var unicodeChar = (char)Convert.ToInt32(charAttributeValue, 16);
             if (UnicodeCharToSymDictionary.ContainsKey(unicodeChar))
                 unicodeChar = ++_lastUnicodeChar;
 
@@ -280,7 +279,7 @@ namespace OpenXmlPowerTools
                 .Select(CharToRunChild)
                 .GroupAdjacent(e => e.Name == W.t)
                 .SelectMany(grouping => grouping.Key
-                    ? StringToSingleRunList(grouping.Select(t => (string) t).StringConcatenate(), runProperties)
+                    ? StringToSingleRunList(grouping.Select(t => (string)t).StringConcatenate(), runProperties)
                     : grouping.Select(e => new XElement(W.r, runProperties, e)))
                 .ToList();
         }

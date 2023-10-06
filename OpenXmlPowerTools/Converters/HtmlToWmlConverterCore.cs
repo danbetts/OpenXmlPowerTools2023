@@ -97,7 +97,6 @@
 // has a border.
 
 using DocumentFormat.OpenXml.Packaging;
-using OpenXmlPowerTools;
 using OpenXmlPowerTools.Commons;
 using OpenXmlPowerTools.Documents;
 using System;
@@ -109,7 +108,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace OpenXmlPowerTools.Htmls
+namespace OpenXmlPowerTools.Converters
 {
     public class ElementToStyleMap
     {
@@ -161,7 +160,7 @@ namespace OpenXmlPowerTools.Htmls
             XElement html = (XElement)TransformToLower(xhtml);
 
             // add pseudo cells for rowspan
-            html = (XElement)AddPseudoCells(html);
+            html = AddPseudoCells(html);
 
             html = (XElement)TransformWhiteSpaceInPreCodeTtKbdSamp(html, false, false);
 
@@ -354,7 +353,7 @@ namespace OpenXmlPowerTools.Htmls
                 var newNodes = groupedCharacters.Select(g =>
                 {
                     if (g.Key == true)
-                        return (object)(new XElement(XHtmlNoNamespace.br));
+                        return (object)new XElement(XHtmlNoNamespace.br);
                     string x = g.Select(c => c.ToString()).StringConcatenate();
                     return new XText(x);
                 });
@@ -639,8 +638,8 @@ namespace OpenXmlPowerTools.Htmls
                 XElement pPr = p != null ? p.Element(W.pPr) : null;
                 XElement rPr = run.Element(W.rPr);
                 XElement rFonts = rPr != null ? rPr.Element(W.rFonts) : null;
-                string str = run.Descendants(W.t).Select(t => (string) t).StringConcatenate();
-                if ((pPr == null) || (rPr == null) || (rFonts == null) || (str == "")) continue;
+                string str = run.Descendants(W.t).Select(t => (string)t).StringConcatenate();
+                if (pPr == null || rPr == null || rFonts == null || str == "") continue;
 
                 AdjustFontAttributes(wDoc, run, pPr, rPr);
                 var csa = new CharStyleAttributes(pPr, rPr);
@@ -654,19 +653,19 @@ namespace OpenXmlPowerTools.Htmls
                 switch (ft)
                 {
                     case FontType.Ascii:
-                        fontType = (string) rFonts.Attribute(W.ascii);
+                        fontType = (string)rFonts.Attribute(W.ascii);
                         languageType = "western";
                         break;
                     case FontType.HAnsi:
-                        fontType = (string) rFonts.Attribute(W.hAnsi);
+                        fontType = (string)rFonts.Attribute(W.hAnsi);
                         languageType = "western";
                         break;
                     case FontType.EastAsia:
-                        fontType = (string) rFonts.Attribute(W.eastAsia);
+                        fontType = (string)rFonts.Attribute(W.eastAsia);
                         languageType = "eastAsia";
                         break;
                     case FontType.CS:
-                        fontType = (string) rFonts.Attribute(W.cs);
+                        fontType = (string)rFonts.Attribute(W.cs);
                         languageType = "bidi";
                         break;
                 }
@@ -705,7 +704,7 @@ namespace OpenXmlPowerTools.Htmls
                     continue;
 
                 // get HtmlToWmlCssWidth attribute
-                var cssWidth = (string) run.Attribute(PtOpenXml.HtmlToWmlCssWidth);
+                var cssWidth = (string)run.Attribute(PtOpenXml.HtmlToWmlCssWidth);
                 if (!cssWidth.EndsWith("pt")) continue;
 
                 cssWidth = cssWidth.Substring(0, cssWidth.Length - 2);
@@ -713,8 +712,8 @@ namespace OpenXmlPowerTools.Htmls
                 if (!decimal.TryParse(cssWidth, out cssWidthInDecimal)) continue;
 
                 // calculate the number of non-breaking spaces to add
-                decimal cssWidthInPixels = cssWidthInDecimal/72*96;
-                var numberOfNpSpToAdd = (int) ((cssWidthInPixels - pixWidth)/nbSpWidth);
+                decimal cssWidthInPixels = cssWidthInDecimal / 72 * 96;
+                var numberOfNpSpToAdd = (int)((cssWidthInPixels - pixWidth) / nbSpWidth);
                 if (numberOfNpSpToAdd > 0)
                     run.Add(new XElement(W.t, "".PadRight(numberOfNpSpToAdd, '\u00a0')));
             }
@@ -1123,20 +1122,20 @@ namespace OpenXmlPowerTools.Htmls
                 return null;
 
             rFonts = new XElement(W.rFonts,
-                (higherPriorityFont.Attribute(W.ascii) != null || higherPriorityFont.Attribute(W.asciiTheme) != null) ?
+                higherPriorityFont.Attribute(W.ascii) != null || higherPriorityFont.Attribute(W.asciiTheme) != null ?
                     new[] { higherPriorityFont.Attribute(W.ascii), higherPriorityFont.Attribute(W.asciiTheme) } :
                     new[] { lowerPriorityFont.Attribute(W.ascii), lowerPriorityFont.Attribute(W.asciiTheme) },
-                (higherPriorityFont.Attribute(W.hAnsi) != null || higherPriorityFont.Attribute(W.hAnsiTheme) != null) ?
+                higherPriorityFont.Attribute(W.hAnsi) != null || higherPriorityFont.Attribute(W.hAnsiTheme) != null ?
                     new[] { higherPriorityFont.Attribute(W.hAnsi), higherPriorityFont.Attribute(W.hAnsiTheme) } :
                     new[] { lowerPriorityFont.Attribute(W.hAnsi), lowerPriorityFont.Attribute(W.hAnsiTheme) },
-                (higherPriorityFont.Attribute(W.eastAsia) != null || higherPriorityFont.Attribute(W.eastAsiaTheme) != null) ?
+                higherPriorityFont.Attribute(W.eastAsia) != null || higherPriorityFont.Attribute(W.eastAsiaTheme) != null ?
                     new[] { higherPriorityFont.Attribute(W.eastAsia), higherPriorityFont.Attribute(W.eastAsiaTheme) } :
                     new[] { lowerPriorityFont.Attribute(W.eastAsia), lowerPriorityFont.Attribute(W.eastAsiaTheme) },
-                (higherPriorityFont.Attribute(W.cs) != null || higherPriorityFont.Attribute(W.cstheme) != null) ?
+                higherPriorityFont.Attribute(W.cs) != null || higherPriorityFont.Attribute(W.cstheme) != null ?
                     new[] { higherPriorityFont.Attribute(W.cs), higherPriorityFont.Attribute(W.cstheme) } :
                     new[] { lowerPriorityFont.Attribute(W.cs), lowerPriorityFont.Attribute(W.cstheme) },
-                (higherPriorityFont.Attribute(W.hint) != null ? higherPriorityFont.Attribute(W.hint) :
-                    lowerPriorityFont.Attribute(W.hint))
+                higherPriorityFont.Attribute(W.hint) != null ? higherPriorityFont.Attribute(W.hint) :
+                    lowerPriorityFont.Attribute(W.hint)
             );
 
             return rFonts;
@@ -1271,23 +1270,23 @@ namespace OpenXmlPowerTools.Htmls
                 var rFonts = rPr.Element(W.rFonts);
                 if (rFonts == null)
                 {
-                    this.AsciiFont = null;
-                    this.HAnsiFont = null;
-                    this.EastAsiaFont = null;
-                    this.CsFont = null;
-                    this.Hint = null;
+                    AsciiFont = null;
+                    HAnsiFont = null;
+                    EastAsiaFont = null;
+                    CsFont = null;
+                    Hint = null;
                 }
                 else
                 {
-                    this.AsciiFont = (string)(rFonts.Attribute(W.ascii));
-                    this.HAnsiFont = (string)(rFonts.Attribute(W.hAnsi));
-                    this.EastAsiaFont = (string)(rFonts.Attribute(W.eastAsia));
-                    this.CsFont = (string)(rFonts.Attribute(W.cs));
-                    this.Hint = (string)(rFonts.Attribute(W.hint));
+                    AsciiFont = (string)rFonts.Attribute(W.ascii);
+                    HAnsiFont = (string)rFonts.Attribute(W.hAnsi);
+                    EastAsiaFont = (string)rFonts.Attribute(W.eastAsia);
+                    CsFont = (string)rFonts.Attribute(W.cs);
+                    Hint = (string)rFonts.Attribute(W.hint);
                 }
-                XElement csel = this.Properties[W.cs];
+                XElement csel = Properties[W.cs];
                 bool cs = csel != null && (csel.Attribute(W.val) == null || csel.Attribute(W.val).ToBoolean() == true);
-                XElement rtlel = this.Properties[W.rtl];
+                XElement rtlel = Properties[W.rtl];
                 bool rtl = rtlel != null && (rtlel.Attribute(W.val) == null || rtlel.Attribute(W.val).ToBoolean() == true);
                 var bidi = false;
                 if (pPr != null)
@@ -1373,9 +1372,9 @@ namespace OpenXmlPowerTools.Htmls
                         ch == 0xAA ||
                         ch == 0xAD ||
                         ch == 0xAF ||
-                        (ch >= 0xB0 && ch <= 0xB4) ||
-                        (ch >= 0xB6 && ch <= 0xBA) ||
-                        (ch >= 0xBC && ch <= 0xBF) ||
+                        ch >= 0xB0 && ch <= 0xB4 ||
+                        ch >= 0xB6 && ch <= 0xBA ||
+                        ch >= 0xBC && ch <= 0xBF ||
                         ch == 0xD7 ||
                         ch == 0xF7)
                     {
@@ -1386,10 +1385,10 @@ namespace OpenXmlPowerTools.Htmls
                     {
                         if (ch == 0xE0 ||
                             ch == 0xE1 ||
-                            (ch >= 0xE8 && ch <= 0xEA) ||
-                            (ch >= 0xEC && ch <= 0xED) ||
-                            (ch >= 0xF2 && ch <= 0xF3) ||
-                            (ch >= 0xF9 && ch <= 0xFA) ||
+                            ch >= 0xE8 && ch <= 0xEA ||
+                            ch >= 0xEC && ch <= 0xED ||
+                            ch >= 0xF2 && ch <= 0xF3 ||
+                            ch >= 0xF9 && ch <= 0xFA ||
                             ch == 0xFC)
                         {
                             return FontType.EastAsia;
@@ -2418,7 +2417,7 @@ namespace OpenXmlPowerTools.Htmls
                 SizeEmu sl = GetImageSizeInEmus(element, bmp);
                 relativeFromColumn = printWidth - sl.m_Width;
                 if (marginRightProp.IsNotAuto)
-                    relativeFromColumn -= (long)(Emu)marginRightInEmus;
+                    relativeFromColumn -= (long)marginRightInEmus;
                 CssExpression parentMarginRight = element.Parent.GetProp("margin-right");
                 if (parentMarginRight.IsNotAuto)
                     relativeFromColumn -= (long)(Emu)parentMarginRight;
@@ -2561,8 +2560,8 @@ namespace OpenXmlPowerTools.Htmls
             double hres = bmp.HorizontalResolution;
             double vres = bmp.VerticalResolution;
             Size s = bmp.Size;
-            Emu cx = (long)((double)(s.Width / hres) * (double)Emu.s_EmusPerInch);
-            Emu cy = (long)((double)(s.Height / vres) * (double)Emu.s_EmusPerInch);
+            Emu cx = (long)((double)(s.Width / hres) * Emu.s_EmusPerInch);
+            Emu cy = (long)((double)(s.Height / vres) * Emu.s_EmusPerInch);
 
             CssExpression width = img.GetProp("width");
             CssExpression height = img.GetProp("height");
@@ -2943,7 +2942,7 @@ namespace OpenXmlPowerTools.Htmls
                 subSuper = new XElement(W.vertAlign, new XAttribute(W.val, "subscript"));
             else
                 if (supAncestor)
-                    subSuper = new XElement(W.vertAlign, new XAttribute(W.val, "superscript"));
+                subSuper = new XElement(W.vertAlign, new XAttribute(W.val, "superscript"));
 
             XElement rFonts = null;
             if (fontFamilyString != null)
@@ -3301,7 +3300,7 @@ namespace OpenXmlPowerTools.Htmls
                 {
                     // space is specified in points, not twips
                     TPoint points = (TPoint)paddingProp;
-                    space = new XAttribute(W.space, (int)(Math.Min(31, (double)points)));
+                    space = new XAttribute(W.space, (int)Math.Min(31, (double)points));
                 }
             }
 
@@ -3345,14 +3344,14 @@ namespace OpenXmlPowerTools.Htmls
         private static XElement GetTableLook(XElement element)
         {
             XElement tblLook = XElement.Parse(
-                //@"<w:tblLook w:val='0600'
-                //  w:firstRow='0'
-                //  w:lastRow='0'
-                //  w:firstColumn='0'
-                //  w:lastColumn='0'
-                //  w:noHBand='1'
-                //  w:noVBand='1'
-                //  xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'/>"
+//@"<w:tblLook w:val='0600'
+//  w:firstRow='0'
+//  w:lastRow='0'
+//  w:firstColumn='0'
+//  w:lastColumn='0'
+//  w:noHBand='1'
+//  w:noVBand='1'
+//  xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'/>"
 
 @"<w:tblLook w:val='0600' xmlns:w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'/>"
 
@@ -3404,8 +3403,8 @@ namespace OpenXmlPowerTools.Htmls
                 CssTerm term = columnWidth.Terms.First();
                 if (term.Unit == CssUnit.PT)
                 {
-                    Double ptValue;
-                    if (Double.TryParse(term.Value, out ptValue))
+                    double ptValue;
+                    if (double.TryParse(term.Value, out ptValue))
                     {
                         Twip twips = (long)(ptValue * 20);
                         return twips;
@@ -3493,8 +3492,8 @@ namespace OpenXmlPowerTools.Htmls
                 vMerge = new XElement(W.vMerge);
             else
                 if (element.Attribute("HtmlToWmlVMergeRestart") != null)
-                    vMerge = new XElement(W.vMerge,
-                        new XAttribute(W.val, "restart"));
+                vMerge = new XElement(W.vMerge,
+                    new XAttribute(W.val, "restart"));
 
             string vAlignValue = (string)element.Attribute(XHtmlNoNamespace.valign);
             CssExpression verticalAlignmentProp = element.GetProp("vertical-align");
@@ -3502,7 +3501,7 @@ namespace OpenXmlPowerTools.Htmls
                 vAlignValue = verticalAlignmentProp.ToString();
             if (vAlignValue != null)
             {
-                if (vAlignValue == "middle" || (vAlignValue != "top" && vAlignValue != "bottom"))
+                if (vAlignValue == "middle" || vAlignValue != "top" && vAlignValue != "bottom")
                     vAlignValue = "center";
                 vAlign = new XElement(W.vAlign, new XAttribute(W.val, vAlignValue));
             }
@@ -3639,7 +3638,7 @@ namespace OpenXmlPowerTools.Htmls
                     twipToUse = Math.Max(twipToUse, (long)minTwips);
                     // have to divide twipToUse by 2 because border-spacing specifies the space between the border of once cell and its adjacent.
                     // tblCellSpacing specifies the distance between the border and the half way point between two cells.
-                    long twipToUseOverTwo = (long)twipToUse / 2;
+                    long twipToUseOverTwo = twipToUse / 2;
                     tblCellSpacing = new XElement(W.tblCellSpacing, new XAttribute(W._w, twipToUseOverTwo),
                         new XAttribute(W.type, "dxa"));
                 }
@@ -4547,7 +4546,7 @@ namespace OpenXmlPowerTools.Htmls
                     numToAbstractNum.Add(nia.numId, currentAbstractId);
                     if (list.Name == XHtmlNoNamespace.ul)
                     {
-                        XElement bulletAbstract = XElement.Parse(String.Format(BulletAbstractXml, currentAbstractId++));
+                        XElement bulletAbstract = XElement.Parse(string.Format(BulletAbstractXml, currentAbstractId++));
                         numberingXDoc.Root.Add(bulletAbstract);
                     }
                     if (list.Name == XHtmlNoNamespace.ol)
@@ -4598,7 +4597,7 @@ namespace OpenXmlPowerTools.Htmls
                             }
                         }
 
-                        XElement simpleNumAbstract = XElement.Parse(String.Format(OrderedListAbstractXml, currentAbstractId++,
+                        XElement simpleNumAbstract = XElement.Parse(string.Format(OrderedListAbstractXml, currentAbstractId++,
                             numFmt[0], just[0], numFmt[1], just[1], numFmt[2], just[2], numFmt[3], just[3], numFmt[4], just[4], numFmt[5], just[5], numFmt[6], just[6], numFmt[7], just[7], numFmt[8], just[8]));
                         numberingXDoc.Root.Add(simpleNumAbstract);
                     }

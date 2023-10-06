@@ -24,7 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace OpenXmlPowerTools.Htmls
+namespace OpenXmlPowerTools.Converters
 {
     public class CssAttribute
     {

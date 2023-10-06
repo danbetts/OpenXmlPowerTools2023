@@ -18,6 +18,7 @@ using OpenXmlPowerTools.Documents;
 */
 using System.Diagnostics.CodeAnalysis;
 using OpenXmlPowerTools.Presentations;
+using OpenXmlPowerTools.Converters;
 
 namespace OpenXmlPowerTools.Documents
 {
