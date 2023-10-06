@@ -8,9 +8,19 @@ using System.Text;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.IO;
-using OpenXmlPowerTools.Commons;
 
-namespace OpenXmlPowerTools
+/* Unmerged change from project 'OpenXmlPowerTools (net48)'
+Before:
+using OpenXmlPowerTools.Commons;
+After:
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools;
+using OpenXmlPowerTools.Spreadsheets;
+*/
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools;
+
+namespace OpenXmlPowerTools.Spreadsheets
 {
     public class Table
     {
@@ -41,7 +51,7 @@ namespace OpenXmlPowerTools
                     new TableColumn(this)
                     {
                         Id = (int)c.Attribute("id"),
-                        ColumnNumber = this.LeftColumn + i,
+                        ColumnNumber = LeftColumn + i,
                         Name = (string)c.Attribute("name"),
                         DataDxfId = (int?)c.Attribute("dataDxfId"),
                         QueryTableFieldId = (int?)c.Attribute("queryTableFieldId"),
@@ -53,9 +63,9 @@ namespace OpenXmlPowerTools
         public IEnumerable<TableRow> TableRows()
         {
             string refStart = Ref.Split(':').First();
-            int rowStart = Int32.Parse(XlsxTables.SplitAddress(refStart)[1]);
+            int rowStart = int.Parse(XlsxTables.SplitAddress(refStart)[1]);
             string refEnd = Ref.Split(':').ElementAt(1);
-            int rowEnd = Int32.Parse(XlsxTables.SplitAddress(refEnd)[1]);
+            int rowEnd = int.Parse(XlsxTables.SplitAddress(refEnd)[1]);
             int headerRowsCount = HeaderRowCount == null ? 0 : (int)HeaderRowCount;
             int totalRowsCount = TotalsRowCount == null ? 0 : (int)TotalsRowCount;
             return Parent
@@ -64,7 +74,7 @@ namespace OpenXmlPowerTools
                 .PtSkipLast(totalRowsCount)
                 .Where(r =>
                 {
-                    int rowId = Int32.Parse(r.RowId);
+                    int rowId = int.Parse(r.RowId);
                     return rowId >= rowStart && rowId <= rowEnd;
                 }
                 )
@@ -130,24 +140,24 @@ namespace OpenXmlPowerTools
         }
         public override bool Equals(object obj)
         {
-            return this.Value == ((TableCell)obj).Value;
+            return Value == ((TableCell)obj).Value;
         }
         bool IEquatable<TableCell>.Equals(TableCell other)
         {
-            return this.Value == other.Value;
+            return Value == other.Value;
         }
         public override int GetHashCode()
         {
-            return this.Value.GetHashCode();
+            return Value.GetHashCode();
         }
         public static bool operator ==(TableCell left, TableCell right)
         {
-            if ((object)left != (object)right) return false;
+            if (left != (object)right) return false;
             return left.Value == right.Value;
         }
         public static bool operator !=(TableCell left, TableCell right)
         {
-            if ((object)left != (object)right) return false;
+            if (left != (object)right) return false;
             return left.Value != right.Value;
         }
         public static explicit operator string(TableCell cell)
@@ -168,82 +178,82 @@ namespace OpenXmlPowerTools
         public static explicit operator int(TableCell cell)
         {
             if (cell == null) throw new ArgumentNullException("TableCell");
-            return Int32.Parse(cell.Value);
+            return int.Parse(cell.Value);
         }
         public static explicit operator int?(TableCell cell)
         {
             if (cell == null) return null;
-            return Int32.Parse(cell.Value);
+            return int.Parse(cell.Value);
         }
         public static explicit operator uint(TableCell cell)
         {
             if (cell == null) throw new ArgumentNullException("TableCell");
-            return UInt32.Parse(cell.Value);
+            return uint.Parse(cell.Value);
         }
         public static explicit operator uint?(TableCell cell)
         {
             if (cell == null) return null;
-            return UInt32.Parse(cell.Value);
+            return uint.Parse(cell.Value);
         }
         public static explicit operator long(TableCell cell)
         {
             if (cell == null) throw new ArgumentNullException("TableCell");
-            return Int64.Parse(cell.Value);
+            return long.Parse(cell.Value);
         }
         public static explicit operator long?(TableCell cell)
         {
             if (cell == null) return null;
-            return Int64.Parse(cell.Value);
+            return long.Parse(cell.Value);
         }
         public static explicit operator ulong(TableCell cell)
         {
             if (cell == null) throw new ArgumentNullException("TableCell");
-            return UInt64.Parse(cell.Value);
+            return ulong.Parse(cell.Value);
         }
         public static explicit operator ulong?(TableCell cell)
         {
             if (cell == null) return null;
-            return UInt64.Parse(cell.Value);
+            return ulong.Parse(cell.Value);
         }
         public static explicit operator float(TableCell cell)
         {
             if (cell == null) throw new ArgumentNullException("TableCell");
-            return Single.Parse(cell.Value);
+            return float.Parse(cell.Value);
         }
         public static explicit operator float?(TableCell cell)
         {
             if (cell == null) return null;
-            return Single.Parse(cell.Value);
+            return float.Parse(cell.Value);
         }
         public static explicit operator double(TableCell cell)
         {
             if (cell == null) throw new ArgumentNullException("TableCell");
-            return Double.Parse(cell.Value);
+            return double.Parse(cell.Value);
         }
         public static explicit operator double?(TableCell cell)
         {
             if (cell == null) return null;
-            return Double.Parse(cell.Value);
+            return double.Parse(cell.Value);
         }
         public static explicit operator decimal(TableCell cell)
         {
             if (cell == null) throw new ArgumentNullException("TableCell");
-            return Decimal.Parse(cell.Value);
+            return decimal.Parse(cell.Value);
         }
         public static explicit operator decimal?(TableCell cell)
         {
             if (cell == null) return null;
-            return Decimal.Parse(cell.Value);
+            return decimal.Parse(cell.Value);
         }
         public static implicit operator DateTime(TableCell cell)
         {
             if (cell == null) throw new ArgumentNullException("TableCell");
-            return new DateTime(1900, 1, 1).AddDays(Int32.Parse(cell.Value) - 2);
+            return new DateTime(1900, 1, 1).AddDays(int.Parse(cell.Value) - 2);
         }
         public static implicit operator DateTime?(TableCell cell)
         {
             if (cell == null) return null;
-            return new DateTime(1900, 1, 1).AddDays(Int32.Parse(cell.Value) - 2);
+            return new DateTime(1900, 1, 1).AddDays(int.Parse(cell.Value) - 2);
         }
     }
 
@@ -257,9 +267,10 @@ namespace OpenXmlPowerTools
             XNamespace s = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
             SpreadsheetDocument doc = (SpreadsheetDocument)Parent.OpenXmlPackage;
             SharedStringTablePart sharedStringTable = doc.WorkbookPart.SharedStringTablePart;
-            IEnumerable<XElement> cells = this.RowElement.Elements(S.c);
+            IEnumerable<XElement> cells = RowElement.Elements(S.c);
             var r = cells
-                .Select(cell => {
+                .Select(cell =>
+                {
                     var cellType = (string)cell.Attribute("t");
                     var sharedString = cellType == "s" ?
                         sharedStringTable
@@ -349,14 +360,14 @@ namespace OpenXmlPowerTools
             // C5:E7
             var spl = theRef.Split(':');
             string refStart = spl.First();
-            var refStartSplit = XlsxTables.SplitAddress(refStart);
-            leftColumn = XlsxTables.ColumnAddressToIndex(refStartSplit[0]);
-            topRow = Int32.Parse(refStartSplit[1]);
+            var refStartSplit = SplitAddress(refStart);
+            leftColumn = ColumnAddressToIndex(refStartSplit[0]);
+            topRow = int.Parse(refStartSplit[1]);
 
             string refEnd = spl.ElementAt(1);
-            var refEndSplit = XlsxTables.SplitAddress(refEnd);
-            rightColumn = XlsxTables.ColumnAddressToIndex(refEndSplit[0]);
-            bottomRow = Int32.Parse(refEndSplit[1]);
+            var refEndSplit = SplitAddress(refEnd);
+            rightColumn = ColumnAddressToIndex(refEndSplit[0]);
+            bottomRow = int.Parse(refEndSplit[1]);
         }
 
         public static Table Table(this SpreadsheetDocument spreadsheet,
@@ -404,29 +415,29 @@ namespace OpenXmlPowerTools
         {
             if (index < 26)
             {
-                char c = (char)((int)'A' + index);
+                char c = (char)('A' + index);
                 string s = new string(c, 1);
                 return s;
             }
             if (index < 702)
             {
                 int i = index - 26;
-                int i1 = (int)(i / 26);
+                int i1 = i / 26;
                 int i2 = i % 26;
-                string s = new string((char)((int)'A' + i1), 1) +
-                    new string((char)((int)'A' + i2), 1);
+                string s = new string((char)('A' + i1), 1) +
+                    new string((char)('A' + i2), 1);
                 return s;
             }
             if (index < 18278)
             {
                 int i = index - 702;
-                int i1 = (int)(i / 676);
+                int i1 = i / 676;
                 i = i - i1 * 676;
-                int i2 = (int)(i / 26);
+                int i2 = i / 26;
                 int i3 = i % 26;
-                string s = new string((char)((int)'A' + i1), 1) +
-                    new string((char)((int)'A' + i2), 1) +
-                    new string((char)((int)'A' + i3), 1);
+                string s = new string((char)('A' + i1), 1) +
+                    new string((char)('A' + i2), 1) +
+                    new string((char)('A' + i3), 1);
                 return s;
             }
             throw new Exception("Invalid column address");

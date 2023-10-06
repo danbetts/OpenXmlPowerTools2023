@@ -9,9 +9,19 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Xml;
 using ExcelFormula;
-using OpenXmlPowerTools.Commons;
 
-namespace OpenXmlPowerTools
+/* Unmerged change from project 'OpenXmlPowerTools (net48)'
+Before:
+using OpenXmlPowerTools.Commons;
+After:
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools;
+using OpenXmlPowerTools.Spreadsheets;
+*/
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools;
+
+namespace OpenXmlPowerTools.Spreadsheets
 {
     // Classes for "bulk load" of a spreadsheet
     public class MemorySpreadsheet
@@ -205,7 +215,7 @@ namespace OpenXmlPowerTools
             string result = "";
             do
             {
-                result = ((char)((columnNumber - 1) % 26 + (int)'A')).ToString() + result;
+                result = ((char)((columnNumber - 1) % 26 + 'A')).ToString() + result;
                 columnNumber = (columnNumber - 1) / 26;
             } while (columnNumber != 0);
             return result;
@@ -233,9 +243,9 @@ namespace OpenXmlPowerTools
                 switch (cell.Attribute(NoNamespace.t).Value)
                 {
                     case "b":
-                        return (cell.Element(S.v).Value == "1");
+                        return cell.Element(S.v).Value == "1";
                     case "s":
-                        return GetSharedString(document, System.Convert.ToInt32(cell.Element(S.v).Value));
+                        return GetSharedString(document, Convert.ToInt32(cell.Element(S.v).Value));
                     case "inlineStr":
                         return cell.Element(S._is).Element(S.t).Value;
                 }
@@ -247,7 +257,7 @@ namespace OpenXmlPowerTools
         private static string GetSharedString(SpreadsheetDocument document, int index)
         {
             XDocument sharedStringsXDocument = document.WorkbookPart.SharedStringTablePart.GetXDocument();
-            return sharedStringsXDocument.Root.Elements().ElementAt<XElement>(index).Value;
+            return sharedStringsXDocument.Root.Elements().ElementAt(index).Value;
         }
 
         // Gets the cell element (c) for the specified cell
@@ -257,10 +267,10 @@ namespace OpenXmlPowerTools
             XElement rowElement = worksheet.Root
                    .Element(S.sheetData)
                    .Elements(S.row)
-                   .Where(r => r.Attribute(NoNamespace.r).Value.Equals(row.ToString())).FirstOrDefault<XElement>();
+                   .Where(r => r.Attribute(NoNamespace.r).Value.Equals(row.ToString())).FirstOrDefault();
             if (rowElement == null)
                 return null;
-            return rowElement.Elements(S.c).Where(c => c.Attribute(NoNamespace.r).Value.Equals(cellReference)).FirstOrDefault<XElement>();
+            return rowElement.Elements(S.c).Where(c => c.Attribute(NoNamespace.r).Value.Equals(cellReference)).FirstOrDefault();
         }
 
         // Sets the value for the specified cell
@@ -371,7 +381,7 @@ namespace OpenXmlPowerTools
             return worksheet.Root
                 .Element(S.sheetData)
                 .Elements(S.row)
-                .FirstOrDefault(r => System.Convert.ToInt32(r.Attribute(NoNamespace.r).Value) > row);
+                .FirstOrDefault(r => Convert.ToInt32(r.Attribute(NoNamespace.r).Value) > row);
         }
 
         // Finds the cell element (c) in the specified row that is after the specified "column" number
@@ -380,7 +390,7 @@ namespace OpenXmlPowerTools
             return worksheet.Root
                 .Element(S.sheetData)
                 .Elements(S.row)
-                .FirstOrDefault(r => System.Convert.ToInt32(r.Attribute(NoNamespace.r).Value) == row)
+                .FirstOrDefault(r => Convert.ToInt32(r.Attribute(NoNamespace.r).Value) == row)
                 .Elements(S.c)
                 .FirstOrDefault(c => GetColumnNumber(c.Attribute(NoNamespace.r).Value) > GetColumnNumber(GetColumnId(column) + row));
         }
@@ -391,8 +401,8 @@ namespace OpenXmlPowerTools
             int columnNumber = 0;
             foreach (char c in cellReference)
             {
-                if (Char.IsLetter(c))
-                    columnNumber = columnNumber * 26 + System.Convert.ToInt32(c) - System.Convert.ToInt32('A') + 1;
+                if (char.IsLetter(c))
+                    columnNumber = columnNumber * 26 + Convert.ToInt32(c) - Convert.ToInt32('A') + 1;
             }
             return columnNumber;
         }
@@ -405,10 +415,10 @@ namespace OpenXmlPowerTools
             column = 0;
             foreach (char c in cellReference)
             {
-                if (Char.IsLetter(c))
-                    column = column * 26 + System.Convert.ToInt32(c) - System.Convert.ToInt32('A') + 1;
+                if (char.IsLetter(c))
+                    column = column * 26 + Convert.ToInt32(c) - Convert.ToInt32('A') + 1;
                 else
-                    row = row * 10 + System.Convert.ToInt32(c) - System.Convert.ToInt32('0');
+                    row = row * 10 + Convert.ToInt32(c) - Convert.ToInt32('0');
             }
         }
 
@@ -423,7 +433,7 @@ namespace OpenXmlPowerTools
             if (element == null)
                 throw new ArgumentException("Range name not found: " + rangeName);
             string sheetName = element.Value.Substring(0, element.Value.IndexOf('!'));
-            string range = element.Value.Substring(element.Value.IndexOf('!') + 1).Replace("$","");
+            string range = element.Value.Substring(element.Value.IndexOf('!') + 1).Replace("$", "");
             int colonIndex = range.IndexOf(':');
             GetRowColumn(range.Substring(0, colonIndex), out startRow, out startColumn);
             GetRowColumn(range.Substring(colonIndex + 1), out endRow, out endColumn);
@@ -443,7 +453,7 @@ namespace OpenXmlPowerTools
                 element = new XElement(S.definedName, new XAttribute(NoNamespace.name, rangeName));
                 book.Root.Element(S.definedNames).Add(element);
             }
-            element.SetValue(String.Format("{0}!${1}${2}:${3}${4}", sheetName, GetColumnId(startColumn), startRow, GetColumnId(endColumn), endRow));
+            element.SetValue(string.Format("{0}!${1}${2}:${3}${4}", sheetName, GetColumnId(startColumn), startRow, GetColumnId(endColumn), endRow));
             doc.WorkbookPart.PutXDocument();
         }
 
@@ -549,7 +559,7 @@ namespace OpenXmlPowerTools
                 XElement sharedItems = new XElement(S.sharedItems);
                 // Determine numeric sharedItems values, if any
                 object value = GetCellValue(document, sourceSheet, column, startRow + 1);
-                if (value is double || value is Int32)
+                if (value is double || value is int)
                 {
                     bool hasDouble = false;
                     double minValue = Convert.ToDouble(value);
@@ -588,7 +598,7 @@ namespace OpenXmlPowerTools
                 for (int column = startColumn; column <= endColumn; column++)
                 {
                     object value = GetCellValue(document, sourceSheet, column, row);
-                    if (value is String)
+                    if (value is string)
                         r.Add(new XElement(S._s, new XAttribute(NoNamespace.v, value.ToString())));
                     else
                         r.Add(new XElement(S.n, new XAttribute(NoNamespace.v, value.ToString())));
@@ -600,7 +610,7 @@ namespace OpenXmlPowerTools
             PivotTablePart pivotTable = sheet.AddNewPart<PivotTablePart>();
             PivotTableCacheDefinitionPart cacheDef = pivotTable.AddNewPart<PivotTableCacheDefinitionPart>();
             PivotTableCacheRecordsPart records = cacheDef.AddNewPart<PivotTableCacheRecordsPart>();
-            document.WorkbookPart.AddPart<PivotTableCacheDefinitionPart>(cacheDef);
+            document.WorkbookPart.AddPart(cacheDef);
 
             // Set content for the PivotTableCacheRecordsPart and PivotTableCacheDefinitionPart
             records.PutXDocument(new XDocument(pivotCacheRecords));
@@ -652,7 +662,7 @@ namespace OpenXmlPowerTools
             foreach (XElement rec in records.Descendants(S.r))
             {
                 XElement val = rec.Elements().Skip(index).First();
-                int x = Array.FindIndex(values.ToArray(), z => XElement.DeepEquals(z, val));
+                int x = Array.FindIndex(values.ToArray(), z => XNode.DeepEquals(z, val));
                 if (x == -1)
                 {
                     values.Add(val);
@@ -852,7 +862,7 @@ namespace OpenXmlPowerTools
                 numFmts = styles.Root.Element(S.numFmts);
             }
             int index = Array.FindIndex(numFmts.Elements(S.numFmt).ToArray(),
-                z => XElement.DeepEquals(z, numFmt));
+                z => XNode.DeepEquals(z, numFmt));
             if (index == -1)
             {
                 numFmts.Add(numFmt);
@@ -973,7 +983,7 @@ namespace OpenXmlPowerTools
             XDocument styles = document.WorkbookPart.WorkbookStylesPart.GetXDocument();
             XElement fonts = styles.Root.Element(S.fonts);
             int index = Array.FindIndex(fonts.Elements(S.font).ToArray(),
-                z => XElement.DeepEquals(z, font));
+                z => XNode.DeepEquals(z, font));
             if (index != -1)
                 return index;
             fonts.Add(font);
@@ -1155,7 +1165,7 @@ namespace OpenXmlPowerTools
             XDocument styles = document.WorkbookPart.WorkbookStylesPart.GetXDocument();
             XElement fills = styles.Root.Element(S.fills);
             int index = Array.FindIndex(fills.Elements(S.fill).ToArray(),
-                z => XElement.DeepEquals(z, fill));
+                z => XNode.DeepEquals(z, fill));
             if (index != -1)
                 return index;
             fills.Add(fill);
@@ -1286,7 +1296,7 @@ namespace OpenXmlPowerTools
             XDocument styles = document.WorkbookPart.WorkbookStylesPart.GetXDocument();
             XElement borders = styles.Root.Element(S.borders);
             int index = Array.FindIndex(borders.Elements(S.border).ToArray(),
-                z => XElement.DeepEquals(z, border));
+                z => XNode.DeepEquals(z, border));
             if (index != -1)
                 return index;
             borders.Add(border);
@@ -1411,10 +1421,10 @@ namespace OpenXmlPowerTools
             XElement xf = new XElement(S.xf, new XAttribute(NoNamespace.numFmtId, numFmt),
                 new XAttribute(NoNamespace.fontId, font), new XAttribute(NoNamespace.fillId, fill),
                 new XAttribute(NoNamespace.borderId, border), new XAttribute(NoNamespace.xfId, 0),
-                new XAttribute(NoNamespace.applyNumberFormat, (numFmt == 0) ? 0 : 1),
-                new XAttribute(NoNamespace.applyFont, (font == 0) ? 0 : 1),
-                new XAttribute(NoNamespace.applyFill, (fill == 0) ? 0 : 1),
-                new XAttribute(NoNamespace.applyBorder, (border == 0) ? 0 : 1));
+                new XAttribute(NoNamespace.applyNumberFormat, numFmt == 0 ? 0 : 1),
+                new XAttribute(NoNamespace.applyFont, font == 0 ? 0 : 1),
+                new XAttribute(NoNamespace.applyFill, fill == 0 ? 0 : 1),
+                new XAttribute(NoNamespace.applyBorder, border == 0 ? 0 : 1));
             if (alignment != null)
             {
                 xf.Add(new XAttribute(NoNamespace.applyAlignment, "1"));
@@ -1438,7 +1448,7 @@ namespace OpenXmlPowerTools
             XDocument styles = document.WorkbookPart.WorkbookStylesPart.GetXDocument();
             XElement cellXfs = styles.Root.Element(S.cellXfs);
             int index = Array.FindIndex(cellXfs.Elements(S.xf).ToArray(),
-                z => XElement.DeepEquals(z, xf));
+                z => XNode.DeepEquals(z, xf));
             if (index != -1)
                 return index;
             cellXfs.Add(xf);
@@ -1994,7 +2004,7 @@ namespace OpenXmlPowerTools
         internal static WorksheetPart Create(SpreadsheetDocument document, List<string> headerList, string[][] valueTable, int headerRow)
         {
             XDocument xDocument = CreateEmptyWorksheet();
-            
+
             for (int i = 0; i < headerList.Count; i++)
             {
                 AddValue(xDocument, headerRow, i + 1, headerList[i]);

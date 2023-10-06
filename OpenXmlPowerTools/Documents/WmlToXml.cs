@@ -19,9 +19,9 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.Drawing;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Documents
 {
     public class ContentTypeRule
     {
@@ -893,7 +893,7 @@ namespace OpenXmlPowerTools
                     var listItemNum = fldSimple.Elements(W.r).Elements(W.t).Select(t => (string)t).StringConcatenate();
                     var runsBefore = element
                         .Elements()
-                        .TakeWhile(fs => fs.Name != W.fldSimple || (fs.Name == W.fldSimple && !((string)fs.Attribute(W.instr)).Trim().StartsWith("SEQ")))
+                        .TakeWhile(fs => fs.Name != W.fldSimple || fs.Name == W.fldSimple && !((string)fs.Attribute(W.instr)).Trim().StartsWith("SEQ"))
                         .Select(e =>
                         {
 #if false
@@ -1217,7 +1217,7 @@ namespace OpenXmlPowerTools
                 if (settings.ProgressFunction != null)
                 {
                     ++count;
-                    if (count < 50 || (count) % 10 == 0 || count == totalCount)
+                    if (count < 50 || count % 10 == 0 || count == totalCount)
                     {
                         var msg = string.Format("  {0} of {1}", count, totalCount);
                         msg += "".PadRight(msg.Length, '\b');

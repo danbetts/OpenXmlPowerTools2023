@@ -12,9 +12,9 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using System.IO;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Spreadsheets;
+using OpenXmlPowerTools.Documents;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Spreadsheets
 {
 
     [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
@@ -57,7 +57,7 @@ namespace OpenXmlPowerTools
                 using (SpreadsheetDocument sDoc = SpreadsheetDocument.Open(ms, false))
                 {
                     var rangeXml = SmlDataRetriever.RetrieveTable(sDoc, tableName);
-                    var xhtml = SmlToHtmlConverter.ConvertToHtmlInternal(sDoc, settings, rangeXml);
+                    var xhtml = ConvertToHtmlInternal(sDoc, settings, rangeXml);
                     return xhtml;
                 }
             }
@@ -66,7 +66,7 @@ namespace OpenXmlPowerTools
         public static XElement ConvertTableToHtml(SpreadsheetDocument sDoc, SmlToHtmlConverterSettings settings, string tableName)
         {
             var rangeXml = SmlDataRetriever.RetrieveTable(sDoc, tableName);
-            var xhtml = SmlToHtmlConverter.ConvertToHtmlInternal(sDoc, settings, rangeXml);
+            var xhtml = ConvertToHtmlInternal(sDoc, settings, rangeXml);
             return xhtml;
         }
         #endregion

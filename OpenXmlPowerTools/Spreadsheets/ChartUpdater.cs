@@ -10,9 +10,8 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Spreadsheets;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Spreadsheets
 {
     public enum ChartDataType
     {
@@ -149,7 +148,7 @@ namespace OpenXmlPowerTools
             firstSeries.Parent.Elements(C.ser).Skip(1).Remove();
 
             var newSetOfSeries = chartData.SeriesNames
-                .Select((string sn, int si) =>
+                .Select((sn, si) =>
                 {
                     XElement cat = null;
 
@@ -377,7 +376,7 @@ namespace OpenXmlPowerTools
                     if (newSer == null)
                         throw new OpenXmlPowerToolsException("Unsupported chart type");
 
-                    int accentNumber = (si % 6) + 1;
+                    int accentNumber = si % 6 + 1;
                     newSer = (XElement)UpdateAccentTransform(newSer, accentNumber);
                     return newSer;
                 });
@@ -431,7 +430,7 @@ namespace OpenXmlPowerTools
                             var firstRow = new XElement(S.row,
                                 new XAttribute("r", "1"),
                                 new XAttribute("spans", string.Format("1:{0}", chartData.SeriesNames.Length + 1)),
-                                new [] { new XElement(S.c,
+                                new[] { new XElement(S.c,
                                 new XAttribute("r", "A1"),
                                 new XAttribute("t", "str"),
                                 new XElement(S.v,

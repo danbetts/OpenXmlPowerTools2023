@@ -4,14 +4,13 @@
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Spreadsheets;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Spreadsheets
 {
     public class SmlDataRetriever
     {
@@ -240,7 +239,7 @@ namespace OpenXmlPowerTools
                                         out color);
                                 else
                                     displayValue = displayValue = SmlCellFormatter.FormatCell(
-                                        (string)"General",
+                                        "General",
                                         cell.Value,
                                         out color);
                                 XElement newCell2 = new XElement("Cell",
@@ -277,7 +276,7 @@ namespace OpenXmlPowerTools
             // if there are any rows that have all cells with no r attribute, then fix them up
             var invalidRows = shXDoc
                 .Descendants(S.row)
-                .Where(r => ! r.Elements(S.c).Any(c => c.Attribute("r") != null))
+                .Where(r => !r.Elements(S.c).Any(c => c.Attribute("r") != null))
                 .ToList();
 
             foreach (var row in invalidRows)
@@ -474,7 +473,7 @@ namespace OpenXmlPowerTools
                                     out color);
                             else
                                 displayValue = SmlCellFormatter.FormatCell(
-                                    (string)"General",
+                                    "General",
                                     tc.Value,
                                     out color);
                             XElement newCell = new XElement("Cell",
@@ -618,7 +617,7 @@ namespace OpenXmlPowerTools
                 TransformRemoveNamespace(sheetFormatPr),
                 TransformRemoveNamespace(shXDoc.Root.Element(S.cols)),
                 mergeCells);
-            
+
             if (!dataProps.HasAttributes && !dataProps.HasElements)
                 dataProps = null;
             return dataProps;
@@ -1001,7 +1000,7 @@ namespace OpenXmlPowerTools
             if (element != null)
             {
                 return new XElement(element.Name.LocalName,
-                    element.Attributes().Select(a => new XAttribute(a.Name.LocalName, (string)a)).OrderBy(a => (string)a.Name.LocalName),
+                    element.Attributes().Select(a => new XAttribute(a.Name.LocalName, (string)a)).OrderBy(a => a.Name.LocalName),
                     element.Nodes().Select(n => TransformRemoveNamespace(n)));
             }
             return node;

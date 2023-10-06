@@ -96,24 +96,20 @@
 // then need to make sure that all of the cells below the caption have the border on the appropriate sides so that it looks as if the table
 // has a border.
 
+using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using DocumentFormat.OpenXml.Packaging;
-using OpenXmlPowerTools;
-using OpenXmlPowerTools.HtmlToWml;
-using OpenXmlPowerTools.HtmlToWml.CSS;
-using System.Text.RegularExpressions;
-using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Documents;
 
-namespace OpenXmlPowerTools.HtmlToWml
+namespace OpenXmlPowerTools.Htmls
 {
     public class ElementToStyleMap
     {

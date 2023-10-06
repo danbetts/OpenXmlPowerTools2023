@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Spreadsheets
 {
     public class SmlCellFormatter
     {
@@ -35,7 +35,7 @@ namespace OpenXmlPowerTools
                 "# ?/?",
                 new FormatConfig
                 {
-                    CellType = SmlCellFormatter.CellType.Number,
+                    CellType = CellType.Number,
                     FormatCode = "0.00",
                 }
             },
@@ -43,7 +43,7 @@ namespace OpenXmlPowerTools
                 "# ??/??",
                 new FormatConfig
                 {
-                    CellType = SmlCellFormatter.CellType.Number,
+                    CellType = CellType.Number,
                     FormatCode = "0.00",
                 }
             },
@@ -212,7 +212,7 @@ namespace OpenXmlPowerTools
                 if (cfc.StartsWith("[h]"))
                 {
                     DateTime zeroHour = new DateTime(1899, 12, 30, 0, 0, 0);
-                    int deltaInHours = (int)((thisDate - zeroHour).TotalHours);
+                    int deltaInHours = (int)(thisDate - zeroHour).TotalHours;
                     var newCfc = cfc.Substring(3);
                     var s = (deltaInHours.ToString() + thisDate.ToString(newCfc)).Trim();
                     return s;
@@ -232,7 +232,7 @@ namespace OpenXmlPowerTools
                 var s = dv.ToString(fc.FormatCode, CultureInfo.InvariantCulture).Trim();
                 return s;
             }
-            if ((cfc.Contains('(') && cfc.Contains(')')) || cfc.Contains('-'))
+            if (cfc.Contains('(') && cfc.Contains(')') || cfc.Contains('-'))
             {
                 var s3 = (-dv).ToString(cfc, CultureInfo.InvariantCulture).Trim();
                 return s3;

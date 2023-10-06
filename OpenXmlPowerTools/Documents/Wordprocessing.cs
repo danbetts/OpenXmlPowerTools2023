@@ -1146,7 +1146,7 @@ namespace OpenXmlPowerTools.Documents
 
             }
         }
-        public static void AppendDocument(this WordprocessingDocument source, WmlPackage package, IList<XElement> targetContent, bool keepSection, string insertId)
+        public static void AppendDocument(this WordprocessingDocument source, WmlPackage package, IEnumerable<XElement> targetContent, bool keepSection, string insertId)
         {
             // Rules for sections
             // - if no sections for any paragraphs, nothing is copied

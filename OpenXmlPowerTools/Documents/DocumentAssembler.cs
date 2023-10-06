@@ -2,8 +2,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Documents;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using System.Xml.Schema;
 using System.Xml.XPath;
 using Path = System.IO.Path;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools.Documents
 {
     public class DocumentAssembler
     {
@@ -31,7 +31,7 @@ namespace OpenXmlPowerTools
             byte[] byteArray = templateDoc.DocumentByteArray;
             using (MemoryStream mem = new MemoryStream())
             {
-                mem.Write(byteArray, 0, (int)byteArray.Length);
+                mem.Write(byteArray, 0, byteArray.Length);
                 using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(mem, true))
                 {
                     if (RevisionAccepter.HasTrackedRevisions(wordDoc))
@@ -953,7 +953,7 @@ namespace OpenXmlPowerTools
                 .Descendants(WP.cNvGraphicFramePr)
                 .Descendants(A.graphicFrameLocks).FirstOrDefault().Attribute(NoNamespace.noChangeAspect);
 
-            var keepSourceImageAspect = (ratioAttr == null);
+            var keepSourceImageAspect = ratioAttr == null;
             var keepOriginalImageSizeElement = inline.Descendants(Pic.cNvPicPr).FirstOrDefault();
             var keepOriginalImageSize = false;
 
@@ -1098,7 +1098,7 @@ namespace OpenXmlPowerTools
                 }
                 catch (Exception)
                 {
-                    imagePartType = default(ImagePartType);
+                    imagePartType = default;
                     error = "Invalid Image data format";
                     return null;
                 }
@@ -1114,7 +1114,7 @@ namespace OpenXmlPowerTools
                 }
                 catch
                 {
-                    imagePartType = default(ImagePartType);
+                    imagePartType = default;
                     error = "Invalid Image path";
                     return null;
                 }
@@ -1137,7 +1137,7 @@ namespace OpenXmlPowerTools
                     imagePartType = ImagePartType.Bmp;
                     break;
                 default:
-                    imagePartType = default(ImagePartType);
+                    imagePartType = default;
                     error = "Invalid image type";
                     return null;
             }
@@ -1159,7 +1159,7 @@ namespace OpenXmlPowerTools
 
             var xPath = (string)element.Attribute(PA.Select);
             var optionalString = (string)element.Attribute(PA.Optional);
-            var optional = (optionalString != null && optionalString.ToLower() == "true");
+            var optional = optionalString != null && optionalString.ToLower() == "true";
 
             string newValue;
             try
@@ -1250,9 +1250,9 @@ namespace OpenXmlPowerTools
                     XElement para = element.Descendants(W.p).FirstOrDefault();
                     XElement run = element.Descendants(W.r).FirstOrDefault();
 
-                    var xPath = (string) element.Attribute(PA.Select);
-                    var optionalString = (string) element.Attribute(PA.Optional);
-                    bool optional = (optionalString?.ToLower() == "true");
+                    var xPath = (string)element.Attribute(PA.Select);
+                    var optionalString = (string)element.Attribute(PA.Optional);
+                    bool optional = optionalString?.ToLower() == "true";
 
                     string newValue;
                     try
@@ -1268,11 +1268,11 @@ namespace OpenXmlPowerTools
                     {
 
                         XElement p = new XElement(W.p, para.Elements(W.pPr));
-                        foreach(string line in newValue.Split('\n'))
+                        foreach (string line in newValue.Split('\n'))
                         {
                             p.Add(new XElement(W.r,
                                     para.Elements(W.r).Elements(W.rPr).FirstOrDefault(),
-                                (p.Elements().Count() > 1) ? new XElement(W.br) : null,
+                                p.Elements().Count() > 1 ? new XElement(W.br) : null,
                                 new XElement(W.t, GetXmlSpaceAttribute(line), line)));
                         }
                         return p;
@@ -1280,11 +1280,11 @@ namespace OpenXmlPowerTools
                     else
                     {
                         List<XElement> list = new List<XElement>();
-                        foreach(string line in newValue.Split('\n'))
+                        foreach (string line in newValue.Split('\n'))
                         {
                             list.Add(new XElement(W.r,
                                 run.Elements().Where(e => e.Name != W.t),
-                                (list.Count > 0) ? new XElement(W.br) : null,
+                                list.Count > 0 ? new XElement(W.br) : null,
                                 new XElement(W.t, GetXmlSpaceAttribute(line), line)));
                         }
                         return list;
@@ -1294,7 +1294,7 @@ namespace OpenXmlPowerTools
                 {
                     string selector = (string)element.Attribute(PA.Select);
                     var optionalString = (string)element.Attribute(PA.Optional);
-                    bool optional = (optionalString?.ToLower() == "true");
+                    bool optional = optionalString?.ToLower() == "true";
                     var alignmentOption = (string)element.Attribute(PA.Align) ?? "vertical";
 
                     IEnumerable<XElement> repeatingData;
@@ -1457,18 +1457,18 @@ namespace OpenXmlPowerTools
                         return CreateContextErrorMessage(element, "Conditional: Cannot specify both Match and NotMatch", templateError);
 
                     string testValue = null;
-                    
-                   
+
+
                     try
                     {
                         testValue = EvaluateXPathToString(data, xPath, optional);
                     }
-	                catch (XPathException e)
+                    catch (XPathException e)
                     {
                         return CreateContextErrorMessage(element, e.Message, templateError);
                     }
-                  
-                    if ((match != null && testValue == match) || (notMatch != null && testValue != notMatch))
+
+                    if (match != null && testValue == match || notMatch != null && testValue != notMatch)
                     {
                         var content = element.Elements().Select(e => ContentReplacementTransform(e, data, templateError, part));
                         return content;
@@ -1522,8 +1522,8 @@ namespace OpenXmlPowerTools
             try
             {
                 //support some cells in the table may not have an xpath expression.
-                if (String.IsNullOrWhiteSpace(xPath)) return String.Empty;
-                
+                if (string.IsNullOrWhiteSpace(xPath)) return string.Empty;
+
                 xPathSelectResult = element.XPathEvaluate(xPath);
             }
             catch (XPathException e)
@@ -1531,9 +1531,9 @@ namespace OpenXmlPowerTools
                 throw new XPathException("XPathException: " + e.Message, e);
             }
 
-            if ((xPathSelectResult is IEnumerable) && !(xPathSelectResult is string))
+            if (xPathSelectResult is IEnumerable && !(xPathSelectResult is string))
             {
-                var selectedData = ((IEnumerable) xPathSelectResult).Cast<XObject>();
+                var selectedData = ((IEnumerable)xPathSelectResult).Cast<XObject>();
                 if (!selectedData.Any())
                 {
                     if (optional) return string.Empty;
@@ -1544,11 +1544,11 @@ namespace OpenXmlPowerTools
                     throw new XPathException(string.Format("XPath expression ({0}) returned more than one node", xPath));
                 }
 
-                XObject selectedDatum = selectedData.First(); 
-                
-                if (selectedDatum is XElement) return ((XElement) selectedDatum).Value;
+                XObject selectedDatum = selectedData.First();
 
-                if (selectedDatum is XAttribute) return ((XAttribute) selectedDatum).Value;
+                if (selectedDatum is XElement) return ((XElement)selectedDatum).Value;
+
+                if (selectedDatum is XAttribute) return ((XAttribute)selectedDatum).Value;
             }
 
             return xPathSelectResult.ToString();
