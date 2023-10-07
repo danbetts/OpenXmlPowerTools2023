@@ -7,14 +7,22 @@ namespace OpenXmlPowerTools.Documents
     /// <summary>
     /// Source for documents used in a wordprocessingdocument merge
     /// </summary>
-    public class WmlSource
+    public class WmlSource : ISource
     {
-        public WmlDocument WmlDocument { get; set; }
+        #region ISource
+        public WmlDocument Document { get; set; }
+        OpenXmlPowerToolsDocument ISource.Document
+        {
+            get => Document;
+            set => Document = (WmlDocument)Convert.ChangeType(value, typeof(WmlDocument));
+        }
         public int Start { get; set; } = 0;
         public int Count { get; set; } = int.MaxValue;
+        public bool ContentOnly { get; set; } = false;
         public bool KeepSections { get; set; } = true;
         public bool KeepHeadersAndFooters { get; set; } = true;
         public string InsertId { get; set; } = null;
+        #endregion
 
         public WmlSource() { }
         public WmlSource(string filename)
@@ -35,7 +43,7 @@ namespace OpenXmlPowerTools.Documents
             : this(document, start, count, keepSections, true, null) { }
         public WmlSource(WmlDocument document, int start, int count, bool keepSections, bool keepHeadersAndFooters, string insertId)
         {
-            this.WmlDocument = document;
+            this.Document = document;
             this.Start = start;
             this.Count = count;
             this.KeepSections = keepSections;

@@ -98,7 +98,7 @@ namespace OpenXmlPowerTools.Converters
 
             return new WmlSource()
             {
-                WmlDocument = _document,
+                Document = _document,
                 Start = _start,
                 Count = _count,
                 KeepSections = _keepSections,

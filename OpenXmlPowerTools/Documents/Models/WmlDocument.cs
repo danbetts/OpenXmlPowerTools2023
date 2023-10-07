@@ -22,7 +22,7 @@ using OpenXmlPowerTools.Converters;
 
 namespace OpenXmlPowerTools.Documents
 {
-    public class WmlDocument : OpenXmlPowerToolsDocument
+    public class WmlDocument : OpenXmlPowerToolsDocument, IDocument
     {
         public PtMainDocumentPart MainDocumentPart
         {
@@ -39,35 +39,48 @@ namespace OpenXmlPowerTools.Documents
                 }
             }
         }
-
+        #region IDocument
+        public WordprocessingDocument Document { get; set; }
+        public MainDocumentPart MainPart => Document.MainDocumentPart;
+        public XDocument Main => Document.GetMainPart();
+        public XElement Root => Main.Root;
+        public XElement Body => Root.Element(W.body);
+        public IEnumerable<XElement> Children => Main.GetBodyElements();
+        private string[] extensions { get; set; }
+        public string[] Extensions
+        {
+            get => extensions = extensions ?? Wordprocessing.Extensions;
+            private set => extensions = value;
+        }
+        public IEnumerable<FooterPart> FooterParts => throw new NotImplementedException();
+        public IEnumerable<HeaderPart> HeaderParts => throw new NotImplementedException();
+        public FontTablePart FontTablePart => throw new NotImplementedException();
+        public XDocument FontFamilyTablePart => throw new NotImplementedException();
+        #endregion
         public WmlDocument(OpenXmlPowerToolsDocument original)
             : base(original)
         {
             if (GetDocumentType() != typeof(WordprocessingDocument))
                 throw new PowerToolsDocumentException("Not a Wordprocessing document.");
         }
-
         public WmlDocument(OpenXmlPowerToolsDocument original, bool convertToTransitional)
             : base(original, convertToTransitional)
         {
             if (GetDocumentType() != typeof(WordprocessingDocument))
                 throw new PowerToolsDocumentException("Not a Wordprocessing document.");
         }
-
         public WmlDocument(string fileName)
             : base(fileName)
         {
             if (GetDocumentType() != typeof(WordprocessingDocument))
                 throw new PowerToolsDocumentException("Not a Wordprocessing document.");
         }
-
         public WmlDocument(string fileName, bool convertToTransitional)
             : base(fileName, convertToTransitional)
         {
             if (GetDocumentType() != typeof(WordprocessingDocument))
                 throw new PowerToolsDocumentException("Not a Wordprocessing document.");
         }
-
         public WmlDocument(string fileName, byte[] byteArray)
             : base(byteArray)
         {
@@ -75,7 +88,6 @@ namespace OpenXmlPowerTools.Documents
             if (GetDocumentType() != typeof(WordprocessingDocument))
                 throw new PowerToolsDocumentException("Not a Wordprocessing document.");
         }
-
         public WmlDocument(string fileName, byte[] byteArray, bool convertToTransitional)
             : base(byteArray, convertToTransitional)
         {
@@ -83,17 +95,14 @@ namespace OpenXmlPowerTools.Documents
             if (GetDocumentType() != typeof(WordprocessingDocument))
                 throw new PowerToolsDocumentException("Not a Wordprocessing document.");
         }
-
         public WmlDocument(string fileName, MemoryStream memStream)
             : base(fileName, memStream)
         {
         }
-
         public WmlDocument(string fileName, MemoryStream memStream, bool convertToTransitional)
             : base(fileName, memStream, convertToTransitional)
         {
         }
-
         public WmlDocument(WmlDocument other, params XElement[] replacementParts) : base(other)
         {
             using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(this))
@@ -115,13 +124,10 @@ namespace OpenXmlPowerTools.Documents
                 DocumentByteArray = streamDoc.GetModifiedDocument().DocumentByteArray;
             }
         }
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public XElement ConvertToHtml(WmlToHtmlConverterSettings htmlConverterSettings)
         {
             return WmlToHtmlConverter.ConvertToHtml(this, htmlConverterSettings);
         }
-
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public XElement ConvertToHtml(HtmlConverterSettings htmlConverterSettings)
         {
             WmlToHtmlConverterSettings settings = new WmlToHtmlConverterSettings(htmlConverterSettings);
@@ -139,12 +145,10 @@ namespace OpenXmlPowerTools.Documents
         {
             return ReferenceAdder.AddToa(this, xPath, switches, rightTabPos);
         }
-
         public WmlDocument SearchAndReplace(string search, string replace, bool matchCase)
         {
             return TextReplacer.SearchAndReplace(this, search, replace, matchCase);
         }
-
         public WmlDocument AcceptRevisions(WmlDocument document)
         {
             return RevisionAccepter.AcceptRevisions(document);
@@ -153,7 +157,6 @@ namespace OpenXmlPowerTools.Documents
         {
             return RevisionAccepter.HasTrackedRevisions(document);
         }
-
         public WmlDocument SimplifyMarkup(SimplifyMarkupSettings settings)
         {
             return MarkupSimplifier.SimplifyMarkup(this, settings);

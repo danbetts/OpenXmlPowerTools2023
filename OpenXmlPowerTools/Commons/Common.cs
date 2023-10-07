@@ -15,11 +15,20 @@ namespace OpenXmlPowerTools.Commons
 {
     public static class Common
     {
+        public static object GetPropValue(this object src, string propName)
+        {
+            return src.GetType().GetProperty(propName).GetValue(src, null);
+        }
+
+        public static T GetPart<T>(this object src) where T : IFixedContentTypePart
+        {
+            return (T)src.GetPropValue(typeof(T).Name);
+        }
 
         #region Declaration
-        /// <summary>
-        /// Get new XDeclaration
-        /// </summary>
+            /// <summary>
+            /// Get new XDeclaration
+            /// </summary>
         public static XDeclaration CreateDeclaration() => new XDeclaration(Constants.OnePointZero, Constants.Utf8, Constants.Yes);
         public static void SetDeclaration(this XDeclaration dec)
         {

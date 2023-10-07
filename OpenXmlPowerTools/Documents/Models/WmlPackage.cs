@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools.Commons;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -9,37 +10,39 @@ namespace OpenXmlPowerTools.Documents
     /// <summary>
     /// Wordprocessing package used during building to simplify method calls and data access
     /// </summary>
-    public  class WmlPackage
+    public class WmlPackage : IPackage
     {
-        public WordprocessingDocument Document { get; set; }
-        public MainDocumentPart MainPart => Document.MainDocumentPart;
-        public XDocument Main => Document.GetMainPart();
-        public XElement Root => Main.Root;
-        public XElement Body => Root.Element(W.body);
-        public IEnumerable<XElement> Children => Main.GetBodyElements();
+        #region IPackage
+        public WordprocessingDocument Target { get; set; }
+        public WordprocessingDocument Source { get; set; }
         public IList<WmlSource> Sources { get; set; } = new List<WmlSource>();
+        IList<ISource> IPackage.Sources
+        {
+            get => Sources.Cast<ISource>().ToList();
+            set => Sources = value.Cast<WmlSource>().ToList();
+        }
         public IList<ImageData> Images { get; set; } = new List<ImageData>();
-        private Dictionary<XName, XName[]> relationshipMarkup { get; set; }
-        public Dictionary<XName, XName[]> RelationshipMarkup
+        public IEnumerable<XElement> Contents { get; set; }
+        private IDictionary<XName, XName[]> relationshipMarkup { get; set; }
+        public IDictionary<XName, XName[]> RelationshipMarkup
         {
             get => relationshipMarkup = relationshipMarkup ?? Wordprocessing.RelationshipMarkup;
             private set => relationshipMarkup = value;
         }
-        public string[] extensions { get; set; }
-        public string[] Extensions
+        public bool HasSources { get => Sources?.Any() == true; }
+        public bool KeepNoSections { get => Sources.All(p => p.KeepSections == false); }
+        public bool KeepAllSections { get => Sources.All(p => p.KeepSections == true); }
+        public bool KeepNoHeadersAndFooters { get => Sources.All(p => p.KeepHeadersAndFooters == false); }
+        public bool KeepAllHeadersAndFooters { get => Sources.All(p => p.KeepHeadersAndFooters == true); }
+
+        public IPackage SetSource(TypedOpenXmlPackage source)
         {
-            get => extensions = extensions ?? Wordprocessing.Extensions;
-            private set => extensions = value;
-        }
-        public bool HasSources() => Sources?.Any() == true;
-        public bool KeepNoSections() => Sources.All(p => p.KeepSections == false);
-        public bool KeepAllSections() => Sources.All(p => p.KeepSections == true);
-        public bool KeepNoHeadersAndFooters() => Sources.All(p => p.KeepHeadersAndFooters == false);
-        public bool KeepAllHeadersAndFooters() => Sources.All(p => p.KeepHeadersAndFooters == true);
-        public WmlPackage SetDocument(WordprocessingDocument document)
-        {
-            Document = document;
+            if (source.GetType() != typeof(WordprocessingDocument)) throw new InvalidCastException($"{source.GetType().Name} is not a word processing document.");
+
+            Target = source as WordprocessingDocument;
             return this;
         }
+        #endregion
+
     }
 }

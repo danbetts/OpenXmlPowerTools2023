@@ -119,12 +119,13 @@ namespace OpenXmlPowerTools.Documents
         private void Process(WordprocessingDocument target)
         {
             WmlPackage package = new WmlPackage();
-            package.Document = target;
+            package.Target = target;
             package.Sources = Sources;
-            package.Main.Declaration.SetDeclaration();
-            package.Main.Root.ReplaceWith(Wordprocessing.CreateRoot());
+            var targetMain = target.GetMainPart();
+            targetMain.Declaration.SetDeclaration();
+            targetMain.Root.ReplaceWith(Wordprocessing.CreateRoot());
 
-            if (package.HasSources())
+            if (package.HasSources)
             {
                 if (normalizeStyleIds)
                 {
@@ -134,7 +135,7 @@ namespace OpenXmlPowerTools.Documents
                 package.CopyFirstSourceCoreParts();
                 HandleInsertId();
 
-                if (package.KeepNoSections())
+                if (package.KeepNoSections)
                 {
                     package.RemoveAllSectionsExceptLast();
                 }
@@ -142,7 +143,7 @@ namespace OpenXmlPowerTools.Documents
                         
                 HandleHeadersAndFooters();
 
-                if (Sources.Any(s => s.KeepSections == true))
+                if (package.Sources.Any(s => s.KeepSections == true))
                 {
                     package.CopyAllSections();
                 }
@@ -154,16 +155,15 @@ namespace OpenXmlPowerTools.Documents
 
             void HandleInsertId()
             {
-                for (int index = 0; index < Sources.Count; index++)
+                for (int index = 0; index < package.Sources.Count; index++)
                 {
                     var source = Sources[index];
                     if (string.IsNullOrEmpty(source.InsertId))
                     {
-                        using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.WmlDocument))
+                        using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.Document))
                         using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                         {
-                            // throws exceptions if a document contains unsupported content
-                            //TestForUnsupportedDocument(doc, sources.IndexOf(source));
+                            doc.TestForUnsupportedDocument(package.Sources.IndexOf(source));
 
                             if (source.KeepSections && !source.KeepHeadersAndFooters)
                                 doc.RemoveHeadersAndFootersFromSections();
@@ -190,9 +190,9 @@ namespace OpenXmlPowerTools.Documents
                             }
                         }
                     }
-                    else if (package.Main.Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == source.InsertId))
+                    else if (targetMain.Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == source.InsertId))
                     {
-                        using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.WmlDocument))
+                        using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.Document))
                         using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                         {
                             // throws exceptions if a document contains unsupported content
@@ -222,7 +222,6 @@ namespace OpenXmlPowerTools.Documents
             {
                 target.FixSectionProperties();
 
-                var targetMain = package.Main;
                 var sections = targetMain.Descendants(W.sectPr).ToList();
 
                 CachedHeaderFooter[] cachedHeaderFooter = Wordprocessing.CachedHeadersAndFooters;
@@ -271,7 +270,7 @@ namespace OpenXmlPowerTools.Documents
 
                             if (foundInHeadersFooters)
                             {
-                                using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.WmlDocument))
+                                using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.Document))
                                 using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                                 {
                                     //// throws exceptions if a document contains unsupported content
