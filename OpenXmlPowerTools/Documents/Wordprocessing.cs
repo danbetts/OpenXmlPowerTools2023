@@ -287,6 +287,8 @@ namespace OpenXmlPowerTools.Documents
         public static int CalcWidthOfRunInTwips(XElement r)
         {
             HashSet<string> KnownFamilies = null;
+            HashSet<string> UnknownFonts = new HashSet<string>();
+
             if (KnownFamilies == null)
             {
                 KnownFamilies = new HashSet<string>();
