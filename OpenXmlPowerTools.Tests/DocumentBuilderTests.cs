@@ -15,7 +15,6 @@ using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using OpenXmlPowerTools;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Converters;
 using OpenXmlPowerTools.Documents;
 using Xunit;
 
@@ -43,7 +42,7 @@ namespace OxPt
             {
                 sourceBuilder.FileName(@"C:\git\AmsDocs\.common\style-template.docx").KeepSections(false).KeepHeadersAndFooters(false).Build(),
                 sourceBuilder.FileName(@"C:\git\AmsDocs\.common\title-template.docx").KeepSections(true).KeepHeadersAndFooters(true).Build(),
-                sourceBuilder.FileName(@"C:\git\AmsDocs\STD\MRHFPM\SB151217-09F_STD_FPM.docx").KeepSections(false).KeepHeadersAndFooters(true).Build(),
+                sourceBuilder.FileName(@"C:\git\AmsDocs\STD\MRHFPM\SB151217-09F_STD_FPM.docx").ContentOnly(true).Build(),
             };
 
             if (File.Exists(outputPath)) File.Delete(outputPath);

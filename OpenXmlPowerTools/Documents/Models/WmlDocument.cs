@@ -24,26 +24,12 @@ namespace OpenXmlPowerTools.Documents
 {
     public class WmlDocument : OpenXmlPowerToolsDocument, IDocument
     {
-        public PtMainDocumentPart MainDocumentPart
-        {
-            get
-            {
-                using (MemoryStream ms = new MemoryStream(DocumentByteArray))
-                using (WordprocessingDocument wDoc = WordprocessingDocument.Open(ms, false))
-                {
-                    XElement partElement = wDoc.MainDocumentPart.GetXDocument().Root;
-                    var childNodes = partElement.Nodes().ToList();
-                    foreach (var item in childNodes)
-                        item.Remove();
-                    return new PtMainDocumentPart(this, wDoc.MainDocumentPart.Uri, partElement.Name, partElement.Attributes(), childNodes);
-                }
-            }
-        }
+        public PtMainDocumentPart MainDocumentPart => GetMainDocumentPart();
         #region IDocument
-        public WordprocessingDocument Document { get; set; }
-        public MainDocumentPart MainPart => Document.MainDocumentPart;
-        public XDocument Main => Document.GetMainPart();
-        public XElement Root => Main.Root;
+        public WordprocessingDocument Document => GetWordprocessingDocument();
+        public MainDocumentPart Main => Document.MainDocumentPart;
+        public XDocument MainPart => Document.GetMainPart();
+        public XElement Root => MainPart.Root;
         public XElement Body => Root.Element(W.body);
         public IEnumerable<XElement> Children => Main.GetBodyElements();
         private string[] extensions { get; set; }
@@ -144,6 +130,27 @@ namespace OpenXmlPowerTools.Documents
         public WmlDocument AddToa(string xPath, string switches, int? rightTabPos)
         {
             return ReferenceAdder.AddToa(this, xPath, switches, rightTabPos);
+        }
+        public WordprocessingDocument GetWordprocessingDocument()
+        {
+            using (MemoryStream ms = new MemoryStream(DocumentByteArray))
+            {
+                return WordprocessingDocument.Open(ms, false);
+            }
+        }
+        public PtMainDocumentPart GetMainDocumentPart()
+        {
+            using (MemoryStream ms = new MemoryStream(DocumentByteArray))
+            using (WordprocessingDocument wDoc = WordprocessingDocument.Open(ms, false))
+            {
+                XElement partElement = wDoc.MainDocumentPart.GetXDocument().Root;
+                var childNodes = partElement.Nodes().ToList();
+                foreach (var item in childNodes)
+                {
+                    item.Remove();
+                }
+                return new PtMainDocumentPart(this, wDoc.MainDocumentPart.Uri, partElement.Name, partElement.Attributes(), childNodes);
+            }
         }
         public WmlDocument SearchAndReplace(string search, string replace, bool matchCase)
         {

@@ -10,6 +10,7 @@ namespace OpenXmlPowerTools.Commons
         IList<ISource> Sources { get; set; }
         IList<ImageData> Images { get; set; }
         IEnumerable<XElement> Contents { get; set; }
+        XElement Section { get; set; }
         IDictionary<XName, XName[]> RelationshipMarkup { get; }
         bool HasSources { get; }
         bool KeepNoSections { get; }

@@ -1,7 +1,6 @@
 ﻿using System;
-using OpenXmlPowerTools.Documents;
 
-namespace OpenXmlPowerTools.Converters
+namespace OpenXmlPowerTools.Documents
 {
     /// <summary>
     /// WmlSource builder
@@ -11,8 +10,10 @@ namespace OpenXmlPowerTools.Converters
         private WmlDocument _document { get; set; } = null;
         private int _start { get; set; } = 0;
         private int _count { get; set; } = int.MaxValue;
-        private bool _keepSections { get; set; } = true;
+        private bool _contentOnly { get; set; } = false;
+        private bool _inheritLayout { get; set; } = false;
         private bool _keepHeadersAndFooters { get; set; } = true;
+        private bool _keepSections { get; set; } = true;
         private string _insertId { get; set; } = null;
 
         public WmlSourceBuilder() { }
@@ -68,13 +69,25 @@ namespace OpenXmlPowerTools.Converters
         }
 
         /// <summary>
-        /// Set keep sections
+        /// Set content only
         /// </summary>
-        /// <param name="keepSections"></param>
+        /// <param name="contentOnly"></param>
         /// <returns></returns>
-        public WmlSourceBuilder KeepSections(bool keepSections)
+        public WmlSourceBuilder ContentOnly(bool contentOnly = true)
         {
-            _keepSections = keepSections;
+            _contentOnly = contentOnly;
+            _keepSections = false;
+            return this;
+        }
+
+        /// <summary>
+        /// Set inherit layout
+        /// </summary>
+        /// <param name="inheritLayout"></param>
+        /// <returns></returns>
+        public WmlSourceBuilder InheritLayout(bool inheritLayout = true)
+        {
+            _inheritLayout = inheritLayout;
             return this;
         }
 
@@ -83,9 +96,20 @@ namespace OpenXmlPowerTools.Converters
         /// </summary>
         /// <param name="keepHeadersAndFooters"></param>
         /// <returns></returns>
-        public WmlSourceBuilder KeepHeadersAndFooters(bool keepHeadersAndFooters)
+        public WmlSourceBuilder KeepHeadersAndFooters(bool keepHeadersAndFooters = true)
         {
             _keepHeadersAndFooters = keepHeadersAndFooters;
+            return this;
+        }
+
+        /// <summary>
+        /// Set keep sections
+        /// </summary>
+        /// <param name="keepSections"></param>
+        /// <returns></returns>
+        public WmlSourceBuilder KeepSections(bool keepSections = true)
+        {
+            _keepSections = keepSections;
             return this;
         }
 
@@ -98,11 +122,13 @@ namespace OpenXmlPowerTools.Converters
 
             return new WmlSource()
             {
-                Document = _document,
+                WmlDocument = _document,
                 Start = _start,
                 Count = _count,
-                KeepSections = _keepSections,
+                ContentOnly = _contentOnly,
+                InheritLayout = _inheritLayout,
                 KeepHeadersAndFooters = _keepHeadersAndFooters,
+                KeepSections = _keepSections,
                 InsertId = _insertId,
             };
         }

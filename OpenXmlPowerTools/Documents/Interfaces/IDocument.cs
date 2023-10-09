@@ -6,10 +6,11 @@ namespace OpenXmlPowerTools.Documents
 {
     public interface IDocument
     {
+        WordprocessingDocument Document { get; }
         XElement Body { get; }
         string[] Extensions { get; }
-        XDocument Main { get; }
-        MainDocumentPart MainPart { get; }
+        XDocument MainPart { get; }
+        MainDocumentPart Main { get; }
         XElement Root { get; }
         IEnumerable<FooterPart> FooterParts { get; }
         IEnumerable<HeaderPart> HeaderParts { get; }

@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using OpenXmlPowerTools.Commons;
 using System;
 using System.Collections.Generic;
@@ -127,20 +126,16 @@ namespace OpenXmlPowerTools.Documents
 
             if (package.HasSources)
             {
-                if (normalizeStyleIds)
-                {
-                    package.Sources.NormalizeStyleNamesAndIds();
-                }
-
+                if (normalizeStyleIds) package.Sources.NormaliseStyleNamesAndIds();
                 package.CopyFirstSourceCoreParts();
                 HandleInsertId();
 
                 if (package.KeepNoSections)
                 {
-                    package.RemoveAllSectionsExceptLast();
+                    package.RemoveAllSectionsExceptLastKept();
                 }
                 else HandleKeepSections();
-                        
+
                 HandleHeadersAndFooters();
 
                 if (package.Sources.Any(s => s.KeepSections == true))
@@ -149,6 +144,7 @@ namespace OpenXmlPowerTools.Documents
                 }
 
                 target.AdjustDocPrIds();
+                //target.NormalisePageLayout(package);
             }
             HandleGlossary();
             PutAllChanges();
@@ -158,69 +154,36 @@ namespace OpenXmlPowerTools.Documents
                 for (int index = 0; index < package.Sources.Count; index++)
                 {
                     var source = Sources[index];
-                    if (string.IsNullOrEmpty(source.InsertId))
+                    var sourceId = source.InsertId;
+                    var idMatch = targetMain.Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == sourceId);
+
+                    using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.WmlDocument))
+                    using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                     {
-                        using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.Document))
-                        using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
+                        doc.TestForUnsupportedDocument(package.Sources.IndexOf(source));
+                        if (source.KeepSections) doc.LinkToPreviousHeadersAndFooters();
+                        else doc.RemoveSections();
+
+                        if (!source.KeepSections && !source.KeepHeadersAndFooters) doc.RemoveHeadersAndFootersFromSections();
+
+                        if (doc.MainDocumentPart.GetBody() == null) throw new DocumentBuilderException(String.Format("Source {0} is unsupported document - contains no body element in the correct namespace", index));
+
+                        var contents = doc.MainDocumentPart.GetContents(source.Start, source.Count);
+                        try
                         {
-                            doc.TestForUnsupportedDocument(package.Sources.IndexOf(source));
-
-                            if (source.KeepSections && !source.KeepHeadersAndFooters)
-                                doc.RemoveHeadersAndFootersFromSections();
-                            else if (source.KeepSections)
-                                doc.LinkToPreviousHeadersAndFooters();
-
-                            var body = doc.GetBody();
-
-                            if (body == null)
-                                throw new DocumentBuilderException(
-                                    String.Format("Source {0} is unsupported document - contains no body element in the correct namespace", index));
-
-                            var contents = doc.GetContents(source.Start, source.Count);
-                            try
-                            {
-                                doc.AppendDocument(package, contents, source.KeepSections, null);
-                            }
-                            catch (DocumentBuilderInternalException dbie)
-                            {
-                                if (dbie.Message.Contains("{0}"))
-                                    throw new DocumentBuilderException(string.Format(dbie.Message, index));
-                                else
-                                    throw dbie;
-                            }
+                            doc.AppendDocument(package, source, contents);
                         }
-                    }
-                    else if (targetMain.Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == source.InsertId))
-                    {
-                        using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.Document))
-                        using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
+                        catch (DocumentBuilderInternalException dbie)
                         {
-                            // throws exceptions if a document contains unsupported content
-                            //TestForUnsupportedDocument(doc, sources.IndexOf(source));
-
-                            if (source.KeepSections && !source.KeepHeadersAndFooters)
-                                doc.RemoveHeadersAndFootersFromSections();
-                            else if (source.KeepSections)
-                                doc.LinkToPreviousHeadersAndFooters();
-
-                            var contents = doc.GetContents(source.Start, source.Count);
-
-                            try
-                            {
-                                doc.AppendDocument(package, contents, source.KeepSections, source.InsertId);
-                            }
-                            catch (DocumentBuilderInternalException dbie)
-                            {
-                                if (dbie.Message.Contains("{0}")) throw new DocumentBuilderException(string.Format(dbie.Message, index));
-                                else throw dbie;
-                            }
+                            if (dbie.Message.Contains("{0}")) throw new DocumentBuilderException(string.Format(dbie.Message, index));
+                            else throw dbie;
                         }
                     }
                 }
             }
             void HandleKeepSections()
             {
-                target.FixSectionProperties();
+                //target.FixSectionProperties(); // TODO this code breaks document layout
 
                 var sections = targetMain.Descendants(W.sectPr).ToList();
 
@@ -242,65 +205,36 @@ namespace OpenXmlPowerTools.Documents
             }
             void HandleHeadersAndFooters()
             {
-                int sourceNum = 0;
                 for (int index = 0; index < Sources.Count; index++)
                 {
                     var source = Sources[index];
-                    if (source.InsertId != null)
+                    var sourceId = source.InsertId;
+
+                    if (sourceId != null && (target.MainDocumentPart.HeaderParts.Any(hp => hp.GetXDocument().Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == sourceId)) ||
+                        target.MainDocumentPart.FooterParts.Any(fp => fp.GetXDocument().Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == sourceId))))
                     {
-                        while (true)
+                        using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.WmlDocument))
+                        using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                         {
-                            //this uses an overload of AppendDocument that takes a part.
-                            //for each in main document part, header parts, footer parts
-                            //    are there any PtOpenXml.Insert elements in any of them?
-                            //if so, then open and process all.
-                            bool foundInHeadersFooters = false;
-                            if (target.MainDocumentPart.HeaderParts.Any(hp =>
-                            {
-                                var hpXDoc = hp.GetXDocument();
-                                return hpXDoc.Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == source.InsertId);
-                            }))
-                                foundInHeadersFooters = true;
-                            if (target.MainDocumentPart.FooterParts.Any(fp =>
-                            {
-                                var hpXDoc = fp.GetXDocument();
-                                return hpXDoc.Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == source.InsertId);
-                            }))
-                                foundInHeadersFooters = true;
+                            var body = doc.MainDocumentPart.GetBody();
+                            doc.TestForUnsupportedDocument(index);
 
-                            if (foundInHeadersFooters)
+                            var partList = target.MainDocumentPart.HeaderParts.Cast<OpenXmlPart>().Concat(target.MainDocumentPart.FooterParts.Cast<OpenXmlPart>()).ToList();
+                            foreach (var part in partList)
                             {
-                                using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.Document))
-                                using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
+                                if (!part.GetXDocument().Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == sourceId)) continue;
+                                List<XElement> contents = doc.MainDocumentPart.GetContents(source.Start, source.Count).ToList();
+
+                                try
                                 {
-                                    //// throws exceptions if a document contains unsupported content
-                                    //TestForUnsupportedDocument(doc, sources.IndexOf(source));
-
-                                    var partList = target.MainDocumentPart.HeaderParts.Cast<OpenXmlPart>().Concat(target.MainDocumentPart.FooterParts.Cast<OpenXmlPart>()).ToList();
-                                    foreach (var part in partList)
-                                    {
-                                        var partXDoc = part.GetXDocument();
-                                        if (!partXDoc.Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == source.InsertId))
-                                            continue;
-                                        List<XElement> contents = doc.GetContents(source.Start, source.Count).ToList();
-
-                                        try
-                                        {
-                                            // append with a part
-                                            doc.AppendPart(package, contents, source.KeepSections, source.InsertId, part);
-                                        }
-                                        catch (DocumentBuilderInternalException dbie)
-                                        {
-                                            if (dbie.Message.Contains("{0}"))
-                                                throw new DocumentBuilderException(string.Format(dbie.Message, sourceNum));
-                                            else
-                                                throw dbie;
-                                        }
-                                    }
+                                    doc.AppendPart(package, contents, source, part);
+                                }
+                                catch (DocumentBuilderInternalException dbie)
+                                {
+                                    if (dbie.Message.Contains("{0}")) throw new DocumentBuilderException(string.Format(dbie.Message, index));
+                                    else throw dbie;
                                 }
                             }
-                            else
-                                break;
                         }
                     }
                 }
