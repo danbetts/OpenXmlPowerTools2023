@@ -19,8 +19,6 @@ namespace OpenXmlPowerTools.Documents
         public WordprocessingDocument Document { get; set; }
         public int Start { get; set; } = 0;
         public int Count { get; set; } = int.MaxValue;
-        public bool ContentOnly { get; set; } = false;
-        public bool InheritLayout { get; set; } = true;
         public bool KeepHeadersAndFooters { get; set; } = true;
         public bool KeepSections { get; set; } = true;
         public string InsertId { get; set; } = null;

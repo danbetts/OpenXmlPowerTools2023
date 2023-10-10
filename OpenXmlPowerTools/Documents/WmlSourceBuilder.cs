@@ -10,8 +10,6 @@ namespace OpenXmlPowerTools.Documents
         private WmlDocument _document { get; set; } = null;
         private int _start { get; set; } = 0;
         private int _count { get; set; } = int.MaxValue;
-        private bool _contentOnly { get; set; } = false;
-        private bool _inheritLayout { get; set; } = false;
         private bool _keepHeadersAndFooters { get; set; } = true;
         private bool _keepSections { get; set; } = true;
         private string _insertId { get; set; } = null;
@@ -69,29 +67,6 @@ namespace OpenXmlPowerTools.Documents
         }
 
         /// <summary>
-        /// Set content only
-        /// </summary>
-        /// <param name="contentOnly"></param>
-        /// <returns></returns>
-        public WmlSourceBuilder ContentOnly(bool contentOnly = true)
-        {
-            _contentOnly = contentOnly;
-            _keepSections = false;
-            return this;
-        }
-
-        /// <summary>
-        /// Set inherit layout
-        /// </summary>
-        /// <param name="inheritLayout"></param>
-        /// <returns></returns>
-        public WmlSourceBuilder InheritLayout(bool inheritLayout = true)
-        {
-            _inheritLayout = inheritLayout;
-            return this;
-        }
-
-        /// <summary>
         /// Set keep headers and footers
         /// </summary>
         /// <param name="keepHeadersAndFooters"></param>
@@ -125,8 +100,6 @@ namespace OpenXmlPowerTools.Documents
                 WmlDocument = _document,
                 Start = _start,
                 Count = _count,
-                ContentOnly = _contentOnly,
-                InheritLayout = _inheritLayout,
                 KeepHeadersAndFooters = _keepHeadersAndFooters,
                 KeepSections = _keepSections,
                 InsertId = _insertId,

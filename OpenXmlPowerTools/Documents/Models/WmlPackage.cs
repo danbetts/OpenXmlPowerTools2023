@@ -38,11 +38,11 @@ namespace OpenXmlPowerTools.Documents
             get => relationshipMarkup = relationshipMarkup ?? Wordprocessing.RelationshipMarkup;
             private set => relationshipMarkup = value;
         }
-        public bool HasSources { get => Sources?.Any() == true; }
-        public bool KeepNoSections { get => Sources.All(p => p.KeepSections == false); }
-        public bool KeepAllSections { get => Sources.All(p => p.KeepSections == true); }
-        public bool KeepNoHeadersAndFooters { get => Sources.All(p => p.KeepHeadersAndFooters == false); }
-        public bool KeepAllHeadersAndFooters { get => Sources.All(p => p.KeepHeadersAndFooters == true); }
+        public bool HasSources => Sources?.Any() == true;
+        public bool KeepNoSections => Sources.All(p => p.KeepSections == false);
+        public bool KeepAllSections => Sources.All(p => p.KeepSections == true);
+        public bool KeepNoHeadersAndFooters => Sources.All(p => p.KeepHeadersAndFooters == false);
+        public bool KeepAllHeadersAndFooters => Sources.All(p => p.KeepHeadersAndFooters == true);
 
         public IEnumerable<XElement> GetContents(int start, int count) => Main.GetContents(start, count);
         public IPackage SetSource(TypedOpenXmlPackage source)

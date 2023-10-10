@@ -568,6 +568,20 @@ namespace OpenXmlPowerTools.Documents
 
         #region Creators
         /// <summary>
+        /// Create a new WordprocessingDocument as an OpenXml memory stream document
+        /// </summary>
+        /// <returns></returns>
+        public static OpenXmlMemoryStreamDocument CreateWordprocessingDocument()
+        {
+            MemoryStream stream = new MemoryStream();
+            using (WordprocessingDocument doc = stream.CreateWordprocessingDocument())
+            {
+                doc.Close();
+                return new OpenXmlMemoryStreamDocument(stream);
+            }
+        }
+
+        /// <summary>
         /// Create a new WordprocessingDocument for a specified file path
         /// </summary>
         /// <param name="filePath"></param>
@@ -593,19 +607,6 @@ namespace OpenXmlPowerTools.Documents
             return doc;
         }
 
-        /// <summary>
-        /// Create a new WordprocessingDocument as an OpenXml memory stream document
-        /// </summary>
-        /// <returns></returns>
-        public static OpenXmlMemoryStreamDocument CreateWordprocessingDocument()
-        {
-            MemoryStream stream = new MemoryStream();
-            using (WordprocessingDocument doc = stream.CreateWordprocessingDocument())
-            {
-                doc.Close();
-                return new OpenXmlMemoryStreamDocument(stream);
-            }
-        }
 
         /// <summary>
         /// Create a new main document part
@@ -691,7 +692,7 @@ namespace OpenXmlPowerTools.Documents
 
             if (!allGlossaryDocuments.Any()) return null;
 
-            WmlDocument coalescedRaw = new DocumentBuilder().SetSources(allGlossaryDocuments).Build();
+            WmlDocument coalescedRaw = new DocumentBuilder().SetSources(allGlossaryDocuments).Modify();
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -1215,7 +1216,7 @@ namespace OpenXmlPowerTools.Documents
                     foreach (var ts in tempSourceList)
                     {
                         var sources = new List<WmlSource>() { new WmlSource(doc, ts.Start, ts.Count) };
-                        WmlDocument newDoc = new DocumentBuilder().SetSources(sources).Build();
+                        WmlDocument newDoc = new DocumentBuilder().SetSources(sources).Modify();
                         newDoc = AdjustSectionBreak(newDoc);
                         yield return newDoc;
                     }
@@ -1347,25 +1348,22 @@ namespace OpenXmlPowerTools.Documents
                 targetContent = adjustedContents;
             }
 
-            if (!wmlSource.ContentOnly)
+            var listOfSectionProps = targetContent.DescendantsAndSelf(W.sectPr).ToList();
+
+            foreach (var sectPr in listOfSectionProps)
             {
-                var listOfSectionProps = targetContent.DescendantsAndSelf(W.sectPr).ToList();
-
-                foreach (var sectPr in listOfSectionProps)
-                {
-                    source.AddSectionAndDependencies(package, sectPr);
-                }
-
-                source.CopyStylesAndFonts(package, targetContent);
-                source.CopyNumbering(package, targetContent);
-                source.CopyComments(package, targetContent);
-                source.CopyFootnotes(package, targetContent);
-                source.CopyEndnotes(package, targetContent);
-                source.AdjustUniqueIds(target, targetContent);
-                targetContent.RemoveGfxdata();
-                source.CopyCustomXmlParts(package, targetContent);
-                CopyWebExtensions(source, target);
+                source.AddSectionAndDependencies(package, sectPr);
             }
+            
+            source.CopyStylesAndFonts(package, targetContent);
+            source.CopyNumbering(package, targetContent);
+            source.CopyComments(package, targetContent);
+            source.CopyFootnotes(package, targetContent);
+            source.CopyEndnotes(package, targetContent);
+            source.AdjustUniqueIds(target, targetContent);
+            targetContent.RemoveGfxdata();
+            source.CopyCustomXmlParts(package, targetContent);
+            CopyWebExtensions(source, target);
 
             if (wmlSource.InsertId != null)
             {
@@ -1410,13 +1408,10 @@ namespace OpenXmlPowerTools.Documents
             adjustedContents.DescendantsAndSelf(W.sectPr).Remove();
             targetContent = adjustedContents;
 
-            if (!wmlSource.ContentOnly)
-            {
-                source.CopyNumbering(package, targetContent);
-                source.CopyComments(package, targetContent);
-                source.AdjustUniqueIds(target, targetContent);
-                targetContent.RemoveGfxdata();
-            }
+            source.CopyNumbering(package, targetContent);
+            source.CopyComments(package, targetContent);
+            source.AdjustUniqueIds(target, targetContent);
+            targetContent.RemoveGfxdata();
 
             if (wmlSource.InsertId == null) throw new OpenXmlPowerToolsException("Internal error");
 

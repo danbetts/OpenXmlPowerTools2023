@@ -80,7 +80,6 @@ namespace OpenXmlPowerTools.Documents
             return this;
         }
 
-        /// <summary>
         /// Build document
         /// </summary>
         public void Save()
@@ -102,7 +101,7 @@ namespace OpenXmlPowerTools.Documents
             Save();
         }
 
-        public WmlDocument Build()
+        public WmlDocument Modify()
         {
             using (OpenXmlMemoryStreamDocument streamDoc = Wordprocessing.CreateWordprocessingDocument())
             {
@@ -113,6 +112,21 @@ namespace OpenXmlPowerTools.Documents
                 }
                 return streamDoc.GetModifiedWmlDocument();
             }
+        }
+
+        public WordprocessingDocument Build()
+        {
+            WordprocessingDocument result;
+            using (OpenXmlMemoryStreamDocument streamDoc = Wordprocessing.CreateWordprocessingDocument())
+            {
+                using (WordprocessingDocument target = streamDoc.GetWordprocessingDocument())
+                {
+                    Process(target);
+                    result = target.Clone(output, isEditable: true) as WordprocessingDocument;
+                    target.Close();
+                }
+            }
+            return result;
         }
 
         private void Process(WordprocessingDocument target)
@@ -160,14 +174,29 @@ namespace OpenXmlPowerTools.Documents
                     using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.WmlDocument))
                     using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                     {
+                        
+                        // Prepare source for merging
                         doc.TestForUnsupportedDocument(package.Sources.IndexOf(source));
-                        if (source.KeepSections) doc.LinkToPreviousHeadersAndFooters();
-                        else doc.RemoveSections();
 
-                        if (!source.KeepSections && !source.KeepHeadersAndFooters) doc.RemoveHeadersAndFootersFromSections();
+                        // Case: Keep section
+                        if (source.KeepSections)
+                        {
+                            // Case: but remove header and footer
+                            if (!source.KeepHeadersAndFooters) doc.RemoveHeadersAndFootersFromSections();
+                            
+                            doc.LinkToPreviousHeadersAndFooters();
+                        }
+                        else
+                        {
+                            // Case: Remove section. Since header and footers are imbedded into section they are removed with the section.
+                            doc.RemoveSections();
+
+                            // Case: maybe a case to handle here where header and footers are kept by cloning previous section and updating header and footer
+                        }
 
                         if (doc.MainDocumentPart.GetBody() == null) throw new DocumentBuilderException(String.Format("Source {0} is unsupported document - contains no body element in the correct namespace", index));
 
+                        // Merge in source
                         var contents = doc.MainDocumentPart.GetContents(source.Start, source.Count);
                         try
                         {

@@ -40,9 +40,9 @@ namespace OxPt
 
             List<WmlSource> sources = new List<WmlSource>
             {
-                sourceBuilder.FileName(@"C:\git\AmsDocs\.common\style-template.docx").KeepSections(false).KeepHeadersAndFooters(false).Build(),
+                sourceBuilder.FileName(@"C:\git\AmsDocs\.common\style-template.docx").KeepSections(false).KeepHeadersAndFooters(true).Build(),
                 sourceBuilder.FileName(@"C:\git\AmsDocs\.common\title-template.docx").KeepSections(true).KeepHeadersAndFooters(true).Build(),
-                sourceBuilder.FileName(@"C:\git\AmsDocs\STD\MRHFPM\SB151217-09F_STD_FPM.docx").ContentOnly(true).Build(),
+                sourceBuilder.FileName(@"C:\git\AmsDocs\STD\MRHFPM\SB151217-09F_STD_FPM.docx").KeepSections(false).KeepHeadersAndFooters(false).Build(),
             };
 
             if (File.Exists(outputPath)) File.Delete(outputPath);

@@ -8,8 +8,6 @@ namespace OpenXmlPowerTools.Commons
         int Start { get; set; }
         int Count { get; set; }
         string InsertId { get; set; }
-        bool ContentOnly { get; set; }
-        bool InheritLayout { get; set; }
         bool KeepHeadersAndFooters { get; set; }
         bool KeepSections { get; set; }
     }
