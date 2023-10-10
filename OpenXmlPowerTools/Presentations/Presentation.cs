@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using OpenXmlPowerTools.Commons;
-using OpenXmlPowerTools.Spreadsheets;
 using System.Text.RegularExpressions;
 using System.Text;
 
@@ -46,6 +45,120 @@ namespace OpenXmlPowerTools.Presentations
                 return new OpenXmlMemoryStreamDocument(stream);
             }
         }
+
+        #region Other
+        public static void CopyRelatedImage(this OpenXmlPart oldPart, OpenXmlPart newPart, XElement imageReference, XName attributeName, IList<ImageData> images)
+        {
+            if (!oldPart.GetValidReferenceId(imageReference, attributeName, out string refId)) return;
+
+            var part = oldPart.Parts.FirstOrDefault(ipp => ipp.RelationshipId == refId);
+            if (part?.OpenXmlPart is ImagePart oldImagePart == true)
+            {
+                ImageData imageData = oldImagePart.ManageImageCopy(newPart, images);
+                if (imageData.ImagePart == null) CopyImageData(imageData, newPart);
+                else
+                {
+                    var refRel = newPart.Parts.FirstOrDefault(pip =>
+                    {
+                        var rel = imageData.ContentPartRelTypeIdList.FirstOrDefault(cpr =>
+                        {
+                            var found = cpr.ContentPart == newPart;
+                            return found;
+                        });
+                        return rel != null;
+                    });
+                    if (refRel != null)
+                    {
+                        imageReference.Attribute(attributeName).Value = imageData.ContentPartRelTypeIdList.First(cpr =>
+                        {
+                            var found = cpr.ContentPart == newPart;
+                            return found;
+                        }).RelationshipId;
+                        return;
+                    }
+                    var g = new Guid();
+                    var newId = $"R{g:N}".Substring(0, 16);
+                    newPart.CreateRelationshipToPart(imageData.ImagePart, newId);
+                    imageReference.Attribute(R.id).Value = newId;
+
+                }
+                //var refRel = newPart.DataPartReferenceRelationships.FirstOrDefault(rr =>
+                //{
+                //    var rel = temp.ContentPartRelTypeIdList.FirstOrDefault(cpr =>
+                //    {
+                //        var found = cpr.ContentPart == newPart && cpr.RelationshipId == rr.Id;
+                //        return found;
+                //    });
+                //    if (rel != null)
+                //        return true;
+                //    return false;
+                //});
+                //if (refRel != null)
+                //{
+                //    imageReference.Attribute(attributeName).Value = temp.ContentPartRelTypeIdList.First((Func<ContentPartRelTypeIdTuple, bool>)(cpr =>
+                //    {
+                //        var found = cpr.ContentPart == newPart && cpr.RelationshipId == refRel.Id;
+                //        return found;
+                //    })).RelationshipId;
+                //    return;
+                //}
+
+                //var cpr2 = temp.ContentPartRelTypeIdList.FirstOrDefault(c => c.ContentPart == newPart);
+                //if (cpr2 != null)
+                //{
+                //    imageReference.Attribute(attributeName).Value = cpr2.RelationshipId;
+                //}
+                //else
+                //{
+                //    ImagePart imagePart = (ImagePart)temp.ImagePart;
+                //    var existingImagePart = newPart.AddPart<ImagePart>(imagePart);
+                //    var newId = newPart.GetIdOfPart(existingImagePart);
+                //    temp.AddContentPartRelTypeResourceIdTupple(newPart, imagePart.RelationshipType, newId);
+                //    imageReference.Attribute(attributeName).Value = newId;
+                //}
+            }
+            else oldPart.SetExternalReferenceId(newPart, imageReference, refId);
+
+            void CopyImageData(ImageData target, OpenXmlPart source)
+            {
+                ImagePart newImagePart = CastAndAddImagePart(source);
+                target.ImagePart = newPart;
+                var partId = newPart.GetIdOfPart(newImagePart);
+                target.AddContentPartRelTypeResourceIdTupple(newImagePart, newPart.RelationshipType, partId);
+                imageReference.Attribute(attributeName).Value = partId;
+                target.WriteImage(newImagePart);
+            }
+            ImagePart CastAndAddImagePart(OpenXmlPart source)
+            {
+                ImagePart imagePart = null;
+                if (source is MainDocumentPart)
+                    imagePart = ((MainDocumentPart)source).AddImagePart(oldPart.ContentType);
+                if (source is HeaderPart)
+                    imagePart = ((HeaderPart)source).AddImagePart(oldPart.ContentType);
+                if (source is FooterPart)
+                    imagePart = ((FooterPart)source).AddImagePart(oldPart.ContentType);
+                if (source is EndnotesPart)
+                    imagePart = ((EndnotesPart)source).AddImagePart(oldPart.ContentType);
+                if (source is FootnotesPart)
+                    imagePart = ((FootnotesPart)source).AddImagePart(oldPart.ContentType);
+                if (source is ThemePart)
+                    imagePart = ((ThemePart)source).AddImagePart(oldPart.ContentType);
+                if (source is WordprocessingCommentsPart)
+                    imagePart = ((WordprocessingCommentsPart)source).AddImagePart(oldPart.ContentType);
+                if (source is DocumentSettingsPart)
+                    imagePart = ((DocumentSettingsPart)source).AddImagePart(oldPart.ContentType);
+                if (source is ChartPart)
+                    imagePart = ((ChartPart)source).AddImagePart(oldPart.ContentType);
+                if (source is NumberingDefinitionsPart)
+                    imagePart = ((NumberingDefinitionsPart)source).AddImagePart(oldPart.ContentType);
+                if (source is DiagramDataPart)
+                    imagePart = ((DiagramDataPart)source).AddImagePart(oldPart.ContentType);
+                if (source is ChartDrawingPart)
+                    imagePart = ((ChartDrawingPart)source).AddImagePart(oldPart.ContentType);
+                return imagePart;
+            }
+        }
+        #endregion
 
         #region PresentationDocument
         // Copy handout master, notes master, presentation properties and view properties, if they exist

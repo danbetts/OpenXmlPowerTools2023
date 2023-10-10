@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
-using OpenXmlPowerTools.Spreadsheets;
 
 namespace OpenXmlPowerTools.Presentations
 {

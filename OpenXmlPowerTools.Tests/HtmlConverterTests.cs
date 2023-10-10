@@ -17,6 +17,8 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
 using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Converters;
+using OpenXmlPowerTools.Documents;
 using Xunit;
 
 #if DO_CONVERSION_VIA_WORD

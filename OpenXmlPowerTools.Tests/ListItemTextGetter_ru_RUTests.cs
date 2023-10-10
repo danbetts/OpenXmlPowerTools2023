@@ -3,6 +3,7 @@
 
 using Xunit;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Converters;
 
 #if !ELIDE_XUNIT_TESTS
 

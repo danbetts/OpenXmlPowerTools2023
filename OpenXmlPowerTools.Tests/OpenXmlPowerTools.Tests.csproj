@@ -8,34 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ChartUpdaterTests.cs" />
-    <Compile Remove="DocumentAssemblerTests.cs" />
-    <Compile Remove="FormattingAssemblerTests.cs" />
-    <Compile Remove="HtmlConverterTests.cs" />
-    <Compile Remove="HtmlToWmlConverterTests.cs" />
-    <Compile Remove="HtmlToWmlReadAsXElement.cs" />
-    <Compile Remove="ListItemTextGetter_ru_RUTests.cs" />
-    <Compile Remove="MarkupSimplifierTests.cs" />
-    <Compile Remove="MetricsGetterTests.cs" />
-    <Compile Remove="OpenXmlRegexTests.cs" />
-    <Compile Remove="PowerToolsBlockExtensionsTests.cs" />
-    <Compile Remove="PowerToolsBlockTests.cs" />
-    <Compile Remove="PresentationBuilderTests.cs" />
-    <Compile Remove="PtUtilTests.cs" />
-    <Compile Remove="RevisionAccepterTests.cs" />
-    <Compile Remove="RevisionProcessorTests.cs" />
-    <Compile Remove="SmlCellFormatterTests.cs" />
-    <Compile Remove="SmlToHtmlConverterTests.cs" />
-    <Compile Remove="SpreadsheetWriterTests.cs" />
-    <Compile Remove="StronglyTypedBlockTests.cs" />
-    <Compile Remove="TestsBase.cs" />
-    <Compile Remove="UnicodeMapperTests.cs" />
-    <Compile Remove="WmlComparerTests.cs" />
-    <Compile Remove="WmlComparerTests2.cs" />
-    <Compile Remove="WmlContentAtomListTests.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="xunit" Version="2.5.1" />

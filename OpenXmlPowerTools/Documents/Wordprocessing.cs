@@ -530,20 +530,22 @@ namespace OpenXmlPowerTools.Documents
 
         public static object OrderElementsPerStandard(XNode node)
         {
-            if (node == null) return node;
             var element = node as XElement;
-
-            if (element.Name == W.p) return ProcessRoot(W.pPr);
-            else if (element.Name == W.r) return ProcessRoot(W.rPr);
-            else if (element.Name == W.pPr) return ProcessBranch(ParagraphPropertiesOrder);
-            else if (element.Name == W.rPr) return ProcessBranch(RunPropertiesOrder);
-            else if (element.Name == W.tblPr) return ProcessBranch(TablePropertiesOrder);
-            else if (element.Name == W.tcPr) return ProcessBranch(TableCellPropertiesOrder);
-            else if (element.Name == W.tcBorders) return ProcessBranch(TableCellBordersOrder);
-            else if (element.Name == W.tblBorders) return ProcessBranch(TableBordersOrder);
-            else if (element.Name == W.pBdr) return ProcessBranch(ParagraphBordersOrder);
-            else if (element.Name == W.settings) return ProcessBranch(SettingsOrder);
-            else return new XElement(element.Name, element.Attributes(), element.Nodes().Select(n => OrderElementsPerStandard(n)));
+            if (element != null)
+            {
+                if (element.Name == W.pPr) return ProcessBranch(ParagraphPropertiesOrder);
+                else if (element.Name == W.rPr) return ProcessBranch(RunPropertiesOrder);
+                else if (element.Name == W.tblPr) return ProcessBranch(TablePropertiesOrder);
+                else if (element.Name == W.tcPr) return ProcessBranch(TableCellPropertiesOrder);
+                else if (element.Name == W.tcBorders) return ProcessBranch(TableCellBordersOrder);
+                else if (element.Name == W.tblBorders) return ProcessBranch(TableBordersOrder);
+                else if (element.Name == W.pBdr) return ProcessBranch(ParagraphBordersOrder);
+                else if (element.Name == W.p) return ProcessRoot(W.pPr);
+                else if (element.Name == W.r) return ProcessRoot(W.rPr);
+                else if (element.Name == W.settings) return ProcessBranch(SettingsOrder);
+                else return new XElement(element.Name, element.Attributes(), element.Nodes().Select(n => OrderElementsPerStandard(n)));
+            }
+            return node;
 
             object ProcessRoot(XName xName)
             {

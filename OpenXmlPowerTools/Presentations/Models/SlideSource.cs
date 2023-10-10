@@ -1,7 +1,6 @@
 ﻿using System;
-using OpenXmlPowerTools.Presentations;
 
-namespace OpenXmlPowerTools.Spreadsheets
+namespace OpenXmlPowerTools.Presentations
 {
     public class SlideSource
     {

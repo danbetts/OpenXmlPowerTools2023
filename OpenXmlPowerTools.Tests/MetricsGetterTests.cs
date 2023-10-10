@@ -4,6 +4,7 @@
 using System.IO;
 using System.Xml.Linq;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
 using OpenXmlPowerTools.Documents;
 using OpenXmlPowerTools.Presentations;
 using OpenXmlPowerTools.Spreadsheets;

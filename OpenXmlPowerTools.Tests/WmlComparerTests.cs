@@ -16,6 +16,7 @@ using OpenXmlPowerTools;
 using Xunit;
 using System.Diagnostics;
 using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Converters;
 
 /****************************************************************************************************************/
 // Large tests have been commented out below.  If and when there is an effort to improve performance for WmlComparer,

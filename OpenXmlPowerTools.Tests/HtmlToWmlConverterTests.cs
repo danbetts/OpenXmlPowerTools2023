@@ -18,6 +18,7 @@ using Xunit;
 using System.Text.RegularExpressions;
 using OpenXmlPowerTools.Documents;
 using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Converters;
 
 /*******************************************************************************************
  * HtmlToWmlConverter expects the HTML to be passed as an XElement, i.e. as XML.  While the HTML test files that
