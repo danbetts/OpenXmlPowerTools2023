@@ -101,7 +101,7 @@ namespace OpenXmlPowerTools.Documents
             Save();
         }
 
-        public WmlDocument Modify()
+        public WmlDocument ToWmlDocument()
         {
             using (OpenXmlMemoryStreamDocument streamDoc = Wordprocessing.CreateWordprocessingDocument())
             {

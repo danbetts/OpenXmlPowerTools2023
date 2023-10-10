@@ -692,7 +692,7 @@ namespace OpenXmlPowerTools.Documents
 
             if (!allGlossaryDocuments.Any()) return null;
 
-            WmlDocument coalescedRaw = new DocumentBuilder().SetSources(allGlossaryDocuments).Modify();
+            WmlDocument coalescedRaw = new DocumentBuilder().SetSources(allGlossaryDocuments).ToWmlDocument();
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -1216,7 +1216,7 @@ namespace OpenXmlPowerTools.Documents
                     foreach (var ts in tempSourceList)
                     {
                         var sources = new List<WmlSource>() { new WmlSource(doc, ts.Start, ts.Count) };
-                        WmlDocument newDoc = new DocumentBuilder().SetSources(sources).Modify();
+                        WmlDocument newDoc = new DocumentBuilder().SetSources(sources).ToWmlDocument();
                         newDoc = AdjustSectionBreak(newDoc);
                         yield return newDoc;
                     }

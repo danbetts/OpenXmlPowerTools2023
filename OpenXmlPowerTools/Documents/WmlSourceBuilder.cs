@@ -88,6 +88,34 @@ namespace OpenXmlPowerTools.Documents
             return this;
         }
 
+        public WmlSourceBuilder Defaults()
+        {
+            _start = 0;
+            _count = int.MaxValue;
+            _keepSections = true;
+            _keepHeadersAndFooters = true;
+            _insertId = null;
+            return this;
+        }
+
+        /// <summary>
+        /// Build given file path
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public WmlSource Build(string filePath) => Build(new WmlDocument(filePath));
+
+        /// <summary>
+        /// Build given wml document
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
+        public WmlSource Build(WmlDocument document)
+        {
+            _document = document;
+            return Build();
+        }
+
         /// <summary>
         /// Processes and saves document
         /// </summary>
