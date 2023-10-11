@@ -77,8 +77,10 @@ With .NET CLI toolchain:
 
 Change Log
 ==========
+Future branches will not be very compatiable with the previous code base. 
 
-Version 6.0 : October 2, 2023
+
+Final : October 2, 2023
 - Brought in outstanding valid PRs that introduce many fixes and features. See the initial commit for details.
 - Migrated to Net 6.0
 
