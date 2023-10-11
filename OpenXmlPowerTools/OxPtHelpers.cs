@@ -11,10 +11,14 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Validation;
-using OpenXmlPowerTools;
 using System.Text;
 using DocumentFormat.OpenXml;
 using System.Drawing.Imaging;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Spreadsheets;
+using OpenXmlPowerTools.Presentations;
+using OpenXmlPowerTools.Converters;
 
 namespace OpenXmlPowerTools
 {
@@ -414,7 +418,7 @@ AAsACwDBAgAAbCwAAAAA";
                             {
                                 return null;
                             }
-                            XElement img = new XElement(Xhtml.img,
+                            XElement img = new XElement(XHtml.img,
                                 new XAttribute(NoNamespace.src, imageFileName),
                                 imageInfo.ImgStyleAttribute,
                                 imageInfo.AltText != null ?
@@ -425,7 +429,7 @@ AAsACwDBAgAAbCwAAAAA";
                     XElement html = WmlToHtmlConverter.ConvertToHtml(wDoc, settings);
 
                     // Note: the xhtml returned by ConvertToHtmlTransform contains objects of type
-                    // XEntity.  PtOpenXmlUtil.cs define the XEntity class.  See
+                    // XEntity.  PtOpenXmlCommon.cs define the XEntity class.  See
                     // http://blogs.msdn.com/ericwhite/archive/2010/01/21/writing-entity-references-using-linq-to-xml.aspx
                     // for detailed explanation.
                     //
@@ -462,7 +466,7 @@ AAsACwDBAgAAbCwAAAAA";
             }
 
             FileInfo fi = new FileInfo(fileName);
-            if (Util.IsWordprocessingML(fi.Extension))
+            if (Wordprocessing.IsWordprocessing(fi.Extension))
             {
                 using (WordprocessingDocument wDoc = WordprocessingDocument.Open(fileName, false))
                 {
@@ -472,7 +476,7 @@ AAsACwDBAgAAbCwAAAAA";
                     return valid;
                 }
             }
-            else if (Util.IsSpreadsheetML(fi.Extension))
+            else if (Spreadsheet.IsSpreadsheet(fi.Extension))
             {
                 using (SpreadsheetDocument sDoc = SpreadsheetDocument.Open(fileName, false))
                 {
@@ -482,7 +486,7 @@ AAsACwDBAgAAbCwAAAAA";
                     return valid;
                 }
             }
-            else if (Util.IsPresentationML(fi.Extension))
+            else if (Presentation.IsPresentation(fi.Extension))
             {
                 using (PresentationDocument pDoc = PresentationDocument.Open(fileName, false))
                 {
@@ -517,7 +521,7 @@ AAsACwDBAgAAbCwAAAAA";
             }
 
             FileInfo fi = new FileInfo(fileName);
-            if (Util.IsWordprocessingML(fi.Extension))
+            if (Wordprocessing.IsWordprocessing(fi.Extension))
             {
                 WmlDocument wml = new WmlDocument(fileName);
                 using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(wml))
@@ -528,7 +532,7 @@ AAsACwDBAgAAbCwAAAAA";
                     return errors.ToList();
                 }
             }
-            else if (Util.IsSpreadsheetML(fi.Extension))
+            else if (Spreadsheet.IsSpreadsheet(fi.Extension))
             {
                 SmlDocument Sml = new SmlDocument(fileName);
                 using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(Sml))
@@ -539,7 +543,7 @@ AAsACwDBAgAAbCwAAAAA";
                     return errors.ToList();
                 }
             }
-            else if (Util.IsPresentationML(fi.Extension))
+            else if (Presentation.IsPresentation(fi.Extension))
             {
                 PmlDocument Pml = new PmlDocument(fileName);
                 using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(Pml))

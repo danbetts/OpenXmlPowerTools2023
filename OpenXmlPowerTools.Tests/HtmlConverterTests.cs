@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Converters;
+using OpenXmlPowerTools.Documents;
 using Xunit;
 
 #if DO_CONVERSION_VIA_WORD
@@ -245,7 +248,7 @@ namespace OxPt
                             {
                                 return null;
                             }
-                            XElement img = new XElement(Xhtml.img,
+                            XElement img = new XElement(XHtml.img,
                                 new XAttribute(NoNamespace.src, imageFileName),
                                 imageInfo.ImgStyleAttribute,
                                 imageInfo.AltText != null ?
@@ -256,7 +259,7 @@ namespace OxPt
                     XElement html = WmlToHtmlConverter.ConvertToHtml(wDoc, settings);
 
                     // Note: the xhtml returned by ConvertToHtmlTransform contains objects of type
-                    // XEntity.  PtOpenXmlUtil.cs define the XEntity class.  See
+                    // XEntity.  PtOpenXmlCommon.cs define the XEntity class.  See
                     // http://blogs.msdn.com/ericwhite/archive/2010/01/21/writing-entity-references-using-linq-to-xml.aspx
                     // for detailed explanation.
                     //
@@ -338,7 +341,7 @@ namespace OxPt
                             {
                                 return null;
                             }
-                            XElement img = new XElement(Xhtml.img,
+                            XElement img = new XElement(XHtml.img,
                                 new XAttribute(NoNamespace.src, imageFileName),
                                 imageInfo.ImgStyleAttribute,
                                 imageInfo.AltText != null ?
@@ -349,7 +352,7 @@ namespace OxPt
                     XElement html = WmlToHtmlConverter.ConvertToHtml(wDoc, settings);
 
                     // Note: the xhtml returned by ConvertToHtmlTransform contains objects of type
-                    // XEntity.  PtOpenXmlUtil.cs define the XEntity class.  See
+                    // XEntity.  PtOpenXmlCommon.cs define the XEntity class.  See
                     // http://blogs.msdn.com/ericwhite/archive/2010/01/21/writing-entity-references-using-linq-to-xml.aspx
                     // for detailed explanation.
                     //

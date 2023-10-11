@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools.Commons;
 using Xunit;
 
 #if !ELIDE_XUNIT_TESTS

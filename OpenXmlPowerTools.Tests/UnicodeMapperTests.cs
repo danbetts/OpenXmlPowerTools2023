@@ -14,6 +14,7 @@ Email: thomas@barnekow.info
 
 ***************************************************************************/
 
+using OpenXmlPowerTools.Commons;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;

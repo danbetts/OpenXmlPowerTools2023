@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using OpenXmlPowerTools;
+using OpenXmlPowerTools.Commons;
+using OpenXmlPowerTools.Documents;
+using OpenXmlPowerTools.Presentations;
+using OpenXmlPowerTools.Spreadsheets;
 using Xunit;
 
 #if !ELIDE_XUNIT_TESTS
@@ -41,17 +40,17 @@ namespace OxPt
 
             var extension = fi.Extension.ToLower();
             XElement metrics = null;
-            if (Util.IsWordprocessingML(extension))
+            if (Wordprocessing.IsWordprocessing(extension))
             {
                 WmlDocument wmlDocument = new WmlDocument(fi.FullName);
                 metrics = MetricsGetter.GetDocxMetrics(wmlDocument, settings);
             }
-            else if (Util.IsSpreadsheetML(extension))
+            else if (Spreadsheet.IsSpreadsheet(extension))
             {
                 SmlDocument smlDocument = new SmlDocument(fi.FullName);
                 metrics = MetricsGetter.GetXlsxMetrics(smlDocument, settings);
             }
-            else if (Util.IsPresentationML(extension))
+            else if (Presentation.IsPresentation(extension))
             {
                 PmlDocument pmlDocument = new PmlDocument(fi.FullName);
                 metrics = MetricsGetter.GetPptxMetrics(pmlDocument, settings);

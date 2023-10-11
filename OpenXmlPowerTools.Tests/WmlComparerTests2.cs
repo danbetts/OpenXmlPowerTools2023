@@ -15,6 +15,7 @@ using DocumentFormat.OpenXml.Validation;
 using OpenXmlPowerTools;
 using Xunit;
 using System.Diagnostics;
+using OpenXmlPowerTools.Documents;
 
 #if !ELIDE_XUNIT_TESTS
 
