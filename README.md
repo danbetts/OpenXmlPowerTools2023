@@ -11,7 +11,8 @@ Moving forward:
 1. Break classes out into separate files that are clean and closed to change
 2. Refactor reusuable code into public or extension methods (this should reduce the code base a lot)
 3. Implement local methods rather than countless private methods and arrow methods of doom that make  overaching local of a method indeterminable.
-4. Start adding xmldoc
+4. Switch from XUnit to MSTests. XUnit has fallen behind in features and a challenge to keep working. NUnit is arguably better, but MSTest is Microsoft, and this is a Microsoft extension framework.
+5. Start adding xmldoc and other incode documentation.
 
 Open-XML-PowerTools
 ===================
