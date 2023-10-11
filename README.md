@@ -7,8 +7,8 @@ This repository was forked from Erik White's as of 01/10/2023. There were over f
 This branch has been detached from the original fork, as the intention is to go in a bit of a different direction, which will result in significant changes to the code base, making cross-pull requests difficult.
 
 Moving forward:
-1. Remove Stylecop, which isn't being used anyway, and instead gravitate towards best practices SOLID/DRY principles, using latest C# syntax sugar
-1. Break classes out into separate files that are clean and closed to change
+1. Remove Stylecop, which isn't being used anyway, and instead gravitate towards best practices SOLID/DRY principles, standard design patterns (see GoF) and using latest C# syntax sugar.
+1. Break classes out into separate files that are clean and closed to change.
 2. Refactor reusuable code into public or extension methods (this should reduce the code base a lot)
 3. Implement local methods rather than countless private methods and arrow methods of doom that make  overaching local of a method indeterminable.
 4. Switch from XUnit to MSTests. XUnit has fallen behind in features and a challenge to keep working. NUnit is arguably better, but MSTest is Microsoft, and this is a Microsoft extension framework.
