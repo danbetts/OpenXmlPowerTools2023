@@ -2,7 +2,7 @@ NuGet Feed for CI build: https://ci.appveyor.com/nuget/open-xml-powertools
 
 News
 ====
-This repository was forked from Erik White's as of 01/10/2023. There were over four years of pull requests pending that have been incorporated. There will be a 'pure' release for Net6.0 with all packages and references updated.
+This repository was forked from Erik White's as of 01 October 2023. There were over four years of pull requests pending that have been incorporated. There will be a 'pure' release for Net6.0 with all packages and references updated.
 
 This branch has been detached from the original fork, as the intention is to go in a bit of a different direction, which will result in significant changes to the code base, making cross-pull requests difficult.
 
