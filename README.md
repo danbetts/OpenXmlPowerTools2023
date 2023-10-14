@@ -1,10 +1,13 @@
-﻿News
+NuGet package: https://www.nuget.org/packages/OpenXmlPowerTools2023
+
+News
 ====
-This repository was forked from Erik White's as of 01/10/2023. There were over four years of pull requests pending that have been incorporated. There will be a 'pure' release for Net6.0 with all packages and references updated.
+This repository was forked from Erik White's as of 01 October 2023. There were over four years of pull requests pending that have been incorporated. There will be a 'pure' release for Net6.0 with all packages and references updated.
 
 This branch has been detached from the original fork, as the intention is to go in a bit of a different direction, which will result in significant changes to the code base, making cross-pull requests difficult.
 
-Moving forward:
+Moving forward
+==============
 1. Remove Stylecop, which isn't being used anyway, and instead gravitate towards best practices SOLID/DRY principles, standard design patterns (see GoF) and using latest C# syntax sugar.
 1. Break classes out into separate files that are clean and closed to change.
 2. Refactor reusuable code into public or extension methods (this should reduce the code base a lot)
@@ -77,6 +80,12 @@ With .NET CLI toolchain:
 
 Change Log
 ==========
+Future branches will not be very compatiable with the previous code base. 
+
+
+Final : October 2, 2023
+- Brought in outstanding valid PRs that introduce many fixes and features. See the initial commit for details.
+- Migrated to Net 6.0
 
 
 Version 1.0 : October 14, 2023
