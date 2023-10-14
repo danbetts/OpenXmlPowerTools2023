@@ -1,6 +1,4 @@
-﻿NuGet Feed for CI build: https://ci.appveyor.com/nuget/open-xml-powertools
-
-News
+﻿News
 ====
 This repository was forked from Erik White's as of 01/10/2023. There were over four years of pull requests pending that have been incorporated. There will be a 'pure' release for Net6.0 with all packages and references updated.
 
@@ -75,7 +73,7 @@ Build Instructions
 
 With .NET CLI toolchain:
 
-- Run `dotnet build OpenXmlPowerTools.sln`
+- Run `dotnet build OpenXmlPowerTools2023.sln`
 
 Change Log
 ==========
