@@ -80,14 +80,6 @@ With .NET CLI toolchain:
 
 Change Log
 ==========
-Future branches will not be very compatiable with the previous code base. 
-
-
-Final : October 2, 2023
-- Brought in outstanding valid PRs that introduce many fixes and features. See the initial commit for details.
-- Migrated to Net 6.0
-
-
 Version 1.0 : October 14, 2023
 - Brought in outstanding valid PRs that introduce many fixes and features. See the initial commit for details.
 - Migrated to Net 6.0 and Framework 4.8.
