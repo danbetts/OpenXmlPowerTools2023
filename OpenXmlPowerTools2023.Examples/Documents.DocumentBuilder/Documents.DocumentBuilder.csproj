@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFrameworks>net48;netstandard2.0;net6.0</TargetFrameworks>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
+	<ItemGroup>
+<<<<<<<< HEAD:OpenXmlPowerTools2023.Examples/Documents.DocumentBuilder/Documents.DocumentBuilder.csproj
+		<ProjectReference Include="..\..\OpenXmlPowerTools2023\OpenXmlPowerTools2023.csproj" />
+========
+		<ProjectReference Include="..\..\OpenXmlPowerTools-v2\OpenXmlPowerTools-v2.csproj" />
+>>>>>>>> refs/remotes/origin/net6fixes:OpenXmlPowerTools-v2.Examples/Documents.DocumentBuilder/Documents.DocumentBuilder.csproj
+		<PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
+	</ItemGroup>
+</Project>

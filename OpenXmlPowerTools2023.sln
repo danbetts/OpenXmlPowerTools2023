@@ -1,0 +1,227 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+<<<<<<<< HEAD:OpenXmlPowerTools2023.sln
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenXmlPowerTools2023", "OpenXmlPowerTools2023\OpenXmlPowerTools2023.csproj", "{6F957FF3-AFCC-4D69-8FBC-71AE21BC45C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.ChartUpdater", "OpenXmlPowerTools2023.Examples\Spreadsheets.ChartUpdater\Spreadsheets.ChartUpdater.csproj", "{1B03D24F-FB08-42E1-BB25-2D1BB907991B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.DocumentBuilder", "OpenXmlPowerTools2023.Examples\Documents.DocumentBuilder\Documents.DocumentBuilder.csproj", "{A8A6FCF0-CA4F-4637-8E66-D86603B92204}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.FieldRetriever", "OpenXmlPowerTools2023.Examples\Converters.FieldRetriever\Converters.FieldRetriever.csproj", "{E1FD7B15-FA09-4F7F-A30E-9FBD9F765D02}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.FormattingAssembler", "OpenXmlPowerTools2023.Examples\Converters.FormattingAssembler\Converters.FormattingAssembler.csproj", "{6EAF15B6-98BE-428B-A018-A5266521551E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.Formulas", "OpenXmlPowerTools2023.Examples\Spreadsheets.Formulas\Spreadsheets.Formulas.csproj", "{618B95DB-3A70-4DC8-BD87-00F636F72453}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.ListItemRetriever", "OpenXmlPowerTools2023.Examples\Converters.ListItemRetriever\Converters.ListItemRetriever.csproj", "{04935FA6-E48B-496F-8D6A-41A59232303D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkupSimplifierApp", "OpenXmlPowerTools2023.Examples\MarkupSimplifierApp\MarkupSimplifierApp.csproj", "{0CCE83BA-8B8B-4B98-8846-B62A61FDF170}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commons.MetricsGetter", "OpenXmlPowerTools2023.Examples\Commons.MetricsGetter\Commons.MetricsGetter.csproj", "{ED37372C-DFBF-4720-BD4B-CE1415961038}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commons.OpenXmlRegex", "OpenXmlPowerTools2023.Examples\Commons.OpenXmlRegex\Commons.OpenXmlRegex.csproj", "{4330D46F-6703-4BA2-844D-177F722C0820}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.PivotTables", "OpenXmlPowerTools2023.Examples\Spreadsheets.PivotTables\Spreadsheets.PivotTables.csproj", "{6785A554-BBBB-480C-8E4D-9FE90DD91A46}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentations.PresentationBuilder", "OpenXmlPowerTools2023.Examples\Presentations.PresentationBuilder\Presentations.PresentationBuilder.csproj", "{A4128935-B707-4D56-B924-27910EC92664}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.ReferenceAdder", "OpenXmlPowerTools2023.Examples\Documents.ReferenceAdder\Documents.ReferenceAdder.csproj", "{211F05D3-F8EE-497F-9DE9-AFFA0A72140D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.RevisionAccepter", "OpenXmlPowerTools2023.Examples\Documents.RevisionAccepter\Documents.RevisionAccepter.csproj", "{84823BA5-B860-4CAF-885E-981D7F121830}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commons.TextReplacer", "OpenXmlPowerTools2023.Examples\Commons.TextReplacer\Commons.TextReplacer.csproj", "{5CA29B44-C4A5-4310-9429-553F0BC9FC1D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.DocumentAssembler", "OpenXmlPowerTools2023.Examples\Documents.DocumentAssembler\Documents.DocumentAssembler.csproj", "{2D081A36-48F9-4A09-8247-420682545492}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.SpreadsheetWriter", "OpenXmlPowerTools2023.Examples\Spreadsheets.SpreadsheetWriter\Spreadsheets.SpreadsheetWriter.csproj", "{0911F996-DF86-4FB1-A1CE-0539599EC0E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenXmlPowerTools2023.Tests", "OpenXmlPowerTools2023.Tests\OpenXmlPowerTools2023.Tests.csproj", "{B1328B70-33B8-40E0-A729-38C34D659B5C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.HtmlToWmlConverter", "OpenXmlPowerTools2023.Examples\Converters.HtmlToWmlConverter\Converters.HtmlToWmlConverter.csproj", "{9E194D13-F5A0-4430-8F87-D74326457385}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.WmlToHtmlConverter", "OpenXmlPowerTools2023.Examples\Converters.WmlToHtmlConverter\Converters.WmlToHtmlConverter.csproj", "{396D9209-0D9A-4E61-9471-04C71F6CA6B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.SmlDataRetriever", "OpenXmlPowerTools2023.Examples\Spreadsheets.SmlDataRetriever\Spreadsheets.SmlDataRetriever.csproj", "{DCE8EC51-1E58-49A0-82CF-5BE269FA0A9D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.WmlComparer", "OpenXmlPowerTools2023.Examples\Documents.WmlComparer\Documents.WmlComparer.csproj", "{C9CAA69C-575A-442E-9D8A-69C53B39D72C}"
+========
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenXmlPowerTools-v2", "OpenXmlPowerTools-v2\OpenXmlPowerTools-v2.csproj", "{6F957FF3-AFCC-4D69-8FBC-71AE21BC45C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.ChartUpdater", "OpenXmlPowerTools-v2.Examples\Spreadsheets.ChartUpdater\Spreadsheets.ChartUpdater.csproj", "{1B03D24F-FB08-42E1-BB25-2D1BB907991B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.DocumentBuilder", "OpenXmlPowerTools-v2.Examples\Documents.DocumentBuilder\Documents.DocumentBuilder.csproj", "{A8A6FCF0-CA4F-4637-8E66-D86603B92204}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.FieldRetriever", "OpenXmlPowerTools-v2.Examples\Converters.FieldRetriever\Converters.FieldRetriever.csproj", "{E1FD7B15-FA09-4F7F-A30E-9FBD9F765D02}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.FormattingAssembler", "OpenXmlPowerTools-v2.Examples\Converters.FormattingAssembler\Converters.FormattingAssembler.csproj", "{6EAF15B6-98BE-428B-A018-A5266521551E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.Formulas", "OpenXmlPowerTools-v2.Examples\Spreadsheets.Formulas\Spreadsheets.Formulas.csproj", "{618B95DB-3A70-4DC8-BD87-00F636F72453}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.ListItemRetriever", "OpenXmlPowerTools-v2.Examples\Converters.ListItemRetriever\Converters.ListItemRetriever.csproj", "{04935FA6-E48B-496F-8D6A-41A59232303D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkupSimplifierApp", "OpenXmlPowerTools-v2.Examples\MarkupSimplifierApp\MarkupSimplifierApp.csproj", "{0CCE83BA-8B8B-4B98-8846-B62A61FDF170}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commons.MetricsGetter", "OpenXmlPowerTools-v2.Examples\Commons.MetricsGetter\Commons.MetricsGetter.csproj", "{ED37372C-DFBF-4720-BD4B-CE1415961038}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commons.OpenXmlRegex", "OpenXmlPowerTools-v2.Examples\Commons.OpenXmlRegex\Commons.OpenXmlRegex.csproj", "{4330D46F-6703-4BA2-844D-177F722C0820}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.PivotTables", "OpenXmlPowerTools-v2.Examples\Spreadsheets.PivotTables\Spreadsheets.PivotTables.csproj", "{6785A554-BBBB-480C-8E4D-9FE90DD91A46}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentations.PresentationBuilder", "OpenXmlPowerTools-v2.Examples\Presentations.PresentationBuilder\Presentations.PresentationBuilder.csproj", "{A4128935-B707-4D56-B924-27910EC92664}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.ReferenceAdder", "OpenXmlPowerTools-v2.Examples\Documents.ReferenceAdder\Documents.ReferenceAdder.csproj", "{211F05D3-F8EE-497F-9DE9-AFFA0A72140D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.RevisionAccepter", "OpenXmlPowerTools-v2.Examples\Documents.RevisionAccepter\Documents.RevisionAccepter.csproj", "{84823BA5-B860-4CAF-885E-981D7F121830}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commons.TextReplacer", "OpenXmlPowerTools-v2.Examples\Commons.TextReplacer\Commons.TextReplacer.csproj", "{5CA29B44-C4A5-4310-9429-553F0BC9FC1D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.DocumentAssembler", "OpenXmlPowerTools-v2.Examples\Documents.DocumentAssembler\Documents.DocumentAssembler.csproj", "{2D081A36-48F9-4A09-8247-420682545492}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.SpreadsheetWriter", "OpenXmlPowerTools-v2.Examples\Spreadsheets.SpreadsheetWriter\Spreadsheets.SpreadsheetWriter.csproj", "{0911F996-DF86-4FB1-A1CE-0539599EC0E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenXmlPowerTools-v2.Tests", "OpenXmlPowerTools-v2.Tests\OpenXmlPowerTools-v2.Tests.csproj", "{B1328B70-33B8-40E0-A729-38C34D659B5C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.HtmlToWmlConverter", "OpenXmlPowerTools-v2.Examples\Converters.HtmlToWmlConverter\Converters.HtmlToWmlConverter.csproj", "{9E194D13-F5A0-4430-8F87-D74326457385}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Converters.WmlToHtmlConverter", "OpenXmlPowerTools-v2.Examples\Converters.WmlToHtmlConverter\Converters.WmlToHtmlConverter.csproj", "{396D9209-0D9A-4E61-9471-04C71F6CA6B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheets.SmlDataRetriever", "OpenXmlPowerTools-v2.Examples\Spreadsheets.SmlDataRetriever\Spreadsheets.SmlDataRetriever.csproj", "{DCE8EC51-1E58-49A0-82CF-5BE269FA0A9D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Documents.WmlComparer", "OpenXmlPowerTools-v2.Examples\Documents.WmlComparer\Documents.WmlComparer.csproj", "{C9CAA69C-575A-442E-9D8A-69C53B39D72C}"
+>>>>>>>> refs/remotes/origin/net6fixes:OpenXmlPowerTools-v2.sln
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{A83D6B58-6D38-46AF-8C20-5CFC170A1063}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9AFB8C96-1E6E-483E-9882-75D2483E7076}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F957FF3-AFCC-4D69-8FBC-71AE21BC45C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F957FF3-AFCC-4D69-8FBC-71AE21BC45C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F957FF3-AFCC-4D69-8FBC-71AE21BC45C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F957FF3-AFCC-4D69-8FBC-71AE21BC45C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B03D24F-FB08-42E1-BB25-2D1BB907991B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B03D24F-FB08-42E1-BB25-2D1BB907991B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B03D24F-FB08-42E1-BB25-2D1BB907991B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B03D24F-FB08-42E1-BB25-2D1BB907991B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8A6FCF0-CA4F-4637-8E66-D86603B92204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8A6FCF0-CA4F-4637-8E66-D86603B92204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8A6FCF0-CA4F-4637-8E66-D86603B92204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8A6FCF0-CA4F-4637-8E66-D86603B92204}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1FD7B15-FA09-4F7F-A30E-9FBD9F765D02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1FD7B15-FA09-4F7F-A30E-9FBD9F765D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1FD7B15-FA09-4F7F-A30E-9FBD9F765D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1FD7B15-FA09-4F7F-A30E-9FBD9F765D02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EAF15B6-98BE-428B-A018-A5266521551E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EAF15B6-98BE-428B-A018-A5266521551E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EAF15B6-98BE-428B-A018-A5266521551E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EAF15B6-98BE-428B-A018-A5266521551E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{618B95DB-3A70-4DC8-BD87-00F636F72453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{618B95DB-3A70-4DC8-BD87-00F636F72453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{618B95DB-3A70-4DC8-BD87-00F636F72453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{618B95DB-3A70-4DC8-BD87-00F636F72453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04935FA6-E48B-496F-8D6A-41A59232303D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04935FA6-E48B-496F-8D6A-41A59232303D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04935FA6-E48B-496F-8D6A-41A59232303D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04935FA6-E48B-496F-8D6A-41A59232303D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CCE83BA-8B8B-4B98-8846-B62A61FDF170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CCE83BA-8B8B-4B98-8846-B62A61FDF170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CCE83BA-8B8B-4B98-8846-B62A61FDF170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CCE83BA-8B8B-4B98-8846-B62A61FDF170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED37372C-DFBF-4720-BD4B-CE1415961038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED37372C-DFBF-4720-BD4B-CE1415961038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED37372C-DFBF-4720-BD4B-CE1415961038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED37372C-DFBF-4720-BD4B-CE1415961038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4330D46F-6703-4BA2-844D-177F722C0820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4330D46F-6703-4BA2-844D-177F722C0820}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4330D46F-6703-4BA2-844D-177F722C0820}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4330D46F-6703-4BA2-844D-177F722C0820}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6785A554-BBBB-480C-8E4D-9FE90DD91A46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6785A554-BBBB-480C-8E4D-9FE90DD91A46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6785A554-BBBB-480C-8E4D-9FE90DD91A46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6785A554-BBBB-480C-8E4D-9FE90DD91A46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4128935-B707-4D56-B924-27910EC92664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4128935-B707-4D56-B924-27910EC92664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4128935-B707-4D56-B924-27910EC92664}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4128935-B707-4D56-B924-27910EC92664}.Release|Any CPU.Build.0 = Release|Any CPU
+		{211F05D3-F8EE-497F-9DE9-AFFA0A72140D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{211F05D3-F8EE-497F-9DE9-AFFA0A72140D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{211F05D3-F8EE-497F-9DE9-AFFA0A72140D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{211F05D3-F8EE-497F-9DE9-AFFA0A72140D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84823BA5-B860-4CAF-885E-981D7F121830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84823BA5-B860-4CAF-885E-981D7F121830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84823BA5-B860-4CAF-885E-981D7F121830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84823BA5-B860-4CAF-885E-981D7F121830}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CA29B44-C4A5-4310-9429-553F0BC9FC1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CA29B44-C4A5-4310-9429-553F0BC9FC1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CA29B44-C4A5-4310-9429-553F0BC9FC1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CA29B44-C4A5-4310-9429-553F0BC9FC1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D081A36-48F9-4A09-8247-420682545492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D081A36-48F9-4A09-8247-420682545492}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D081A36-48F9-4A09-8247-420682545492}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D081A36-48F9-4A09-8247-420682545492}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0911F996-DF86-4FB1-A1CE-0539599EC0E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0911F996-DF86-4FB1-A1CE-0539599EC0E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0911F996-DF86-4FB1-A1CE-0539599EC0E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0911F996-DF86-4FB1-A1CE-0539599EC0E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1328B70-33B8-40E0-A729-38C34D659B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1328B70-33B8-40E0-A729-38C34D659B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1328B70-33B8-40E0-A729-38C34D659B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1328B70-33B8-40E0-A729-38C34D659B5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E194D13-F5A0-4430-8F87-D74326457385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E194D13-F5A0-4430-8F87-D74326457385}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E194D13-F5A0-4430-8F87-D74326457385}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E194D13-F5A0-4430-8F87-D74326457385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{396D9209-0D9A-4E61-9471-04C71F6CA6B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{396D9209-0D9A-4E61-9471-04C71F6CA6B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{396D9209-0D9A-4E61-9471-04C71F6CA6B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{396D9209-0D9A-4E61-9471-04C71F6CA6B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCE8EC51-1E58-49A0-82CF-5BE269FA0A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCE8EC51-1E58-49A0-82CF-5BE269FA0A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCE8EC51-1E58-49A0-82CF-5BE269FA0A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCE8EC51-1E58-49A0-82CF-5BE269FA0A9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9CAA69C-575A-442E-9D8A-69C53B39D72C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9CAA69C-575A-442E-9D8A-69C53B39D72C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9CAA69C-575A-442E-9D8A-69C53B39D72C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9CAA69C-575A-442E-9D8A-69C53B39D72C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1B03D24F-FB08-42E1-BB25-2D1BB907991B} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{A8A6FCF0-CA4F-4637-8E66-D86603B92204} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{E1FD7B15-FA09-4F7F-A30E-9FBD9F765D02} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{6EAF15B6-98BE-428B-A018-A5266521551E} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{618B95DB-3A70-4DC8-BD87-00F636F72453} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{04935FA6-E48B-496F-8D6A-41A59232303D} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{0CCE83BA-8B8B-4B98-8846-B62A61FDF170} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{ED37372C-DFBF-4720-BD4B-CE1415961038} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{4330D46F-6703-4BA2-844D-177F722C0820} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{6785A554-BBBB-480C-8E4D-9FE90DD91A46} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{A4128935-B707-4D56-B924-27910EC92664} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{211F05D3-F8EE-497F-9DE9-AFFA0A72140D} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{84823BA5-B860-4CAF-885E-981D7F121830} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{5CA29B44-C4A5-4310-9429-553F0BC9FC1D} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{2D081A36-48F9-4A09-8247-420682545492} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{0911F996-DF86-4FB1-A1CE-0539599EC0E0} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{9E194D13-F5A0-4430-8F87-D74326457385} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{396D9209-0D9A-4E61-9471-04C71F6CA6B9} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{DCE8EC51-1E58-49A0-82CF-5BE269FA0A9D} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+		{C9CAA69C-575A-442E-9D8A-69C53B39D72C} = {A83D6B58-6D38-46AF-8C20-5CFC170A1063}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E623EFF5-2CA4-4FA0-B3AB-53F921DA212E}
+	EndGlobalSection
+EndGlobal
