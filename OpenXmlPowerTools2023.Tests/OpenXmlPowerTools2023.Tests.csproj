@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<<< HEAD:OpenXmlPowerTools2023.Tests/OpenXmlPowerTools2023.Tests.csproj
     <ProjectReference Include="..\OpenXmlPowerTools2023\OpenXmlPowerTools2023.csproj" />
+========
+    <ProjectReference Include="..\OpenXmlPowerTools-v2\OpenXmlPowerTools-v2.csproj" />
+>>>>>>>> refs/remotes/origin/net6fixes:OpenXmlPowerTools-v2.Tests/OpenXmlPowerTools-v2.Tests.csproj
   </ItemGroup>
 </Project>

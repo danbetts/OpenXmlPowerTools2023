@@ -16,7 +16,11 @@
 	  </COMReference>
 	</ItemGroup>
 	<ItemGroup>
+<<<<<<<< HEAD:OpenXmlPowerTools2023.Examples/WordAutomationUtilities/Documents.AutomationUtil.csproj
 		<ProjectReference Include="..\..\OpenXmlPowerTools2023\OpenXmlPowerTools2023.csproj" />
+========
+		<ProjectReference Include="..\..\OpenXmlPowerTools-v2\OpenXmlPowerTools-v2.csproj" />
+>>>>>>>> refs/remotes/origin/net6fixes:OpenXmlPowerTools-v2.Examples/WordAutomationUtilities/Documents.AutomationUtil.csproj
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
 	</ItemGroup>
 </Project>
