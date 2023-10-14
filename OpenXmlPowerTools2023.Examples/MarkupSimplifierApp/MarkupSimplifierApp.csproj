@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+	<TargetFrameworks>net48</TargetFrameworks>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\OpenXmlPowerTools2023\OpenXmlPowerTools2023.csproj" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+	<ItemGroup>
+    <Compile Update="Form1.cs" />
+    <Compile Update="Form1.Designer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>
