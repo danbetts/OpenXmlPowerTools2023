@@ -9,13 +9,9 @@
     <ProjectGuid>{2C50A5AF-E34B-4FC4-983F-F30BB49A57AB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-<<<<<<<< HEAD:OpenXmlPowerTools2023.Tests.OA/OpenXmlPowerTools2023.Tests.OA.csproj
+
     <RootNamespace>OpenXmlPowerTools2023.Tests.OA</RootNamespace>
     <AssemblyName>OpenXmlPowerTools2023.Tests.OA</AssemblyName>
-========
-    <RootNamespace>OpenXmlPowerTools-v2.Tests.OA</RootNamespace>
-    <AssemblyName>OpenXmlPowerTools-v2.Tests.OA</AssemblyName>
->>>>>>>> refs/remotes/origin/net6fixes:OpenXmlPowerTools-v2.Tests.OA/OpenXmlPowerTools.Tests.OA.csproj
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>f5d754ea</NuGetPackageImportStamp>
@@ -74,7 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-<<<<<<<< HEAD:OpenXmlPowerTools2023.Tests.OA/OpenXmlPowerTools2023.Tests.OA.csproj
+
     <Compile Include="..\OpenXmlPowerTools2023.Tests\HtmlConverterTests.cs">
       <Link>HtmlConverterTests.cs</Link>
     </Compile>
@@ -82,15 +78,6 @@
       <Link>HtmlToWmlConverterTests.cs</Link>
     </Compile>
     <Compile Include="..\OpenXmlPowerTools2023.Tests\HtmlToWmlReadAsXElement.cs">
-========
-    <Compile Include="..\OpenXmlPowerTools-v2.Tests\HtmlConverterTests.cs">
-      <Link>HtmlConverterTests.cs</Link>
-    </Compile>
-    <Compile Include="..\OpenXmlPowerTools-v2.Tests\HtmlToWmlConverterTests.cs">
-      <Link>HtmlToWmlConverterTests.cs</Link>
-    </Compile>
-    <Compile Include="..\OpenXmlPowerTools-v2.Tests\HtmlToWmlReadAsXElement.cs">
->>>>>>>> refs/remotes/origin/net6fixes:OpenXmlPowerTools-v2.Tests.OA/OpenXmlPowerTools.Tests.OA.csproj
       <Link>HtmlToWmlReadAsXElement.cs</Link>
     </Compile>
     <Compile Include="HtmlToWmlConverterTests2.cs" />
@@ -102,12 +89,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<<< HEAD:OpenXmlPowerTools2023.Tests.OA/OpenXmlPowerTools2023.Tests.OA.csproj
+
     <ProjectReference Include="..\OpenXmlPowerTools2023\OpenXmlPowerTools2023.csproj">
-========
-    <ProjectReference Include="..\OpenXmlPowerTools-v2\OpenXmlPowerTools-v2.csproj">
->>>>>>>> refs/remotes/origin/net6fixes:OpenXmlPowerTools-v2.Tests.OA/OpenXmlPowerTools.Tests.OA.csproj
-      <Project>{6f957ff3-afcc-4d69-8fbc-71ae21bc45c9}</Project>
+=     <Project>{6f957ff3-afcc-4d69-8fbc-71ae21bc45c9}</Project>
       <Name>OpenXmlPowerTools</Name>
     </ProjectReference>
   </ItemGroup>
