@@ -39,7 +39,7 @@ namespace OpenXmlPowerTools.Documents
     {
         public static WmlDocument SimplifyMarkup(WmlDocument doc, SimplifyMarkupSettings settings)
         {
-            using (var streamDoc = new OpenXmlMemoryStreamDocument(doc))
+            using (var streamDoc = new MemoryStreamDocument(doc))
             {
                 using (WordprocessingDocument document = streamDoc.GetWordprocessingDocument())
                     SimplifyMarkup(document, settings);

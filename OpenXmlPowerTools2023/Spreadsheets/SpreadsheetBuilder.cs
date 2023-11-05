@@ -159,7 +159,7 @@ namespace OpenXmlPowerTools.Spreadsheets
             }
         }
 
-        public static OpenXmlMemoryStreamDocument CreateSpreadsheetDocument()
+        public static MemoryStreamDocument CreateSpreadsheetDocument()
         {
             MemoryStream stream = new MemoryStream();
             using (SpreadsheetDocument doc = SpreadsheetDocument.Create(stream, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))
@@ -167,7 +167,7 @@ namespace OpenXmlPowerTools.Spreadsheets
                 doc.AddWorkbookPart();
                 doc.WorkbookPart.PutXDocument(Spreadsheet.CreateWorkbook());
                 doc.Close();
-                return new OpenXmlMemoryStreamDocument(stream);
+                return new MemoryStreamDocument(stream);
             }
         }
     }

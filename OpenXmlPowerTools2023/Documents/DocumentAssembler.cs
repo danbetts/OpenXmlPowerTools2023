@@ -435,7 +435,7 @@ namespace OpenXmlPowerTools.Documents
                         var thisGuid = Guid.NewGuid().ToString();
                         var r = new Regex("<#.*?#>");
                         XElement xml = null;
-                        OpenXmlRegex.Replace(new[] { element }, r, thisGuid, (para, match) =>
+                        PowerToolsRegex.Replace(new[] { element }, r, thisGuid, (para, match) =>
                         {
                             var matchString = match.Value.Trim();
                             var xmlText = matchString.Substring(2, matchString.Length - 4).Trim().Replace('“', '"').Replace('”', '"');
@@ -521,7 +521,7 @@ namespace OpenXmlPowerTools.Documents
                         var thisGuid = Guid.NewGuid().ToString();
                         var r = new Regex("<#.*?#>");
                         XElement xml = null;
-                        OpenXmlRegex.Replace(new[] { element }, r, thisGuid, (para, match) =>
+                        PowerToolsRegex.Replace(new[] { element }, r, thisGuid, (para, match) =>
                         {
                             var matchString = match.Value.Trim();
                             var xmlText = matchString.Substring(2, matchString.Length - 4).Trim().Replace('“', '"').Replace('”', '"');

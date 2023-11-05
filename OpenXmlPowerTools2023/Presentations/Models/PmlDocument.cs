@@ -4,15 +4,15 @@ using System.IO;
 
 namespace OpenXmlPowerTools.Presentations
 {
-    public class PmlDocument : OpenXmlPowerToolsDocument
+    public class PmlDocument : PowerToolsDocument
     {
-        public PmlDocument(OpenXmlPowerToolsDocument original) : base(original)
+        public PmlDocument(PowerToolsDocument original) : base(original)
         {
             if (GetDocumentType() != typeof(PresentationDocument))
                 throw new PowerToolsDocumentException("Not a Presentation document.");
         }
 
-        public PmlDocument(OpenXmlPowerToolsDocument original, bool convertToTransitional) : base(original, convertToTransitional)
+        public PmlDocument(PowerToolsDocument original, bool convertToTransitional) : base(original, convertToTransitional)
         {
             if (GetDocumentType() != typeof(PresentationDocument))
                 throw new PowerToolsDocumentException("Not a Presentation document.");

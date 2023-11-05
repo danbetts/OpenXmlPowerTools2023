@@ -194,7 +194,7 @@ namespace OpenXmlPowerTools.Commons
 
         public static WmlDocument SearchAndReplace(WmlDocument doc, string search, string replace, bool matchCase)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(doc))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(doc))
             {
                 using (WordprocessingDocument document = streamDoc.GetWordprocessingDocument())
                 {
@@ -388,7 +388,7 @@ namespace OpenXmlPowerTools.Commons
 
         public static PmlDocument SearchAndReplace(PmlDocument doc, string search, string replace, bool matchCase)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(doc))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(doc))
             {
                 using (PresentationDocument document = streamDoc.GetPresentationDocument())
                 {

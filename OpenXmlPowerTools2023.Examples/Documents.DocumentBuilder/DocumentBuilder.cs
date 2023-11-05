@@ -12,7 +12,7 @@ using System.Xml.Linq;
 
 namespace OpenXmlPowerTools.Examples
 {
-    class DocumentBuilderExample
+    public class DocumentBuilderExample
     {
         private class DocumentInfo
         {
@@ -23,40 +23,41 @@ namespace OpenXmlPowerTools.Examples
 
         static void Main(string[] args)
         {
-            Example01();
-            Example02();
-            Example03();
-            Example04();
+            DocumentBuilder docBuilder = new DocumentBuilder();
+            Example01(docBuilder);
+            Example02(docBuilder);
+            Example03(docBuilder);
+            Example04(docBuilder);
         }
 
-        private static void Example01()
+        public static void Example01(DocumentBuilder docBuilder)
         {
-            var n = DateTime.Now;
+
+        var n = DateTime.Now;
             var tempDi = new DirectoryInfo(string.Format("ExampleOutput-{0:00}-{1:00}-{2:00}-{3:00}{4:00}{5:00}", n.Year - 2000, n.Month, n.Day, n.Hour, n.Minute, n.Second));
             tempDi.Create();
 
-            WmlSourceBuilder sourceBuilder = new WmlSourceBuilder();
-            DocumentBuilder docBuilder = new DocumentBuilder();
             string source1 = "../../Examples01/Source1.docx";
             string source2 = "../../Examples01/Source2.docx";
             string source3 = "../../Examples01/Source3.docx";
 
             // Create new document from 10 paragraphs starting at paragraph 5 of Source1.docx
-            docBuilder.AddSource(sourceBuilder.Start(5).Count(10).KeepSections(true).Build(source1));
-            docBuilder.SaveAs(Path.Combine(tempDi.FullName, "Out1.docx"));
+            docBuilder.AddSource(source1, 5, 10)
+                .SaveAs(Path.Combine(tempDi.FullName, "Out1.docx"));
 
             // Create new document from paragraph 1, and paragraphs 5 through end of Source3.docx.
             // This effectively 'deletes' paragraphs 2-4
-            docBuilder.AddSource(sourceBuilder.Start(0).Count(1).KeepSections(false).Build(source2));
-            docBuilder.AddSource(sourceBuilder.Start(5).KeepSections(false).Build(source3));
-            docBuilder.SaveAs(Path.Combine(tempDi.FullName, "Out2.docx"));
+            docBuilder.Reset()
+                .AddSource(source2, 0, 1, false)
+                .AddSource(source3, 5, keepSections: false)
+                .SaveAs(Path.Combine(tempDi.FullName, "Out2.docx"));
 
             // Create a new document that consists of the entirety of Source1.docx and Source2.docx.  Use
             // the section information (headings and footers) from source1.
-            docBuilder.Sources.Clear();
-            docBuilder.AddSource(sourceBuilder.KeepSections(true).Build(source1));
-            docBuilder.AddSource(sourceBuilder.KeepSections(false).Build(source2));
-            docBuilder.SaveAs(Path.Combine(tempDi.FullName, "Out3.docx"));
+            docBuilder.Reset()
+                .AddSource(source1)
+                .AddSource(source2, keepSections: false)
+                .SaveAs(Path.Combine(tempDi.FullName, "Out3.docx"));
 
             // Create a new document that consists of the entirety of Source1.docx and Source2.docx.  Use
             // the section information (headings and footers) from source2.
@@ -68,27 +69,25 @@ namespace OpenXmlPowerTools.Examples
             // five paragraphs of Source2.docx.  This example returns a new WmlDocument, when you then can
             // serialize to a SharePoint document library, or use in some other interesting scenario.
 
-            docBuilder.Sources.Clear();
-            docBuilder.AddSource(sourceBuilder.Start(0).Count(5).KeepSections(false).Build(source1));
-            docBuilder.AddSource(sourceBuilder.KeepSections(true).Build(source2)); // note builder already set to start 0 and count 5, so next item will use same values.
+            docBuilder.Reset()
+                .AddSource(source1, 0, 5, false)
+                .AddSource(source2, keepSections: true); // note builder already set to start 0 and count 5, so next item will use same values.
             WmlDocument out5 = docBuilder.ToWmlDocument();
             out5.SaveAs(Path.Combine(tempDi.FullName, "Out5.docx"));  // save it to the file system, but we could just as easily done something
         }
-        private static void Example02()
+        private static void Example02(DocumentBuilder docBuilder)
         {
             var n = DateTime.Now;
             var tempDi = new DirectoryInfo(string.Format("ExampleOutput-{0:00}-{1:00}-{2:00}-{3:00}{4:00}{5:00}", n.Year - 2000, n.Month, n.Day, n.Hour, n.Minute, n.Second));
             tempDi.Create();
 
-            WmlSourceBuilder sourceBuilder = new WmlSourceBuilder();
-            DocumentBuilder docBuilder = new DocumentBuilder();
-
             // Create new document from 10 paragraphs starting at paragraph 5 of Source1.docx
-            docBuilder.AddSource(sourceBuilder.Start(0).Count(1).KeepSections(true).Build("../../Example02/WhitePaper.docx"));
-            docBuilder.AddSource(sourceBuilder.Defaults().KeepSections(false).Build("../../Example02/Abstract.docx"));
-            docBuilder.AddSource(sourceBuilder.Build("../../Example02/AuthorBiography.docx"));
-            docBuilder.AddSource(sourceBuilder.Start(1).Build("../../Example02/WhitePaper.docx"));
-            docBuilder.SaveAs(Path.Combine(tempDi.FullName, "AssembledPaper.docx"));
+            docBuilder.Reset()
+                .AddSource("../../Example02/WhitePaper.docx", 0, 1)
+                .AddSource("../../Example02/Abstract.docx", keepSections: false)
+                .AddSource("../../Example02/AuthorBiography.docx", keepSections: false)
+                .AddSource("../../Example02/WhitePaper.docx", start: 1, keepSections: false)
+                .SaveAs(Path.Combine(tempDi.FullName, "AssembledPaper.docx"));
 
             List<WmlSource> sources = new List<WmlSource>();
 
@@ -114,7 +113,7 @@ namespace OpenXmlPowerTools.Examples
                     .Where(g => g.Key == true)
                     .Select(g => new WmlSource(
                         new WmlDocument("../../Notes.docx"), g.First().Index,
-                            g.Last().Index - g.First().Index + 1, true))
+                            g.Last().Index - g.First().Index + 1, true, true, null))
                     .ToList();
             }
             docBuilder.SetSources(sources).SaveAs(Path.Combine(tempDi.FullName, "NewNotes.docx"));
@@ -165,7 +164,7 @@ namespace OpenXmlPowerTools.Examples
                 {
                     string fileName = String.Format("Section{0:000}.docx", doc.DocumentNumber);
                     List<WmlSource> documentSource = new List<WmlSource> {
-                    new WmlSource(new WmlDocument("../../Spec.docx"), doc.Start, doc.Count, true)
+                    new WmlSource(new WmlDocument("../../Spec.docx"), doc.Start, doc.Count, true, false, null)
                 };
 
                 docBuilder.SetSources(documentSource).SaveAs(Path.Combine(tempDi.FullName, fileName));
@@ -174,11 +173,11 @@ namespace OpenXmlPowerTools.Examples
             // Re-assemble the parts into a single document.
             sources = tempDi
                 .GetFiles("Section*.docx")
-                .Select(d => new WmlSource(new WmlDocument(d.FullName), true))
+                .Select(d => new WmlSource(new WmlDocument(d.FullName), 0, int.MaxValue, true, false, null))
                 .ToList();
             docBuilder.SetSources(sources).SaveAs(Path.Combine(tempDi.FullName, "ReassembledSpec.docx"));
         }
-        private static void Example03()
+        private static void Example03(DocumentBuilder docBuilder)
         {
             var n = DateTime.Now;
             var tempDi = new DirectoryInfo(string.Format("ExampleOutput-{0:00}-{1:00}-{2:00}-{3:00}{4:00}{5:00}", n.Year - 2000, n.Month, n.Day, n.Hour, n.Minute, n.Second));
@@ -210,24 +209,21 @@ namespace OpenXmlPowerTools.Examples
             }
 
             string outFileName = Path.Combine(tempDi.FullName, "Out.docx");
-            List<WmlSource> sources = new List<WmlSource>()
-            {
-                new WmlSource(doc1, true),
-                new WmlSource(new WmlDocument(@"..\..\Insert-01.docx")) { InsertId = "Liz" },
-                new WmlSource(new WmlDocument(@"..\..\Insert-02.docx")) { InsertId = "Eric" },
-                new WmlSource(new WmlDocument(@"..\..\FrontMatter.docx")) { InsertId = "Front" },
-            };
-            DocumentBuilder builder = new DocumentBuilder();
-            builder.SetSources(sources).SaveAs(outFileName);
+
+            docBuilder.Reset()
+                      .AddSource(@"..\..\Insert-01.docx", insertId: "Liz")
+                      .AddSource(@"..\..\Insert-02.docx", insertId: "Eric")
+                      .AddSource(@"..\..\FrontMatter.docx", insertId: "Front")
+                      .SaveAs(outFileName);
         }
-        private static void Example04()
+        private static void Example04(DocumentBuilder docBuilder)
         {
             var n = DateTime.Now;
             var tempDi = new DirectoryInfo(string.Format("ExampleOutput-{0:00}-{1:00}-{2:00}-{3:00}{4:00}{5:00}", n.Year - 2000, n.Month, n.Day, n.Hour, n.Minute, n.Second));
             tempDi.Create();
 
             WmlDocument solarSystemDoc = new WmlDocument("../../solar-system.docx");
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(solarSystemDoc))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(solarSystemDoc))
             using (WordprocessingDocument solarSystem = streamDoc.GetWordprocessingDocument())
             {
                 // get children elements of the <w:body> element
@@ -305,13 +301,14 @@ namespace OpenXmlPowerTools.Examples
                                         .Count(),
                                     g.Group
                                         .Count(),
-                                    false);
+                                    false, true, null);
                             else
-                                return new WmlSource(g.Document, false);
+                                return new WmlSource(g.Document, 0, int.MaxValue, false, true, null);
                         }
                     ).ToList();
-                DocumentBuilder docBuilder = new DocumentBuilder();
-                docBuilder.SetSources(sources).SaveAs(Path.Combine(tempDi.FullName, "solar-system-new.docx"));
+
+                docBuilder.SetSources(sources)
+                    .SaveAs(Path.Combine(tempDi.FullName, "solar-system-new.docx"));
             }
         }
     }

@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace OpenXmlPowerTools.Commons
 {
-    public class OpenXmlRegex
+    public class PowerToolsRegex
     {
         private const string DontConsolidate = "DontConsolidate";
 

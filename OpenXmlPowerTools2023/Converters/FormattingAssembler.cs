@@ -39,7 +39,7 @@ namespace OpenXmlPowerTools.Converters
     {
         public static WmlDocument AssembleFormatting(WmlDocument document, FormattingAssemblerSettings settings)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                 {

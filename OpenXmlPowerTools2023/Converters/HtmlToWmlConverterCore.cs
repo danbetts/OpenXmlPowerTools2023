@@ -178,7 +178,7 @@ namespace OpenXmlPowerTools.Converters
 
             WmlDocument newWmlDocument;
 
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(emptyDocument))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(emptyDocument))
             {
                 using (WordprocessingDocument wDoc = streamDoc.GetWordprocessingDocument())
                 {

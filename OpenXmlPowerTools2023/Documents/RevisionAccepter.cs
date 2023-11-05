@@ -10,7 +10,7 @@ namespace OpenXmlPowerTools.Documents
     {
         public static WmlDocument AcceptRevisions(WmlDocument document)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                 {

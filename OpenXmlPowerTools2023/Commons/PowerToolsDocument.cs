@@ -10,19 +10,19 @@ using OpenXmlPowerTools.Documents;
 namespace OpenXmlPowerTools.Commons
 {
     /// <summary>
-    /// OpenXml Powertools Document
+    /// Powertools Document
     /// </summary>
-    public class OpenXmlPowerToolsDocument
+    public class PowerToolsDocument
     {
         public string FileName { get; set; }
         public byte[] DocumentByteArray { get; set; }
-        public OpenXmlPowerToolsDocument(OpenXmlPowerToolsDocument original)
+        public PowerToolsDocument(PowerToolsDocument original)
         {
             DocumentByteArray = new byte[original.DocumentByteArray.Length];
             Array.Copy(original.DocumentByteArray, DocumentByteArray, original.DocumentByteArray.Length);
             FileName = original.FileName;
         }
-        public OpenXmlPowerToolsDocument(OpenXmlPowerToolsDocument original, bool convertToTransitional)
+        public PowerToolsDocument(PowerToolsDocument original, bool convertToTransitional)
         {
             if (convertToTransitional)
             {
@@ -35,12 +35,12 @@ namespace OpenXmlPowerTools.Commons
                 FileName = original.FileName;
             }
         }
-        public OpenXmlPowerToolsDocument(string fileName)
+        public PowerToolsDocument(string fileName)
         {
             FileName = fileName;
             DocumentByteArray = File.ReadAllBytes(fileName);
         }
-        public OpenXmlPowerToolsDocument(string fileName, bool convertToTransitional)
+        public PowerToolsDocument(string fileName, bool convertToTransitional)
         {
             FileName = fileName;
 
@@ -55,13 +55,13 @@ namespace OpenXmlPowerTools.Commons
                 DocumentByteArray = File.ReadAllBytes(fileName);
             }
         }
-        public OpenXmlPowerToolsDocument(byte[] byteArray)
+        public PowerToolsDocument(byte[] byteArray)
         {
             DocumentByteArray = new byte[byteArray.Length];
             Array.Copy(byteArray, DocumentByteArray, byteArray.Length);
             FileName = null;
         }
-        public OpenXmlPowerToolsDocument(byte[] byteArray, bool convertToTransitional)
+        public PowerToolsDocument(byte[] byteArray, bool convertToTransitional)
         {
             if (convertToTransitional)
             {
@@ -74,13 +74,13 @@ namespace OpenXmlPowerTools.Commons
                 FileName = null;
             }
         }
-        public OpenXmlPowerToolsDocument(string fileName, MemoryStream memStream)
+        public PowerToolsDocument(string fileName, MemoryStream memStream)
         {
             FileName = fileName;
             DocumentByteArray = new byte[memStream.Length];
             Array.Copy(memStream.GetBuffer(), DocumentByteArray, memStream.Length);
         }
-        public OpenXmlPowerToolsDocument(string fileName, MemoryStream memStream, bool convertToTransitional)
+        public PowerToolsDocument(string fileName, MemoryStream memStream, bool convertToTransitional)
         {
             if (convertToTransitional)
             {
@@ -239,7 +239,7 @@ namespace OpenXmlPowerTools.Commons
                 File.WriteAllBytes(filePath, partContent);
             }
         }
-        public static OpenXmlPowerToolsDocument FromFileName(string fileName)
+        public static PowerToolsDocument FromFileName(string fileName)
         {
             byte[] bytes = File.ReadAllBytes(fileName);
             Type type;
@@ -259,13 +259,13 @@ namespace OpenXmlPowerTools.Commons
                 return new PmlDocument(fileName, bytes);
             if (type == typeof(Package))
             {
-                OpenXmlPowerToolsDocument pkg = new OpenXmlPowerToolsDocument(bytes);
+                PowerToolsDocument pkg = new PowerToolsDocument(bytes);
                 pkg.FileName = fileName;
                 return pkg;
             }
             throw new PowerToolsDocumentException("Not an Open XML document.");
         }
-        public static OpenXmlPowerToolsDocument FromDocument(OpenXmlPowerToolsDocument doc)
+        public static PowerToolsDocument FromDocument(PowerToolsDocument doc)
         {
             Type type = doc.GetDocumentType();
             if (type == typeof(WordprocessingDocument))

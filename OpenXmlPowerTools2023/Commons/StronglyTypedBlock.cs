@@ -3,8 +3,9 @@
 
 using System;
 using DocumentFormat.OpenXml.Packaging;
+using OpenXmlPowerTools.Commons;
 
-namespace OpenXmlPowerTools
+namespace OpenXmlPowerTools2023.Commons
 {
     /// <summary>
     /// Provides an elegant way of wrapping a set of invocations of the strongly typed 
