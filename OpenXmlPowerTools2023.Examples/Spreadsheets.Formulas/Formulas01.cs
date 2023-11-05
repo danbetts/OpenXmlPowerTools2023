@@ -18,7 +18,7 @@ namespace OpenXmlPowerTools.Examples
             tempDi.Create();
 
             // Change sheet name in formulas
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(
                 SmlDocument.FromFileName("../../Formulas.xlsx")))
             {
                 using (SpreadsheetDocument doc = streamDoc.GetSpreadsheetDocument())
@@ -29,7 +29,7 @@ namespace OpenXmlPowerTools.Examples
             }
 
             // Change sheet name in formulas
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(
                 SmlDocument.FromFileName("../../Formulas.xlsx")))
             {
                 using (SpreadsheetDocument doc = streamDoc.GetSpreadsheetDocument())

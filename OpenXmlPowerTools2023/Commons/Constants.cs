@@ -30,7 +30,6 @@ namespace OpenXmlPowerTools.Commons
             new XAttribute(XNamespace.Xmlns + "wps", WPS.wps),
             new XAttribute(MC.Ignorable, "w14 wp14"),
         };
-
         public static Dictionary<XName, XName[]> PresentationRelationshipMarkup = new Dictionary<XName, XName[]>()
         {
             { A.audioFile,        new [] { R.link }},
@@ -89,7 +88,5 @@ namespace OpenXmlPowerTools.Commons
             W.moveTo,
             W.sdtContent
         };
-
-
     }
 }

@@ -24,7 +24,7 @@ namespace OpenXmlPowerTools.Presentations
             ".ppam",
         };
         public static bool IsPresentation(string ext) => Extensions.Contains(ext.ToLower());
-        public static OpenXmlMemoryStreamDocument CreatePresentationDocument()
+        public static MemoryStreamDocument CreatePresentationDocument()
         {
             MemoryStream stream = new MemoryStream();
             using (PresentationDocument doc = PresentationDocument.Create(stream, DocumentFormat.OpenXml.PresentationDocumentType.Presentation))
@@ -42,7 +42,7 @@ namespace OpenXmlPowerTools.Presentations
                         new XElement(ns + "sldIdLst"),
                         new XElement(ns + "notesSz", new XAttribute("cx", "6858000"), new XAttribute("cy", "9144000")))));
                 doc.Close();
-                return new OpenXmlMemoryStreamDocument(stream);
+                return new MemoryStreamDocument(stream);
             }
         }
 
@@ -1108,7 +1108,7 @@ namespace OpenXmlPowerTools.Presentations
         #region SlideSource
         public static void BuildPresentation(this List<SlideSource> sources, string fileName)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = CreatePresentationDocument())
+            using (MemoryStreamDocument streamDoc = CreatePresentationDocument())
             {
                 using (PresentationDocument output = streamDoc.GetPresentationDocument())
                 {
@@ -1120,7 +1120,7 @@ namespace OpenXmlPowerTools.Presentations
         }
         public static PmlDocument BuildPresentation(this List<SlideSource> sources)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = CreatePresentationDocument())
+            using (MemoryStreamDocument streamDoc = CreatePresentationDocument())
             {
                 using (PresentationDocument output = streamDoc.GetPresentationDocument())
                 {
@@ -1139,7 +1139,7 @@ namespace OpenXmlPowerTools.Presentations
             mainPart.Declaration.Encoding = "UTF-8";
             output.PresentationPart.PutXDocument();
 
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(sources[0].PmlDocument))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(sources[0].PmlDocument))
             using (PresentationDocument doc = streamDoc.GetPresentationDocument())
             {
                 CopyStartingParts(doc, output);
@@ -1149,7 +1149,7 @@ namespace OpenXmlPowerTools.Presentations
             SlideMasterPart currentMasterPart = null;
             foreach (SlideSource source in sources)
             {
-                using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.PmlDocument))
+                using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(source.PmlDocument))
                 using (PresentationDocument doc = streamDoc.GetPresentationDocument())
                 {
                     try

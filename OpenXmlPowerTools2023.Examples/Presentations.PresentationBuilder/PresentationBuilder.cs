@@ -90,7 +90,7 @@ namespace OpenXmlPowerTools.Examples
             // Next, replace "thee" with "the" in the main presentation
             var pmlMainPresentation = new PmlDocument("Main.pptx", baPresentation);
             PmlDocument modifiedMainPresentation = null;
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(pmlMainPresentation))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(pmlMainPresentation))
             {
                 using (PresentationDocument document = streamDoc.GetPresentationDocument())
                 {
@@ -101,7 +101,7 @@ namespace OpenXmlPowerTools.Examples
                         var slidePart = document.PresentationPart.GetPartById(slideRelId);
                         var slideXDoc = slidePart.GetXDocument();
                         var paragraphs = slideXDoc.Descendants(A.p).ToList();
-                        OpenXmlRegex.Replace(paragraphs, new Regex("thee"), "the", null);
+                        PowerToolsRegex.Replace(paragraphs, new Regex("thee"), "the", null);
                         slidePart.PutXDocument();
                     }
                 }
@@ -118,7 +118,7 @@ namespace OpenXmlPowerTools.Examples
 
             // Replace <# TRADEMARK #> with AdventureWorks (c)
             PmlDocument modifiedCombinedPresentation = null;
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(combinedPresentation))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(combinedPresentation))
             {
                 using (PresentationDocument document = streamDoc.GetPresentationDocument())
                 {
@@ -129,7 +129,7 @@ namespace OpenXmlPowerTools.Examples
                         var slidePart = document.PresentationPart.GetPartById(slideRelId);
                         var slideXDoc = slidePart.GetXDocument();
                         var paragraphs = slideXDoc.Descendants(A.p).ToList();
-                        OpenXmlRegex.Replace(paragraphs, new Regex("<# TRADEMARK #>"), "AdventureWorks (c)", null);
+                        PowerToolsRegex.Replace(paragraphs, new Regex("<# TRADEMARK #>"), "AdventureWorks (c)", null);
                         slidePart.PutXDocument();
                     }
                 }

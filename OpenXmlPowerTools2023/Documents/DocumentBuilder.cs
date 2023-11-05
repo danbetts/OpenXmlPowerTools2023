@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Packaging;
 using OpenXmlPowerTools.Commons;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace OpenXmlPowerTools.Documents
         private HashSet<string> customXmlGuidList { get; set; } = null;
         private bool normalizeStyleIds { get; set; } = true;
 
+        #region Settings
         /// <summary>
         /// Set output path
         /// </summary>
@@ -37,13 +39,40 @@ namespace OpenXmlPowerTools.Documents
         }
 
         /// <summary>
+        /// Add a new srouce by path, and every other optional field
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <param name="keepSections"></param>
+        /// <param name="keepHeadersAndFooters"></param>
+        /// <param name="insertId"></param>
+        /// <returns></returns>
+        public DocumentBuilder AddSource(string source, int start = 0, int count = int.MaxValue, bool keepSections = true, bool keepHeadersAndFooters = true, string insertId = null) 
+        {
+            AddSource(new WmlDocument(source), 0, count, keepSections, keepHeadersAndFooters, insertId);
+            return this;
+        }
+
+        /// <summary>
+        /// Add a new source
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public DocumentBuilder AddSource(WmlDocument document, int start = 0, int count = int.MaxValue, bool keepSections = true, bool keepHeadersAndFooters = true, string insertId = null)
+        {
+            AddSource(new WmlSource(document, start, count, keepSections, keepHeadersAndFooters, insertId));
+            return this;
+        }
+
+        /// <summary>
         /// Add a new source
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
         public DocumentBuilder AddSource(WmlSource source)
         {
-            Sources.Add(source);
+            Sources.Add(source); 
             return this;
         }
 
@@ -80,11 +109,19 @@ namespace OpenXmlPowerTools.Documents
             return this;
         }
 
+        /// <summary>
+        /// Reset document builder to defaults
+        /// </summary>
+        /// <returns></returns>
+        public DocumentBuilder Reset() => new DocumentBuilder();
+        #endregion
+
+        #region Process
         /// Build document
         /// </summary>
         public void Save()
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = Wordprocessing.CreateWordprocessingDocument())
+            using (MemoryStreamDocument streamDoc = Wordprocessing.CreateWordprocessingDocument())
             {
                 using (WordprocessingDocument target = streamDoc.GetWordprocessingDocument())
                 {
@@ -103,7 +140,7 @@ namespace OpenXmlPowerTools.Documents
 
         public WmlDocument ToWmlDocument()
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = Wordprocessing.CreateWordprocessingDocument())
+            using (MemoryStreamDocument streamDoc = Wordprocessing.CreateWordprocessingDocument())
             {
                 using (WordprocessingDocument target = streamDoc.GetWordprocessingDocument())
                 {
@@ -117,7 +154,7 @@ namespace OpenXmlPowerTools.Documents
         public WordprocessingDocument Build()
         {
             WordprocessingDocument result;
-            using (OpenXmlMemoryStreamDocument streamDoc = Wordprocessing.CreateWordprocessingDocument())
+            using (MemoryStreamDocument streamDoc = Wordprocessing.CreateWordprocessingDocument())
             {
                 using (WordprocessingDocument target = streamDoc.GetWordprocessingDocument())
                 {
@@ -171,7 +208,7 @@ namespace OpenXmlPowerTools.Documents
                     var sourceId = source.InsertId;
                     var idMatch = targetMain.Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == sourceId);
 
-                    using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.WmlDocument))
+                    using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(source.WmlDocument))
                     using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                     {
                         
@@ -242,7 +279,7 @@ namespace OpenXmlPowerTools.Documents
                     if (sourceId != null && (target.MainDocumentPart.HeaderParts.Any(hp => hp.GetXDocument().Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == sourceId)) ||
                         target.MainDocumentPart.FooterParts.Any(fp => fp.GetXDocument().Descendants(PtOpenXml.Insert).Any(d => (string)d.Attribute(PtOpenXml.Id) == sourceId))))
                     {
-                        using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(source.WmlDocument))
+                        using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(source.WmlDocument))
                         using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                         {
                             var body = doc.MainDocumentPart.GetBody();
@@ -284,5 +321,6 @@ namespace OpenXmlPowerTools.Documents
                 }
             }
         }
+        #endregion
     }
 }

@@ -178,7 +178,7 @@ namespace OpenXmlPowerTools.Converters
     {
         public static WmlDocument ApplyContentTypes(WmlDocument document, WmlToXmlSettings settings)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument wDoc = streamDoc.GetWordprocessingDocument())
                 {
@@ -315,7 +315,7 @@ namespace OpenXmlPowerTools.Converters
 
         public static XElement ProduceContentTypeXml(WmlDocument document, WmlToXmlSettings settings)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                 {
@@ -1352,7 +1352,7 @@ namespace OpenXmlPowerTools.Converters
 
                             for (int i = 0; i < rule.RegexArray.Length; i++)
                             {
-                                if (OpenXmlRegex.Match(new[] { clonedBlc }, rule.RegexArray[i]) != 0)
+                                if (PowerToolsRegex.Match(new[] { clonedBlc }, rule.RegexArray[i]) != 0)
                                 {
                                     regexPass = true;
                                     break;

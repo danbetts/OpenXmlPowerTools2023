@@ -31,103 +31,103 @@ namespace OpenXmlPowerTools.Examples
                 // Match content (paragraph 1)
                 IEnumerable<XElement> content = xDoc.Descendants(W.p).Take(1);
                 var regex = new Regex("Video");
-                int count = OpenXmlRegex.Match(content, regex);
+                int count = PowerToolsRegex.Match(content, regex);
                 Console.WriteLine("Example #1 Count: {0}", count);
 
                 // Match content, case insensitive (paragraph 1)
                 content = xDoc.Descendants(W.p).Take(1);
                 regex = new Regex("video", RegexOptions.IgnoreCase);
-                count = OpenXmlRegex.Match(content, regex);
+                count = PowerToolsRegex.Match(content, regex);
                 Console.WriteLine("Example #2 Count: {0}", count);
 
                 // Match content, with callback (paragraph 1)
                 content = xDoc.Descendants(W.p).Take(1);
                 regex = new Regex("video", RegexOptions.IgnoreCase);
-                OpenXmlRegex.Match(content, regex, (element, match) =>
+                PowerToolsRegex.Match(content, regex, (element, match) =>
                     Console.WriteLine("Example #3 Found value: >{0}<", match.Value));
 
                 // Replace content, beginning of paragraph (paragraph 2)
                 content = xDoc.Descendants(W.p).Skip(1).Take(1);
                 regex = new Regex("^Video provides");
-                count = OpenXmlRegex.Replace(content, regex, "Audio gives", null);
+                count = PowerToolsRegex.Replace(content, regex, "Audio gives", null);
                 Console.WriteLine("Example #4 Replaced: {0}", count);
 
                 // Replace content, middle of paragraph (paragraph 3)
                 content = xDoc.Descendants(W.p).Skip(2).Take(1);
                 regex = new Regex("powerful");
-                count = OpenXmlRegex.Replace(content, regex, "good", null);
+                count = PowerToolsRegex.Replace(content, regex, "good", null);
                 Console.WriteLine("Example #5 Replaced: {0}", count);
 
                 // Replace content, end of paragraph (paragraph 4)
                 content = xDoc.Descendants(W.p).Skip(3).Take(1);
                 regex = new Regex(" [a-z.]*$");
-                count = OpenXmlRegex.Replace(content, regex, " super good point!", null);
+                count = PowerToolsRegex.Replace(content, regex, " super good point!", null);
                 Console.WriteLine("Example #6 Replaced: {0}", count);
 
                 // Delete content, beginning of paragraph (paragraph 5)
                 content = xDoc.Descendants(W.p).Skip(4).Take(1);
                 regex = new Regex("^Video provides");
-                count = OpenXmlRegex.Replace(content, regex, "", null);
+                count = PowerToolsRegex.Replace(content, regex, "", null);
                 Console.WriteLine("Example #7 Deleted: {0}", count);
 
                 // Delete content, middle of paragraph (paragraph 6)
                 content = xDoc.Descendants(W.p).Skip(5).Take(1);
                 regex = new Regex("powerful ");
-                count = OpenXmlRegex.Replace(content, regex, "", null);
+                count = PowerToolsRegex.Replace(content, regex, "", null);
                 Console.WriteLine("Example #8 Deleted: {0}", count);
 
                 // Delete content, end of paragraph (paragraph 7)
                 content = xDoc.Descendants(W.p).Skip(6).Take(1);
                 regex = new Regex("[.]$");
-                count = OpenXmlRegex.Replace(content, regex, "", null);
+                count = PowerToolsRegex.Replace(content, regex, "", null);
                 Console.WriteLine("Example #9 Deleted: {0}", count);
 
                 // Replace content in inserted text, same author (paragraph 8)
                 content = xDoc.Descendants(W.p).Skip(7).Take(1);
                 regex = new Regex("Video");
-                count = OpenXmlRegex.Replace(content, regex, "Audio", null, true, "Eric White");
+                count = PowerToolsRegex.Replace(content, regex, "Audio", null, true, "Eric White");
                 Console.WriteLine("Example #10 Deleted: {0}", count);
 
                 // Delete content in inserted text, same author (paragraph 9)
                 content = xDoc.Descendants(W.p).Skip(8).Take(1);
                 regex = new Regex("powerful ");
-                count = OpenXmlRegex.Replace(content, regex, "", null, true, "Eric White");
+                count = PowerToolsRegex.Replace(content, regex, "", null, true, "Eric White");
                 Console.WriteLine("Example #11 Deleted: {0}", count);
 
                 // Replace content partially in inserted text, same author (paragraph 10)
                 content = xDoc.Descendants(W.p).Skip(9).Take(1);
                 regex = new Regex("Video provides ");
-                count = OpenXmlRegex.Replace(content, regex, "Audio gives ", null, true, "Eric White");
+                count = PowerToolsRegex.Replace(content, regex, "Audio gives ", null, true, "Eric White");
                 Console.WriteLine("Example #12 Replaced: {0}", count);
 
                 // Delete content partially in inserted text, same author (paragraph 11)
                 content = xDoc.Descendants(W.p).Skip(10).Take(1);
                 regex = new Regex(" to help you prove your point");
-                count = OpenXmlRegex.Replace(content, regex, "", null, true, "Eric White");
+                count = PowerToolsRegex.Replace(content, regex, "", null, true, "Eric White");
                 Console.WriteLine("Example #13 Deleted: {0}", count);
 
                 // Replace content in inserted text, different author (paragraph 12)
                 content = xDoc.Descendants(W.p).Skip(11).Take(1);
                 regex = new Regex("Video");
-                count = OpenXmlRegex.Replace(content, regex, "Audio", null, true, "John Doe");
+                count = PowerToolsRegex.Replace(content, regex, "Audio", null, true, "John Doe");
                 Console.WriteLine("Example #14 Deleted: {0}", count);
 
                 // Delete content in inserted text, different author (paragraph 13)
                 content = xDoc.Descendants(W.p).Skip(12).Take(1);
                 regex = new Regex("powerful ");
-                count = OpenXmlRegex.Replace(content, regex, "", null, true, "John Doe");
+                count = PowerToolsRegex.Replace(content, regex, "", null, true, "John Doe");
                 Console.WriteLine("Example #15 Deleted: {0}", count);
 
                 // Replace content partially in inserted text, different author (paragraph 14)
                 content = xDoc.Descendants(W.p).Skip(13).Take(1);
                 regex = new Regex("Video provides ");
-                count = OpenXmlRegex.Replace(content, regex, "Audio gives ", null, true, "John Doe");
+                count = PowerToolsRegex.Replace(content, regex, "Audio gives ", null, true, "John Doe");
                 Console.WriteLine("Example #16 Replaced: {0}", count);
 
                 // Delete content partially in inserted text, different author (paragraph 15)
                 content = xDoc.Descendants(W.p).Skip(14).Take(1);
                 regex = new Regex(" to help you prove your point");
-                count = OpenXmlRegex.Replace(content, regex, "", null, true, "John Doe");
+                count = PowerToolsRegex.Replace(content, regex, "", null, true, "John Doe");
                 Console.WriteLine("Example #17 Deleted: {0}", count);
 
                 const string leftDoubleQuotationMarks = @"[\u0022“„«»”]";
@@ -137,25 +137,25 @@ namespace OpenXmlPowerTools.Examples
                 // Replace content using replacement pattern (paragraph 16)
                 content = xDoc.Descendants(W.p).Skip(15).Take(1);
                 regex = new Regex($"{leftDoubleQuotationMarks}(?<words>{words}){rightDoubleQuotationMarks}");
-                count = OpenXmlRegex.Replace(content, regex, "‘${words}’", null);
+                count = PowerToolsRegex.Replace(content, regex, "‘${words}’", null);
                 Console.WriteLine("Example #18 Replaced: {0}", count);
 
                 // Replace content using replacement pattern in partially inserted text (paragraph 17)
                 content = xDoc.Descendants(W.p).Skip(16).Take(1);
                 regex = new Regex($"{leftDoubleQuotationMarks}(?<words>{words}){rightDoubleQuotationMarks}");
-                count = OpenXmlRegex.Replace(content, regex, "‘${words}’", null, true, "John Doe");
+                count = PowerToolsRegex.Replace(content, regex, "‘${words}’", null, true, "John Doe");
                 Console.WriteLine("Example #19 Replaced: {0}", count);
 
                 // Replace content using replacement pattern (paragraph 18)
                 content = xDoc.Descendants(W.p).Skip(17).Take(1);
                 regex = new Regex($"({leftDoubleQuotationMarks})(video)({rightDoubleQuotationMarks})");
-                count = OpenXmlRegex.Replace(content, regex, "$1audio$3", null, true, "John Doe");
+                count = PowerToolsRegex.Replace(content, regex, "$1audio$3", null, true, "John Doe");
                 Console.WriteLine("Example #20 Replaced: {0}", count);
 
                 // Recognize tabs (paragraph 19)
                 content = xDoc.Descendants(W.p).Skip(18).Take(1);
                 regex = new Regex(@"([1-9])\.\t");
-                count = OpenXmlRegex.Replace(content, regex, "($1)\t", null);
+                count = PowerToolsRegex.Replace(content, regex, "($1)\t", null);
                 Console.WriteLine("Example #21 Replaced: {0}", count);
 
                 // The next two examples deal with line breaks, i.e., the <w:br/> elements.
@@ -167,19 +167,19 @@ namespace OpenXmlPowerTools.Examples
                 // Recognize tabs and insert line breaks (paragraph 20).
                 content = xDoc.Descendants(W.p).Skip(19).Take(1);
                 regex = new Regex($@"([1-9])\.{UnicodeMapper.HorizontalTabulation}");
-                count = OpenXmlRegex.Replace(content, regex, $"Article $1{UnicodeMapper.CarriageReturn}", null);
+                count = PowerToolsRegex.Replace(content, regex, $"Article $1{UnicodeMapper.CarriageReturn}", null);
                 Console.WriteLine("Example #22 Replaced: {0}", count);
 
                 // Recognize and remove line breaks (paragraph 21)
                 content = xDoc.Descendants(W.p).Skip(20).Take(1);
                 regex = new Regex($"{UnicodeMapper.CarriageReturn}");
-                count = OpenXmlRegex.Replace(content, regex, " ", null);
+                count = PowerToolsRegex.Replace(content, regex, " ", null);
                 Console.WriteLine("Example #23 Replaced: {0}", count);
 
                 // Remove soft hyphens (paragraph 22)
                 List<XElement> paras = xDoc.Descendants(W.p).Skip(21).Take(1).ToList();
-                count = OpenXmlRegex.Replace(paras, new Regex($"{UnicodeMapper.SoftHyphen}"), "", null);
-                count += OpenXmlRegex.Replace(paras, new Regex("use"), "no longer use", null);
+                count = PowerToolsRegex.Replace(paras, new Regex($"{UnicodeMapper.SoftHyphen}"), "", null);
+                count += PowerToolsRegex.Replace(paras, new Regex("use"), "no longer use", null);
                 Console.WriteLine("Example #24 Replaced: {0}", count);
 
                 // The next example deals with symbols (i.e., w:sym elements).
@@ -205,9 +205,9 @@ namespace OpenXmlPowerTools.Examples
 
                 // Replace or comment on symbols (paragraph 23)
                 paras = xDoc.Descendants(W.p).Skip(22).Take(1).ToList();
-                count = OpenXmlRegex.Replace(paras, new Regex($"{oldPhone}"), $"{newPhone} (replaced with new phone)", null);
-                count += OpenXmlRegex.Replace(paras, new Regex($"({pencil})"), "$1 (same pencil)", null);
-                count += OpenXmlRegex.Replace(paras, new Regex($"({spider})"), "$1 (same spider)", null);
+                count = PowerToolsRegex.Replace(paras, new Regex($"{oldPhone}"), $"{newPhone} (replaced with new phone)", null);
+                count += PowerToolsRegex.Replace(paras, new Regex($"({pencil})"), "$1 (same pencil)", null);
+                count += PowerToolsRegex.Replace(paras, new Regex($"({spider})"), "$1 (same spider)", null);
                 Console.WriteLine("Example #25 Replaced: {0}", count);
 
                 wDoc.MainDocumentPart.PutXDocument();
@@ -225,7 +225,7 @@ namespace OpenXmlPowerTools.Examples
                     // Replace content
                     IEnumerable<XElement> content = xDoc.Descendants(A.p);
                     var regex = new Regex("Hello");
-                    int count = OpenXmlRegex.Replace(content, regex, "H e l l o", null);
+                    int count = PowerToolsRegex.Replace(content, regex, "H e l l o", null);
                     Console.WriteLine("Example #18 Replaced: {0}", count);
 
                     // If you absolutely want to preserve compatibility with PowerPoint 2007, then you will need to strip the xml:space="preserve" attribute throughout.

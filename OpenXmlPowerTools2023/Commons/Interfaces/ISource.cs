@@ -4,7 +4,7 @@ namespace OpenXmlPowerTools.Commons
 {
     public interface ISource
     {
-        OpenXmlPowerToolsDocument WmlDocument { get; set; }
+        PowerToolsDocument WmlDocument { get; set; }
         int Start { get; set; }
         int Count { get; set; }
         string InsertId { get; set; }

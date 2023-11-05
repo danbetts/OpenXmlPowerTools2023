@@ -19,7 +19,7 @@ namespace OpenXmlPowerTools.Documents
     {
         public static WmlDocument RejectRevisions(WmlDocument document)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                 {
@@ -1257,7 +1257,7 @@ namespace OpenXmlPowerTools.Documents
 
         public static WmlDocument AcceptRevisions(WmlDocument document)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                 {
@@ -2795,7 +2795,7 @@ namespace OpenXmlPowerTools.Documents
 
         public static bool HasTrackedRevisions(WmlDocument document)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument wdoc = streamDoc.GetWordprocessingDocument())
                 {

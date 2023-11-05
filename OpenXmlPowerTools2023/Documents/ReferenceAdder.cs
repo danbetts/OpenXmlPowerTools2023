@@ -17,7 +17,7 @@ namespace OpenXmlPowerTools.Documents
     {
         public static WmlDocument AddToc(WmlDocument document, string xPath, string switches, string title, int? rightTabPos)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                 {
@@ -129,7 +129,7 @@ namespace OpenXmlPowerTools.Documents
 
         public static WmlDocument AddTof(WmlDocument document, string xPath, string switches, int? rightTabPos)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                 {
@@ -204,7 +204,7 @@ namespace OpenXmlPowerTools.Documents
 
         public static WmlDocument AddToa(WmlDocument document, string xPath, string switches, int? rightTabPos)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(document))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(document))
             {
                 using (WordprocessingDocument doc = streamDoc.GetWordprocessingDocument())
                 {

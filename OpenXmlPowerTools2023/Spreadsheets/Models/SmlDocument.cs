@@ -6,14 +6,14 @@ using System.Xml.Linq;
 
 namespace OpenXmlPowerTools.Spreadsheets
 {
-    public class SmlDocument : OpenXmlPowerToolsDocument
+    public class SmlDocument : PowerToolsDocument
     {
-        public SmlDocument(OpenXmlPowerToolsDocument original) : base(original)
+        public SmlDocument(PowerToolsDocument original) : base(original)
         {
             if (GetDocumentType() != typeof(SpreadsheetDocument)) throw new PowerToolsDocumentException("Not a Spreadsheet document.");
         }
 
-        public SmlDocument(OpenXmlPowerToolsDocument original, bool convertToTransitional) : base(original, convertToTransitional)
+        public SmlDocument(PowerToolsDocument original, bool convertToTransitional) : base(original, convertToTransitional)
         {
             if (GetDocumentType() != typeof(SpreadsheetDocument)) throw new PowerToolsDocumentException("Not a Spreadsheet document.");
         }

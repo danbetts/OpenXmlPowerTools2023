@@ -145,7 +145,7 @@ namespace OpenXmlPowerTools.Converters
     {
         public static XElement ConvertToHtml(WmlDocument doc, WmlToHtmlConverterSettings htmlConverterSettings)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(doc))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(doc))
             {
                 using (WordprocessingDocument document = streamDoc.GetWordprocessingDocument())
                 {

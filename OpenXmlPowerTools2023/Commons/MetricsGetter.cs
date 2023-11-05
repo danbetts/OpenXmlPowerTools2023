@@ -679,7 +679,7 @@ namespace OpenXmlPowerTools.Commons
 
         public static XElement GetXlsxMetrics(SmlDocument smlDoc, MetricsGetterSettings settings)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(smlDoc))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(smlDoc))
             {
                 using (SpreadsheetDocument sDoc = streamDoc.GetSpreadsheetDocument())
                 {
@@ -771,7 +771,7 @@ namespace OpenXmlPowerTools.Commons
 
         public static XElement GetPptxMetrics(PmlDocument pmlDoc, MetricsGetterSettings settings)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(pmlDoc))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(pmlDoc))
             {
                 using (PresentationDocument pDoc = streamDoc.GetPresentationDocument())
                 {

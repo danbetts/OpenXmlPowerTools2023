@@ -1,9 +1,11 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using OpenXmlPowerTools.Documents;
 using OpenXmlPowerTools.Presentations;
+using OpenXmlPowerTools.Spreadsheets;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -1415,5 +1417,174 @@ namespace OpenXmlPowerTools.Commons
                 AddPart(partList, p.OpenXmlPart);
         }
 
+        public static bool IsValid(string fileName, string officeVersion)
+        {
+#if !NET35
+            FileFormatVersions fileFormatVersion = FileFormatVersions.Office2013;
+#else
+            FileFormatVersions fileFormatVersion = FileFormatVersions.Office2010;
+#endif
+            try
+            {
+                fileFormatVersion = (FileFormatVersions)Enum.Parse(fileFormatVersion.GetType(), officeVersion);
+            }
+            catch (Exception)
+            {
+#if !NET35
+                fileFormatVersion = FileFormatVersions.Office2013;
+#else
+                fileFormatVersion = FileFormatVersions.Office2010;
+#endif
+            }
+
+            FileInfo fi = new FileInfo(fileName);
+            if (Wordprocessing.IsWordprocessing(fi.Extension))
+            {
+                using (WordprocessingDocument wDoc = WordprocessingDocument.Open(fileName, false))
+                {
+                    OpenXmlValidator validator = new OpenXmlValidator(fileFormatVersion);
+                    var errors = validator.Validate(wDoc);
+                    bool valid = errors.Count() == 0;
+                    return valid;
+                }
+            }
+            else if (Spreadsheet.IsSpreadsheet(fi.Extension))
+            {
+                using (SpreadsheetDocument sDoc = SpreadsheetDocument.Open(fileName, false))
+                {
+                    OpenXmlValidator validator = new OpenXmlValidator(fileFormatVersion);
+                    var errors = validator.Validate(sDoc);
+                    bool valid = errors.Count() == 0;
+                    return valid;
+                }
+            }
+            else if (Presentation.IsPresentation(fi.Extension))
+            {
+                using (PresentationDocument pDoc = PresentationDocument.Open(fileName, false))
+                {
+                    OpenXmlValidator validator = new OpenXmlValidator(fileFormatVersion);
+                    var errors = validator.Validate(pDoc);
+                    bool valid = errors.Count() == 0;
+                    return valid;
+                }
+            }
+            return false;
+        }
+
+        public static IEnumerable<ValidationErrorInfo> GetOpenXmlValidationErrors(string fileName,
+            string officeVersion)
+        {
+#if !NET35
+            FileFormatVersions fileFormatVersion = FileFormatVersions.Office2013;
+#else
+            FileFormatVersions fileFormatVersion = FileFormatVersions.Office2010;
+#endif
+            try
+            {
+                fileFormatVersion = (FileFormatVersions)Enum.Parse(fileFormatVersion.GetType(), officeVersion);
+            }
+            catch (Exception)
+            {
+#if !NET35
+                fileFormatVersion = FileFormatVersions.Office2013;
+#else
+                fileFormatVersion = FileFormatVersions.Office2010;
+#endif
+            }
+
+            FileInfo fi = new FileInfo(fileName);
+            if (Wordprocessing.IsWordprocessing(fi.Extension))
+            {
+                WmlDocument wml = new WmlDocument(fileName);
+                using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(wml))
+                using (WordprocessingDocument wDoc = streamDoc.GetWordprocessingDocument())
+                {
+                    OpenXmlValidator validator = new OpenXmlValidator(fileFormatVersion);
+                    var errors = validator.Validate(wDoc);
+                    return errors.ToList();
+                }
+            }
+            else if (Spreadsheet.IsSpreadsheet(fi.Extension))
+            {
+                SmlDocument Sml = new SmlDocument(fileName);
+                using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(Sml))
+                using (SpreadsheetDocument wDoc = streamDoc.GetSpreadsheetDocument())
+                {
+                    OpenXmlValidator validator = new OpenXmlValidator(fileFormatVersion);
+                    var errors = validator.Validate(wDoc);
+                    return errors.ToList();
+                }
+            }
+            else if (Presentation.IsPresentation(fi.Extension))
+            {
+                PmlDocument Pml = new PmlDocument(fileName);
+                using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(Pml))
+                using (PresentationDocument wDoc = streamDoc.GetPresentationDocument())
+                {
+                    OpenXmlValidator validator = new OpenXmlValidator(fileFormatVersion);
+                    var errors = validator.Validate(wDoc);
+                    return errors.ToList();
+                }
+            }
+            return Enumerable.Empty<ValidationErrorInfo>();
+        }
+
+        #region PowerTools Block
+        /// <summary>
+        /// Begins a PowerTools Block by (1) removing annotations and, unless the package was
+        /// opened in read-only mode, (2) saving the package.
+        /// </summary>
+        /// <remarks>
+        /// Removes <see cref="XDocument" /> and <see cref="XmlNamespaceManager" /> instances
+        /// added by <see cref="PtOpenXmlExtensions.GetXDocument(OpenXmlPart)" />,
+        /// <see cref="PtOpenXmlExtensions.GetXDocument(OpenXmlPart, out XmlNamespaceManager)" />,
+        /// <see cref="PtOpenXmlExtensions.PutXDocument(OpenXmlPart)" />,
+        /// <see cref="PtOpenXmlExtensions.PutXDocument(OpenXmlPart, XDocument)" />, and
+        /// <see cref="PtOpenXmlExtensions.PutXDocumentWithFormatting(OpenXmlPart)" />.
+        /// methods.
+        /// </remarks>
+        /// <param name="package">
+        /// A <see cref="WordprocessingDocument" />, <see cref="SpreadsheetDocument" />,
+        /// or <see cref="PresentationDocument" />.
+        /// </param>
+        public static void BeginPowerToolsBlock(this OpenXmlPackage package)
+        {
+            if (package == null) throw new ArgumentNullException("package");
+
+            package.RemovePowerToolsAnnotations();
+            package.Save();
+        }
+
+        /// <summary>
+        /// Ends a PowerTools Block by reloading the root elements of all package parts
+        /// that were changed by the PowerTools. A part is deemed changed by the PowerTools
+        /// if it has an annotation of type <see cref="XDocument" />.
+        /// </summary>
+        /// <param name="package">
+        /// A <see cref="WordprocessingDocument" />, <see cref="SpreadsheetDocument" />,
+        /// or <see cref="PresentationDocument" />.
+        /// </param>
+        public static void EndPowerToolsBlock(this OpenXmlPackage package)
+        {
+            if (package == null) throw new ArgumentNullException("package");
+
+            foreach (OpenXmlPart part in package.GetAllParts())
+            {
+                if (part.Annotations<XDocument>().Any() && part.RootElement != null)
+                    part.RootElement.Reload();
+            }
+        }
+
+        private static void RemovePowerToolsAnnotations(this OpenXmlPackage package)
+        {
+            if (package == null) throw new ArgumentNullException("package");
+
+            foreach (OpenXmlPart part in package.GetAllParts())
+            {
+                part.RemoveAnnotations<XDocument>();
+                part.RemoveAnnotations<XmlNamespaceManager>();
+            }
+        }
+        #endregion
     }
 }

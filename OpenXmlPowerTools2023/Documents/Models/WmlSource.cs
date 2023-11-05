@@ -11,7 +11,7 @@ namespace OpenXmlPowerTools.Documents
     {
         #region ISource
         public WmlDocument WmlDocument { get; set; }
-        OpenXmlPowerToolsDocument ISource.WmlDocument
+        PowerToolsDocument ISource.WmlDocument
         {
             get => WmlDocument;
             set => WmlDocument = (WmlDocument)Convert.ChangeType(value, typeof(WmlDocument));
@@ -25,23 +25,29 @@ namespace OpenXmlPowerTools.Documents
         #endregion
 
         public WmlSource() { }
-        public WmlSource(string filename) : this(new WmlDocument(filename), 0, int.MaxValue) { }
-        public WmlSource(string filename, int start) : this(new WmlDocument(filename), start, int.MaxValue) { }
-        public WmlSource(string filename, bool keepSections) : this(new WmlDocument(filename), keepSections) { }
+        public WmlSource(string filename) : this(new WmlDocument(filename)) { }
         public WmlSource(string filename, int start, int count) : this(new WmlDocument(filename), start, count) { }
-        public WmlSource(string filename, int start, bool keepSections) : this(new WmlDocument(filename), start, keepSections) { }
-        public WmlSource(string filename, int start, int count, bool keepSections) : this(new WmlDocument(filename), start, count, keepSections) { }
-        public WmlSource(WmlDocument document) : this(document, 0) { }
-        public WmlSource(WmlDocument document, int start) : this(document, start, int.MaxValue) { }
-        public WmlSource(WmlDocument doucment, bool keepSections) : this(doucment, 0, int.MaxValue, keepSections) { }
-        public WmlSource(WmlDocument document, int start, int count) : this(document, start, count, true) { }
-        public WmlSource(WmlDocument document, int start, bool keepSections) : this(document, start, int.MaxValue, keepSections) { }
-        public WmlSource(WmlDocument document, int start, int count, bool keepSections)
+        public WmlSource(string filename, int start, int count, bool keepSections, bool keepHeaderAndFooters, string insertId)
+            : this(new WmlDocument(filename), start, count, keepSections, keepHeaderAndFooters, insertId) { }
+        public WmlSource(WmlDocument document) 
+        {
+            WmlDocument = document;
+        }
+        public WmlSource(WmlDocument doucment, int start, int count)
+        {
+            WmlDocument = doucment;
+            Start = start;
+            Count = count;
+        }
+
+        public WmlSource(WmlDocument document, int start, int count, bool keepSections, bool keepHeaderAndFooters, string insertId)
         { 
-            this.WmlDocument = document;
-            this.Start = start;
-            this.Count = count;
-            this.KeepSections = KeepSections;
+            WmlDocument = document;
+            Start = start;
+            Count = count;
+            KeepSections = keepSections;
+            KeepHeadersAndFooters = keepHeaderAndFooters;
+            InsertId = insertId;
         }
     }
 }

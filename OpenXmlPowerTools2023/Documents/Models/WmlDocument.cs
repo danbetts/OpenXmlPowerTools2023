@@ -22,7 +22,7 @@ using OpenXmlPowerTools.Converters;
 
 namespace OpenXmlPowerTools.Documents
 {
-    public class WmlDocument : OpenXmlPowerToolsDocument, IDocument
+    public class WmlDocument : PowerToolsDocument, IDocument
     {
         public PtMainDocumentPart MainDocumentPart => GetMainDocumentPart();
         #region IDocument
@@ -43,13 +43,13 @@ namespace OpenXmlPowerTools.Documents
         public FontTablePart FontTablePart => throw new NotImplementedException();
         public XDocument FontFamilyTablePart => throw new NotImplementedException();
         #endregion
-        public WmlDocument(OpenXmlPowerToolsDocument original)
+        public WmlDocument(PowerToolsDocument original)
             : base(original)
         {
             if (GetDocumentType() != typeof(WordprocessingDocument))
                 throw new PowerToolsDocumentException("Not a Wordprocessing document.");
         }
-        public WmlDocument(OpenXmlPowerToolsDocument original, bool convertToTransitional)
+        public WmlDocument(PowerToolsDocument original, bool convertToTransitional)
             : base(original, convertToTransitional)
         {
             if (GetDocumentType() != typeof(WordprocessingDocument))
@@ -91,7 +91,7 @@ namespace OpenXmlPowerTools.Documents
         }
         public WmlDocument(WmlDocument other, params XElement[] replacementParts) : base(other)
         {
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(this))
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(this))
             {
                 using (Package package = streamDoc.GetPackage())
                 {

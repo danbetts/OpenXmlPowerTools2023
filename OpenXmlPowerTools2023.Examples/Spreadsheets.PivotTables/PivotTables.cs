@@ -22,7 +22,7 @@ namespace OpenXmlPowerTools.Examples
             FileInfo qsu = new FileInfo(Path.Combine(tempDi.FullName, "QuarterlyPivot.xlsx"));
 
             int row = 1;
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(
                 SmlDocument.FromFileName(qs.FullName)))
             {
                 using (SpreadsheetDocument doc = streamDoc.GetSpreadsheetDocument())
@@ -59,7 +59,7 @@ namespace OpenXmlPowerTools.Examples
             // Create from scratch
             row = 1;
             int maxColumn = 1;
-            using (OpenXmlMemoryStreamDocument streamDoc = OpenXmlMemoryStreamDocument.CreateSpreadsheetDocument())
+            using (MemoryStreamDocument streamDoc = MemoryStreamDocument.CreateSpreadsheetDocument())
             {
                 using (SpreadsheetDocument doc = streamDoc.GetSpreadsheetDocument())
                 {
@@ -429,7 +429,7 @@ namespace OpenXmlPowerTools.Examples
 
             // Add pivot table to existing spreadsheet
             // Demonstrate multiple data fields
-            using (OpenXmlMemoryStreamDocument streamDoc = new OpenXmlMemoryStreamDocument(
+            using (MemoryStreamDocument streamDoc = new MemoryStreamDocument(
                 SmlDocument.FromFileName("../../QuarterlyUnitSales.xlsx")))
             {
                 using (SpreadsheetDocument doc = streamDoc.GetSpreadsheetDocument())
